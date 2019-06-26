@@ -4,8 +4,9 @@ const mongoose = require("mongoose");
 const app = express();
 const cors = require("cors");
 const car = require("./routes/car");
+const carRenter = require("./routes/carRenter");
 
-app.use(cors())
+app.use(cors());
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
@@ -33,11 +34,13 @@ app.use(express.urlencoded({ extended: false }));
 app.get("/", (req, res) => {
   res.send(`<h1>Welcome to CarRent </h1>
     <a href="/car">Cars</a> </br>
+    <a href="/carRenter">Car Renters</a> </br>
     `);
 });
 
 // Direct routes to appropriate files
 app.use("/car", car);
+app.use("/carRenter", carRenter);
 
 // Handling 404
 app.use((req, res) => {

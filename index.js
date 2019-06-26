@@ -5,6 +5,8 @@ const app = express();
 const cors = require("cors");
 const car = require("./routes/car");
 const carRenter = require("./routes/carRenter");
+const carOwner = require("./routes/carOwner");
+const history = require("./routes/history");
 
 app.use(cors());
 app.use(function(req, res, next) {
@@ -35,12 +37,16 @@ app.get("/", (req, res) => {
   res.send(`<h1>Welcome to CarRent </h1>
     <a href="/car">Cars</a> </br>
     <a href="/carRenter">Car Renters</a> </br>
+    <a href="/carOwner">Car Owner</a> </br>
+    <a href="/history">History</a></br>
     `);
 });
 
 // Direct routes to appropriate files
 app.use("/car", car);
 app.use("/carRenter", carRenter);
+app.use("/carOwner", carOwner);
+app.use("/history", history);
 
 // Handling 404
 app.use((req, res) => {

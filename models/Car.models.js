@@ -5,7 +5,6 @@ const CarRenterSchema = mongoose.model("carRenter").schema;
 history = require("./History.models");
 const HistorySchema = mongoose.model("history").schema;
 
-
 const CarSchema = new Schema({
   make: { type: String, required: true },
   model: { type: String, required: true },

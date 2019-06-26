@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
+
 const HistorySchema = new Schema({
-  carRenterId: { type: String, required: true },
+  carRenter:{ type: String, required: true },
   carId: { type: String, required: true },
   carOwnerId: { type: String, required: true },
   rentingDateStart: { type: Date, required: true },

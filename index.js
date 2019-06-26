@@ -6,7 +6,9 @@ const cors = require("cors");
 const car = require("./routes/car");
 const carRenter = require("./routes/carRenter");
 const carOwner = require("./routes/carOwner");
-const history = require("./routes/history");
+const transaction = require("./routes/transaction");
+const admin = require("./routes/admin");
+const moderator = require("./routes/moderator");
 
 app.use(cors());
 app.use(function(req, res, next) {
@@ -38,7 +40,9 @@ app.get("/", (req, res) => {
     <a href="/car">Cars</a> </br>
     <a href="/carRenter">Car Renters</a> </br>
     <a href="/carOwner">Car Owner</a> </br>
-    <a href="/history">History</a></br>
+    <a href="/transaction">Transaction</a></br>
+    <a href="/admin">Admin</a></br>
+    <a href="/moderator">Moderator</a></br>
     `);
 });
 
@@ -46,7 +50,9 @@ app.get("/", (req, res) => {
 app.use("/car", car);
 app.use("/carRenter", carRenter);
 app.use("/carOwner", carOwner);
-app.use("/history", history);
+app.use("/transaction", transaction);
+app.use("/admin", admin);
+app.use("/moderator", moderator);
 
 // Handling 404
 app.use((req, res) => {

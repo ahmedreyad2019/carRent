@@ -1,14 +1,17 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
-history = require("./History.models");
-const HistorySchema = mongoose.model("history").schema;
+const TransactionSchema = mongoose.model("transaction").schema;
+const CarSchema=mongoose.model("Car").schema;
 const CarOwnerSchema = new Schema({
-  name: { type: String, required: true },
-  dateOfBirth: { type: Date, required: true },
+  FirstName: { type: String, required: true },
+  LastName:{ type: String, required: true },
   mobileNumber: { type: String, required: true },
-  drivingLicense: { type: String },
-  history: [HistorySchema],
-  balance: { type: Number, required: true, default: 0.0 }
+  personalID: { type: String},
+  transaction: [TransactionSchema],
+  carsOwned:[CarSchema],
+  balance: { type: Number, required: true, default: 0.0 },
+  dateAdded:{ type: Date},
+  password:{ type: String, required: true }
 });
 
 module.exports = mongoose.model("carOwner", CarOwnerSchema);

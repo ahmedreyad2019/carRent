@@ -1,12 +1,14 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const HistorySchema = new Schema({
-  carRenter:{ type: String, required: true },
-  carId: { type: String, required: true },
+const TransactionSchema = new Schema({
+  carRenterID:{ type: String },
+  carID: { type: String, required: true },
   carOwnerId: { type: String, required: true },
   rentingDateStart: { type: Date, required: true },
   rentingDateEnd: { type: Date, required: true },
+  offeredDate:{type: Date, required: true},
+  status:{type:String, enum:["Done","In process","Upcoming"],default:"Upcoming"},
   complaints: [
     new Schema({
       issuedFrom: { type: String, enum: ["Renter", "Owner"] },
@@ -20,6 +22,7 @@ const HistorySchema = new Schema({
   ],
   carRating: { type: Number, required: true, default: 5.0 },
   renterRating: { type: Number, required: true, default: 5.0 },
-  ownerRating: { type: Number, required: true, default: 5.0 }
+  ownerRating: { type: Number, required: true, default: 5.0 },
+  price:{type:Number,required:true}
 });
-module.exports = mongoose.model("history", HistorySchema);
+module.exports = mongoose.model("transaction", TransactionSchema);

@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 carRenter = require("./CarRenter.models");
 const CarRenterSchema = mongoose.model("carRenter").schema;
-history = require("./History.models");
-const HistorySchema = mongoose.model("history").schema;
+transaction = require("./Transaction.models");
+const TransactionSchema = mongoose.model("transaction").schema;
 
 const CarSchema = new Schema({
   make: { type: String, required: true },
@@ -14,12 +14,15 @@ const CarSchema = new Schema({
     default: "PendingApproval",
     enum: ["UpForRent", "Rented", "PendingApproval", "Idle"]
   },
-  history: [HistorySchema],
+  transaction: [TransactionSchema],
   rating: { type: Number, required: true, default: 5.0 },
   currentRenter: CarRenterSchema,
   currentMileage: { type: Number },
-  license: { type: String, required: true },
+  licenseLink: { type: String, required: true },
+  plateNumber:{type:String,required:true},
   licenseExpiryDate: { type: Date, required: true },
-  dateAdded: { type: Date }
+  dateAdded: { type: Date },
+  location:{type:String,required:true},
+  category:{type:String,enum:["A","B","C"]}
 });
 module.exports = mongoose.model("Car", CarSchema);

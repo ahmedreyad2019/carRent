@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
-
+var config = require("../config/jwt");
+var jwt = require("jsonwebtoken");
 const Car = require("../models/Car.models");
+const CarOwner = require("../models/CarOwner.models");
 
 //create
 router.post("/", async (req, res) => {
@@ -11,9 +13,33 @@ router.post("/", async (req, res) => {
     //   return res
     //     .status(400)
     //     .send({ error: isValidated.error.details[0].message });
+    var stat = 0;
+    var token = req.headers["x-access-token"];
+    if (!token) {
+      return res
+        .status(401)
+        .send({ auth: false, message: "Please login first." });
+    }
+    jwt.verify(token, config.secret, async function(err, decoded) {
+      if (err) {
+        return res
+          .status(500)
+          .send({ auth: false, message: "Failed to authenticate token." });
+      }
+      stat = decoded.id;
+    });
+    const owner = await CarOwner.findById(stat);
+    if (!owner) {
+      return res.status(404).send({ error: "Owner does not exist" });
+    }
+    req.body.dateAdded = Date.now();
     const newCar = await Car.create(req.body);
-    newCar.dateAdded = Date.now();
-    res.json({ msg: "Car was added successfully", data: newCar });
+    const allCars= owner.carsOwned.push(newCar)
+    console.log(owner)
+//
+    const updatedOwner=await CarOwner.findByIdAndUpdate(stat,{carsOwned:owner.carsOwned})
+    console.log(owner)
+    res.json({ msg: "Car was added successfully", data: owner });
   } catch (error) {
     res.status(400).send({ msg: error });
     console.log(error);

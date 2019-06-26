@@ -13,7 +13,8 @@ const CarRenterSchema = new Schema({
   personalID:{type:String},
   transaction: [TransactionSchema],
   balance: { type: Number, required: true, default: 0.0 },
-  password:{type: String, required: true}
+  password:{type: String, required: true},
+  statusID:{type:String,enum:["Pending","Rejected","Accepted"]}
 });
 
 module.exports = mongoose.model("carRenter", CarRenterSchema);

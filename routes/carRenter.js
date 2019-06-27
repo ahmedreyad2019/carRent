@@ -5,6 +5,7 @@ const CarRenter = require("../models/CarRenter.models");
 const Car = require("../models/Car.models");
 const CarOwner = require("../models/CarOwner.models");
 const Transaction = require("../models/Transaction.models");
+const Complaint = require("../models/Complaint.models");
 var config = require("../config/jwt");
 var jwt = require("jsonwebtoken");
 //create
@@ -234,8 +235,39 @@ router.post("/drivingLicense/submit", async (req, res) => {
     const Renter = await CarRenter.findOneAndUpdate(
       { _id: stat },
       { drivingLicenseLink: req.body.drivingLicenseLink }
-    ).then(res.status(200).send({ msg: "updated successfully", data: Renter }));
+    );
+    if (!Renter) return res.status(401).send({ msg: "authorization failed" });
+    return res.status(200).send({ msg: "updated successfully", data: Renter });
   } catch (error) {
+    console.log(error);
+    return res.status(400).send({ msg: "error", error: error });
+  }
+});
+router.post("/personalID/submit", async (req, res) => {
+  var stat = 0;
+  var token = req.headers["x-access-token"];
+  if (!token) {
+    return res
+      .status(401)
+      .send({ auth: false, message: "Please login first." });
+  }
+  jwt.verify(token, config.secret, async function(err, decoded) {
+    if (err) {
+      return res
+        .status(500)
+        .send({ auth: false, message: "Failed to authenticate token." });
+    }
+    stat = decoded.id;
+  });
+  try {
+    const Renter = await CarRenter.findOneAndUpdate(
+      { _id: stat },
+      { personalID: req.body.personalID }
+    );
+    if (!Renter) return res.status(401).send({ msg: "authorization failed" });
+    return res.status(200).send({ msg: "updated successfully", data: Renter });
+  } catch (error) {
+    console.log(error);
     return res.status(400).send({ msg: "error", error: error });
   }
 });
@@ -267,17 +299,12 @@ router.post("/view/availableCars/:id/rent", async (req, res) => {
       return res
         .status(401)
         .send({ msg: "your driving license is not validated yet" });
-    const cars = await Car.findOneAndUpdate(
-      {
-        _id: req.params.id,
-        status: "UpForRent"
-      },
-      {
-        status: "Rented",
-        currentRenter: Renter
-      }
-    );
+    const cars = await Car.findOne({
+      _id: req.params.id,
+      status: "UpForRent"
+    });
     if (!cars) {
+      console.log("no cars");
       return res.status(204).send({ msg: "no cars avaialble at the moment" });
     }
     const transaction = await Transaction.create({
@@ -287,13 +314,22 @@ router.post("/view/availableCars/:id/rent", async (req, res) => {
       rentingDateStart: req.body.rentingDateStart,
       rentingDateEnd: req.body.rentingDateEnd
     });
+    if (!transaction) {
+      console.log("no");
+      return res.status(204).send({ msg: "renting failed" });
+    }
+    console.log(transaction);
     await CarRenter.findOneAndUpdate(
       { _id: stat },
       { $push: { transaction: transaction } }
     );
     await Car.findOneAndUpdate(
       { _id: cars._id },
-      { $push: { transaction: transaction } }
+      {
+        $push: { transaction: transaction },
+        status: "Rented",
+        currentRenter: Renter
+      }
     );
     await CarOwner.findOneAndUpdate(
       { _id: cars.carOwnerID },
@@ -303,6 +339,7 @@ router.post("/view/availableCars/:id/rent", async (req, res) => {
       .status(200)
       .json({ msg: "Cars Rented", data: cars, transaction: transaction });
   } catch (error) {
+    console.log(error);
     return res.status(400).send({ msg: "error", error: error });
   }
 });
@@ -433,15 +470,70 @@ router.get("/view/pastRentals", async (req, res) => {
     const transactions = Renter.transaction.find(
       transaction => transaction.status === "Done"
     );
-    if (!transactions)
-      return res.status(401).send({ msg: "no past rentals" });
-    return res
-      .status(200)
-      .send({ msg: "past rentals:", data: transactions });
+    if (!transactions) return res.status(401).send({ msg: "no past rentals" });
+    return res.status(200).send({ msg: "past rentals:", data: transactions });
   } catch (error) {
     return res.status(400).send({ msg: "error", error: error });
   }
 });
 
+//35
+router.post("/view/pastRentals/:id/fileComplaint", async (req, res) => {
+  var stat = 0;
+  var token = req.headers["x-access-token"];
+  if (!token) {
+    return res
+      .status(401)
+      .send({ auth: false, message: "Please login first." });
+  }
+  jwt.verify(token, config.secret, async function(err, decoded) {
+    if (err) {
+      return res
+        .status(500)
+        .send({ auth: false, message: "Failed to authenticate token." });
+    }
+    stat = decoded.id;
+  });
+  try {
+    const transaction = await Transaction.findOne({
+      _id: req.params.id,
+      carRenterID: stat,
+      status: "Done"
+    });
+    console.log(req.params.id + " " + stat);
+    if (!transaction)
+      return res.status(404).send({ msg: "transaction not found" });
 
+    const complaint = await Complaint.create({
+      issuedFrom: "Renter",
+      comment: req.body.comment,
+      transactionId: req.params.id
+    });
+    const renter = await CarRenter.findOneAndUpdate(
+      { "transaction._id": req.params.id },
+      { $push: { "transaction.$.complaints": complaint } }
+    );
+    await CarOwner.findOneAndUpdate(
+      { "transaction._id": req.params.id },
+      { $push: { "transaction.$.complaints": complaint } }
+    );
+    await Car.findOneAndUpdate(
+      { "transaction._id": req.params.id },
+      { $push: { "transaction.$.complaints": complaint } }
+    );
+    await Transaction.findOneAndUpdate(
+      {
+        _id: req.params.id
+      },
+      {
+        $push: { complaints: complaint }
+      }
+    );
+
+    return res.status(200).send({ msg: "past rentals:", data: renter });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send({ msg: "error", error: error });
+  }
+});
 module.exports = router;

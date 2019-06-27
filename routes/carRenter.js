@@ -214,7 +214,7 @@ router.get("/view/availableCars/:id", async (req, res) => {
 });
 
 //29
-router.put("/submitDrivingLicense", async (req, res) => {
+router.post("/drivingLicense/submit", async (req, res) => {
   var stat = 0;
   var token = req.headers["x-access-token"];
   if (!token) {
@@ -239,8 +239,9 @@ router.put("/submitDrivingLicense", async (req, res) => {
     return res.status(400).send({ msg: "error", error: error });
   }
 });
+
 //30
-router.put("/view/availableCars/:id/rent", async (req, res) => {
+router.post("/view/availableCars/:id/rent", async (req, res) => {
   var stat = 0;
   var token = req.headers["x-access-token"];
   if (!token) {
@@ -305,6 +306,45 @@ router.put("/view/availableCars/:id/rent", async (req, res) => {
     return res.status(400).send({ msg: "error", error: error });
   }
 });
+
+//31
+router.put("/PaymentMethod/change", async (req, res) => {
+  var stat = 0;
+  var token = req.headers["x-access-token"];
+  if (!token) {
+    return res
+      .status(401)
+      .send({ auth: false, message: "Please login first." });
+  }
+  jwt.verify(token, config.secret, async function(err, decoded) {
+    if (err) {
+      return res
+        .status(500)
+        .send({ auth: false, message: "Failed to authenticate token." });
+    }
+    stat = decoded.id;
+  });
+  try {
+    if (req.body.paymentMethod === "Cash") {
+      await CarRenter.findOneAndUpdate(
+        { _id: stat },
+        { paymentMethod: "Cash", cardNumber: null }
+      ).then(res.status(200).send({ msg: "Updated to cash successfully" }));
+    } else if (req.body.paymentMethod === "Card") {
+      if (!req.body.cardNumber)
+        return res.status(400).send({ msg: "Please enter card number" });
+      await CarRenter.findOneAndUpdate(
+        { _id: stat },
+        { paymentMethod: "Card", cardNumber: req.body.cardNumber }
+      ).then(res.status(200).send({ msg: "Updated to card successfully" }));
+    } else {
+      res.status(400).send({ msg: "Please choose a valid payment method" });
+    }
+  } catch (error) {
+    return res.status(400).send({ msg: "error", error: errro });
+  }
+});
+
 //32
 router.get("/view/availableCars/:id/ownerDetails", async (req, res) => {
   var stat = 0;
@@ -323,11 +363,10 @@ router.get("/view/availableCars/:id/ownerDetails", async (req, res) => {
     stat = decoded.id;
   });
   try {
-    const Renter = await CarRenter.findOne({ _id: stat });
     const cars = await Car.findOne({
       _id: req.params.id,
       status: "Rented",
-      "currentRenter._id":stat
+      "currentRenter._id": stat
     });
     if (!cars) {
       return res.send({ msg: "no cars avaialble at the moment" });
@@ -335,9 +374,74 @@ router.get("/view/availableCars/:id/ownerDetails", async (req, res) => {
     const Owner = await CarOwner.findOne({ _id: cars.carOwnerID });
     return res.status(200).send({ msg: "Owner Details", data: Owner });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(400).send({ msg: "error", error: error });
   }
 });
+
+//33
+router.get("/view/upComingRentals", async (req, res) => {
+  var stat = 0;
+  var token = req.headers["x-access-token"];
+  if (!token) {
+    return res
+      .status(401)
+      .send({ auth: false, message: "Please login first." });
+  }
+  jwt.verify(token, config.secret, async function(err, decoded) {
+    if (err) {
+      return res
+        .status(500)
+        .send({ auth: false, message: "Failed to authenticate token." });
+    }
+    stat = decoded.id;
+  });
+  try {
+    const Renter = await CarRenter.findOne({ _id: stat });
+    const transactions = Renter.transaction.find(
+      transaction => transaction.status === "Upcoming"
+    );
+    if (!transactions)
+      return res.status(401).send({ msg: "no upcoming rentals" });
+    return res
+      .status(200)
+      .send({ msg: "upcoming rentals:", data: transactions });
+  } catch (error) {
+    return res.status(400).send({ msg: "error", error: error });
+  }
+});
+
+//34
+router.get("/view/pastRentals", async (req, res) => {
+  var stat = 0;
+  var token = req.headers["x-access-token"];
+  if (!token) {
+    return res
+      .status(401)
+      .send({ auth: false, message: "Please login first." });
+  }
+  jwt.verify(token, config.secret, async function(err, decoded) {
+    if (err) {
+      return res
+        .status(500)
+        .send({ auth: false, message: "Failed to authenticate token." });
+    }
+    stat = decoded.id;
+  });
+  try {
+    const Renter = await CarRenter.findOne({ _id: stat });
+    const transactions = Renter.transaction.find(
+      transaction => transaction.status === "Done"
+    );
+    if (!transactions)
+      return res.status(401).send({ msg: "no past rentals" });
+    return res
+      .status(200)
+      .send({ msg: "past rentals:", data: transactions });
+  } catch (error) {
+    return res.status(400).send({ msg: "error", error: error });
+  }
+});
+
 
 module.exports = router;

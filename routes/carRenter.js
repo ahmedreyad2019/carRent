@@ -213,6 +213,32 @@ router.get("/view/availableCars/:id", async (req, res) => {
   } catch (error) {}
 });
 
+//29
+router.put("/submitDrivingLicense", async (req, res) => {
+  var stat = 0;
+  var token = req.headers["x-access-token"];
+  if (!token) {
+    return res
+      .status(401)
+      .send({ auth: false, message: "Please login first." });
+  }
+  jwt.verify(token, config.secret, async function(err, decoded) {
+    if (err) {
+      return res
+        .status(500)
+        .send({ auth: false, message: "Failed to authenticate token." });
+    }
+    stat = decoded.id;
+  });
+  try {
+    const Renter = await CarRenter.findOneAndUpdate(
+      { _id: stat },
+      { drivingLicenseLink: req.body.drivingLicenseLink }
+    ).then(res.status(200).send({ msg: "updated successfully", data: Renter }));
+  } catch (error) {
+    return res.status(400).send({ msg: "error", error: error });
+  }
+});
 //30
 router.put("/view/availableCars/:id/rent", async (req, res) => {
   var stat = 0;
@@ -232,6 +258,14 @@ router.put("/view/availableCars/:id/rent", async (req, res) => {
   });
   try {
     const Renter = await CarRenter.findOne({ _id: stat });
+    if (!Renter.drivingLicenseLink)
+      return res.status(401).send({ msg: "Please add your driving license" });
+    if (!Renter.personalID)
+      return res.status(401).send({ msg: "Please add your personalID" });
+    if (!Renter.validated)
+      return res
+        .status(401)
+        .send({ msg: "your driving license is not validated yet" });
     const cars = await Car.findOneAndUpdate(
       {
         _id: req.params.id,
@@ -242,6 +276,9 @@ router.put("/view/availableCars/:id/rent", async (req, res) => {
         currentRenter: Renter
       }
     );
+    if (!cars) {
+      return res.status(204).send({ msg: "no cars avaialble at the moment" });
+    }
     const transaction = await Transaction.create({
       carRenterID: stat,
       carID: cars._id,
@@ -261,15 +298,44 @@ router.put("/view/availableCars/:id/rent", async (req, res) => {
       { _id: cars.carOwnerID },
       { $push: { transaction: transaction } }
     );
-    if (!cars) {
-      return res.status(204).send({ msg: "no cars avaialble at the moment" });
-    }
-    console.table(cars);
-    console.table(transaction);
     return res
       .status(200)
       .json({ msg: "Cars Rented", data: cars, transaction: transaction });
   } catch (error) {
+    return res.status(400).send({ msg: "error", error: error });
+  }
+});
+//32
+router.get("/view/availableCars/:id/ownerDetails", async (req, res) => {
+  var stat = 0;
+  var token = req.headers["x-access-token"];
+  if (!token) {
+    return res
+      .status(401)
+      .send({ auth: false, message: "Please login first." });
+  }
+  jwt.verify(token, config.secret, async function(err, decoded) {
+    if (err) {
+      return res
+        .status(500)
+        .send({ auth: false, message: "Failed to authenticate token." });
+    }
+    stat = decoded.id;
+  });
+  try {
+    const Renter = await CarRenter.findOne({ _id: stat });
+    const cars = await Car.findOne({
+      _id: req.params.id,
+      status: "Rented",
+      "currentRenter._id":stat
+    });
+    if (!cars) {
+      return res.send({ msg: "no cars avaialble at the moment" });
+    }
+    const Owner = await CarOwner.findOne({ _id: cars.carOwnerID });
+    return res.status(200).send({ msg: "Owner Details", data: Owner });
+  } catch (error) {
+    console.log(error)
     return res.status(400).send({ msg: "error", error: error });
   }
 });

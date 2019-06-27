@@ -19,11 +19,12 @@ const CarSchema = new Schema({
   currentRenter: CarRenterSchema,
   currentMileage: { type: Number },
   licenseLink: { type: String, required: true },
-  plateNumber:{type:String,required:true},
+  plateNumber: { type: String, required: true },
   licenseExpiryDate: { type: Date, required: true },
   dateAdded: { type: Date },
-  location:{type:String,required:true},
-  category:{type:String,enum:["A","B","C"]},
-  carOwnerID:{type:String,required:true}
+  location: { type: String, required: true },
+  category: { type: String, enum: ["A", "B", "C"] },
+  carOwnerID: { type: String, required: true },
+  photosLink: { type: String }
 });
 module.exports = mongoose.model("Car", CarSchema);

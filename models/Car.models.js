@@ -23,6 +23,7 @@ const CarSchema = new Schema({
   licenseExpiryDate: { type: Date, required: true },
   dateAdded: { type: Date },
   location:{type:String,required:true},
-  category:{type:String,enum:["A","B","C"]}
+  category:{type:String,enum:["A","B","C"]},
+  carOwnerID:{type:String,required:true}
 });
 module.exports = mongoose.model("Car", CarSchema);

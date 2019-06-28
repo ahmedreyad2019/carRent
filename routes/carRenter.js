@@ -553,7 +553,7 @@ router.post("/view/pastRentals/:id/fileComplaint", async (req, res) => {
     const complaint = await Complaint.create({
       issuedFrom: "Renter",
       comment: req.body.comment,
-      transactionId: req.params.id,
+      transactionID: req.params.id,
       issuedAgainst:req.body.issuedAgainst
     });
 
@@ -565,4 +565,51 @@ router.post("/view/pastRentals/:id/fileComplaint", async (req, res) => {
     return res.status(400).send({ msg: "error", error: error });
   }
 });
+
+
+router.post("/RateCar/:id", async (req, res) => {
+  var stat = 0;
+  var token = req.headers["x-access-token"];
+  if (!token) {
+    return res
+      .status(401)
+      .send({ auth: false, message: "Please login first." });
+  }
+  jwt.verify(token, config.secret, async function(err, decoded) {
+    if (err) {
+      return res
+        .status(500)
+        .send({ auth: false, message: "Failed to authenticate token." });
+    }
+    stat = decoded.id;
+  });
+  const renter = await CarRenter.findById(stat);
+  if (!renter) {
+    return res.status(404).send({ error: "Renter does not exist" });
+  }
+  try {
+    const transaction = await Transaction.findOne({
+      _id: req.params.id,
+      carRenterID: stat,
+      status: "Done"
+    });
+    if (!transaction)
+      return res.status(404).send({ msg: "transaction not found" });
+    if(!req.body.rating||req.body.rating<0||req.body.rating>5){
+      return res
+      .status(401)
+      .send({ error:true, message: "Please Enter A valid Rating" });
+  
+    }
+    transaction.renterRating=req.body.rating
+    await Transaction.findByIdAndUpdate(transaction._id,{carRating:req.body.rating})
+    return res
+      .status(200)
+      .send({ msg: "Your Rating has been Submitted:", data: transaction });
+  } catch (error) {
+    console.log(error);
+    return res.status(400).send({ msg: "error", error: error });
+  }
+});
+
 module.exports = router;

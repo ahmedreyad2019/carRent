@@ -14,11 +14,6 @@ var jwt = require("jsonwebtoken");
 
 router.post("/", async (req, res) => {
   try {
-    // const isValidated = validator.createCarValidation(req.body);
-    // if (isValidated.error)
-    //   return res
-    //     .status(400)
-    //     .send({ error: isValidated.error.details[0].message });
     var stat = 0;
     var token = req.headers["x-access-token"];
     if (!token) {

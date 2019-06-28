@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const Admin = require("../models/Admin.models");
 var config = require("../config/jwt");
 var jwt = require("jsonwebtoken");
+const Moderator = require("../models/Moderator.models");
 
 router.post("/", async (req, res) => {
   try {
@@ -495,6 +496,65 @@ router.put("/view/complaints/:id", async (req, res) => {
     });
   } catch (error) {
     return res.status(400).send({ msg: "error", error: error });
+  }
+});
+
+
+router.delete("/DeleteModerator/:id", async (req, res) => {
+  var stat = 0;
+  var token = req.headers["x-access-token"];
+  if (!token) {
+    return res
+      .status(401)
+      .send({ auth: false, message: "Please login first." });
+  }
+  jwt.verify(token, config.secret, async function(err, decoded) {
+    if (err) {
+      return res
+        .status(500)
+        .send({ auth: false, message: "Failed to authenticate token." });
+    }
+    stat = decoded.id;
+  });
+  var admin = await Admin.findById(stat);
+  if (!admin) {
+    return res.status(404).send({ error: "Admin does not exist" });
+  }
+  try {
+    await Moderator.findByIdAndRemove(req.params.id);
+    res.json({ msg: "Moderator was deleted successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ msg: error });
+  }
+});
+
+router.delete("/DeleteAdmin/:id", async (req, res) => {
+  var stat = 0;
+  var token = req.headers["x-access-token"];
+  if (!token) {
+    return res
+      .status(401)
+      .send({ auth: false, message: "Please login first." });
+  }
+  jwt.verify(token, config.secret, async function(err, decoded) {
+    if (err) {
+      return res
+        .status(500)
+        .send({ auth: false, message: "Failed to authenticate token." });
+    }
+    stat = decoded.id;
+  });
+  var admin = await Admin.findById(stat);
+  if (!admin) {
+    return res.status(404).send({ error: "Admin does not exist" });
+  }
+  try {
+    await Admin.findByIdAndRemove(req.params.id);
+    res.json({ msg: "Admin was deleted successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ msg: error });
   }
 });
 

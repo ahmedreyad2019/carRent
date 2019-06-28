@@ -4,6 +4,8 @@ const bcrypt = require("bcryptjs");
 const CarOwner = require("../models/CarOwner.models");
 var config = require("../config/jwt");
 var jwt = require("jsonwebtoken");
+const Car = require("../models/Car.models");
+const Transaction = require("../models/Transaction.models");
 
 //create
 router.post("/", async (req, res) => {
@@ -57,7 +59,7 @@ router.get("/", async (req, res) => {
 });
 
 //read specific
-router.get("/:id", async (req, res) => {
+router.get("/Me/:id", async (req, res) => {
   try {
     const carOwners = await CarOwner.findById(req.params.id);
     res.json({ data: carOwners });
@@ -114,6 +116,326 @@ router.delete("/:id", async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(400).send({ msg: error });
+  }
+});
+
+//test UserStory 8
+router.get("/idleCars",async (req,res)=>{
+  try{
+    var stat = 0;
+    var token = req.headers["x-access-token"];
+    if (!token) {
+      return res
+        .status(401)
+        .send({ auth: false, message: "Please login first." });
+    }
+    jwt.verify(token, config.secret, async function(err, decoded) {
+      if (err) {
+        return res
+          .status(500)
+          .send({ auth: false, message: "Failed to authenticate token." });
+      }
+      stat = decoded.id;
+    });
+    const owner = await CarOwner.findById(stat);
+    if (!owner) {
+      return res.status(404).send({ error: "Owner does not exist" });
+    }
+    const cars = await Car.find({ status: "Idle" ,carOwnerID:stat});
+    if (cars.length === 0) {
+      return res.send({ msg: "You Don't have any Idle cars" });
+    }
+    res.json({ msg: "Your available Cars:", data: cars });
+
+  }catch(error){
+    console.log(error);
+    res.status(400).send({ msg: error });
+  }
+})
+
+
+//test UserStory 9
+router.get("/pending",async (req,res)=>{
+  try{
+    var stat = 0;
+    var token = req.headers["x-access-token"];
+    if (!token) {
+      return res
+        .status(401)
+        .send({ auth: false, message: "Please login first." });
+    }
+    jwt.verify(token, config.secret, async function(err, decoded) {
+      if (err) {
+        return res
+          .status(500)
+          .send({ auth: false, message: "Failed to authenticate token." });
+      }
+      stat = decoded.id;
+    });
+    const owner = await CarOwner.findById(stat);
+    if (!owner) {
+      return res.status(404).send({ error: "Owner does not exist" });
+    }
+    const cars = await Car.find({"$or":[ { status: "PendingApproval" ,carOwnerID:stat},{ status: "Rejected" ,carOwnerID:stat}]});
+    if (cars.length === 0) {
+      return res.send({ msg: "You Don't have any cars that are still in the process" });
+    }
+    res.json({ msg: "Your available Cars:", data: cars });
+
+  }catch(error){
+    console.log(error);
+    res.status(400).send({ msg: error });
+  }
+})
+
+router.get("/MyCar/:id", async (req, res) => {
+  try {
+    var stat = 0;
+    var token = req.headers["x-access-token"];
+    if (!token) {
+      return res
+        .status(401)
+        .send({ auth: false, message: "Please login first." });
+    }
+    jwt.verify(token, config.secret, async function(err, decoded) {
+      if (err) {
+        return res
+          .status(500)
+          .send({ auth: false, message: "Failed to authenticate token." });
+      }
+      stat = decoded.id;
+    });
+    const owner = await CarOwner.findById(stat);
+    if (!owner) {
+      return res.status(404).send({ error: "Owner does not exist" });
+    }
+    
+    const cars = await Car.findById(req.params.id);
+    if(cars.carOwnerID!=stat){
+      return res
+      .status(401)
+      .send({ auth: false, message: "Not your Car" });
+    }
+    res.json({ data: cars });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.delete("/MyCar/:id", async (req, res) => {
+  try {
+    var stat = 0;
+    var token = req.headers["x-access-token"];
+    if (!token) {
+      return res
+        .status(401)
+        .send({ auth: false, message: "Please login first." });
+    }
+    jwt.verify(token, config.secret, async function(err, decoded) {
+      if (err) {
+        return res
+          .status(500)
+          .send({ auth: false, message: "Failed to authenticate token." });
+      }
+      stat = decoded.id;
+    });
+    const owner = await CarOwner.findById(stat);
+    if (!owner) {
+      return res.status(404).send({ error: "Owner does not exist" });
+    }
+    const car = await Car.findById(req.params.id);
+    if(car.carOwnerID!=stat){
+      return res
+      .status(401)
+      .send({ auth: false, message: "Not your Car" });
+    }
+    if(car.status==="Rented"){
+      return res
+      .status(401)
+      .send({ auth: false, message: "You Cannot remove a rented Car" });
+    }
+    await Car.findByIdAndRemove(req.params.id);
+    var index = owner.carsOwned.indexOf(car._id);
+    owner.carsOwned.splice(index,1)
+    await CarOwner.findByIdAndUpdate(stat,{carsOwned:owner.carsOwned})
+    res.json({ msg: "Car was deleted successfully" });
+  } catch (error) {
+    console.log(error);
+    res.status(400).send({ msg: error });
+  }
+});
+
+
+router.post("/RentMyCar/:id", async (req, res) => {
+  try {
+    var stat = 0;
+    var token = req.headers["x-access-token"];
+    if (!token) {
+      return res
+        .status(401)
+        .send({ auth: false, message: "Please login first." });
+    }
+    jwt.verify(token, config.secret, async function(err, decoded) {
+      if (err) {
+        return res
+          .status(500)
+          .send({ auth: false, message: "Failed to authenticate token." });
+      }
+      stat = decoded.id;
+    });
+    const owner = await CarOwner.findById(stat);
+    if (!owner) {
+      return res.status(404).send({ error: "Owner does not exist" });
+    }
+    const car = await Car.findById(req.params.id);
+    if(car.carOwnerID!=stat){
+      return res
+      .status(401)
+      .send({ auth: false, message: "Not your Car" });
+    }
+    if(car.status!="Idle"){
+      return res
+      .status(401)
+      .send({ message: "This Car Cannot be up for Rent" });
+    }
+    req.body.carOwnerID=stat
+    req.body.carID=req.params.id
+    req.body.dateAdded = Date.now();
+    const newTransaction = await Transaction.create(req.body);
+    car.status="UpForRent"
+    await Car.findByIdAndUpdate(req.params.id,car)
+    res.json({ msg: "Your Car is up for Rent", data: newTransaction });
+  } catch (error) {
+    res.status(400).send({ msg: error });
+    console.log(error);
+  }
+});
+
+router.get("/UpcomingRents/:id",async(req,res)=>{
+
+  try {
+    var stat = 0;
+    var token = req.headers["x-access-token"];
+    if (!token) {
+      return res
+        .status(401)
+        .send({ auth: false, message: "Please login first." });
+    }
+    jwt.verify(token, config.secret, async function(err, decoded) {
+      if (err) {
+        return res
+          .status(500)
+          .send({ auth: false, message: "Failed to authenticate token." });
+      }
+      stat = decoded.id;
+    });
+    const owner = await CarOwner.findById(stat);
+    if (!owner) {
+      return res.status(404).send({ error: "Owner does not exist" });
+    }
+    const car = await Car.findById(req.params.id);
+    if(car.carOwnerID!=stat){
+      return res
+      .status(401)
+      .send({ auth: false, message: "Not your Car" });
+    }
+    const transactions = await Transaction.find({status: "Upcoming" ,carID:req.params.id});
+    if (transactions.length === 0) {
+      return res.send({ msg: "This Car has not been Rented" });
+    }
+    res.json({ msg: "The Upcoming rents of this Car:", data: transactions });
+
+
+  }catch(error){
+
+  }
+
+})
+
+router.get("/UpcomingRents",async(req,res)=>{
+
+  try {
+    var stat = 0;
+    var token = req.headers["x-access-token"];
+    if (!token) {
+      return res
+        .status(401)
+        .send({ auth: false, message: "Please login first." });
+    }
+    jwt.verify(token, config.secret, async function(err, decoded) {
+      if (err) {
+        return res
+          .status(500)
+          .send({ auth: false, message: "Failed to authenticate token." });
+      }
+      stat = decoded.id;
+    });
+    const owner = await CarOwner.findById(stat);
+    if (!owner) {
+      return res.status(404).send({ error: "Owner does not exist" });
+    }
+    const car = await Car.findById(req.params.id);
+    if(car.carOwnerID!=stat){
+      return res
+      .status(401)
+      .send({ auth: false, message: "Not your Car" });
+    }
+    const transactions;
+    const transactions = await Transaction.find({status: "Upcoming" ,carID:{$in:owner.carsOwned}});
+    if (transactions.length === 0) {
+      return res.send({ msg: "You don't have any rented cars" });
+    }
+    res.json({ msg: "The Upcoming rents of your Cars:", data: transactions });
+
+
+  }catch(error){
+
+  }
+
+})
+
+router.post("/UnPublishMyCar/:id", async (req, res) => {
+  try {
+    var stat = 0;
+    var token = req.headers["x-access-token"];
+    if (!token) {
+      return res
+        .status(401)
+        .send({ auth: false, message: "Please login first." });
+    }
+    jwt.verify(token, config.secret, async function(err, decoded) {
+      if (err) {
+        return res
+          .status(500)
+          .send({ auth: false, message: "Failed to authenticate token." });
+      }
+      stat = decoded.id;
+    });
+    const owner = await CarOwner.findById(stat);
+    if (!owner) {
+      return res.status(404).send({ error: "Owner does not exist" });
+    }
+    const car = await Car.findById(req.params.id);
+    if(car.carOwnerID!=stat){
+      return res
+      .status(401)
+      .send({ auth: false, message: "Not your Car" });
+    }
+    if(car.status!="UpForRent"){
+      return res
+      .status(401)
+      .send({ message: "This Car is not Up For Rent" });
+    }
+    req.body.carOwnerID=stat
+    req.body.carID=req.params.id
+    req.body.dateAdded = Date.now();
+    const newTransaction = await Transaction.create(req.body);
+    car.status="Idle"
+    await Car.findByIdAndUpdate(req.params.id,car)
+    res.json({ msg: "Your Car is unPublished", data: newTransaction });
+  } catch (error) {
+    res.status(400).send({ msg: error });
+    console.log(error);
   }
 });
 module.exports = router;

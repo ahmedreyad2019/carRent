@@ -33,11 +33,12 @@ router.post("/", async (req, res) => {
       return res.status(404).send({ error: "Owner does not exist" });
     }
     req.body.dateAdded = Date.now();
+    req.body.carOwnerID=stat;
     const newCar = await Car.create(req.body);
-    const allCars= owner.carsOwned.push(newCar)
+    owner.carsOwned.push(newCar._id)
     console.log(owner)
 //
-    const updatedOwner=await CarOwner.findByIdAndUpdate(stat,{carsOwned:owner.carsOwned})
+    await CarOwner.findByIdAndUpdate(stat,{carsOwned:owner.carsOwned})
     console.log(owner)
     res.json({ msg: "Car was added successfully", data: owner });
   } catch (error) {

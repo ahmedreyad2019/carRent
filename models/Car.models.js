@@ -11,7 +11,7 @@ const CarSchema = new Schema({
   status: {
     type: String,
     default: "PendingApproval",
-    enum: ["UpForRent", "Rented", "PendingApproval", "Idle"]
+    enum: ["UpForRent", "Rented", "PendingApproval", "Idle","Rejected"]
   },
   rating: { type: Number, required: true, default: 5.0 },
   currentRenter: CarRenterSchema,

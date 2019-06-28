@@ -380,7 +380,6 @@ router.get("/UpcomingRents",async(req,res)=>{
       .status(401)
       .send({ auth: false, message: "Not your Car" });
     }
-    const transactions;
     const transactions = await Transaction.find({status: "Upcoming" ,carID:{$in:owner.carsOwned}});
     if (transactions.length === 0) {
       return res.send({ msg: "You don't have any rented cars" });

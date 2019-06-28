@@ -145,6 +145,10 @@ router.get("/view/drivingLicenseRequests", async (req, res) => {
     }
     stat = decoded.id;
   });
+  var moderator = await Moderator.findById(stat);
+  if (!moderator) {
+    return res.status(404).send({ error: "Moderator does not exist" });
+  }
   try {
     const renters = await CarRenter.find({
       "drivingLicenseRequest.status": "Pending"
@@ -177,6 +181,10 @@ router.get("/view/drivingLicenseRequests/:id", async (req, res) => {
     }
     stat = decoded.id;
   });
+  var moderator = await Moderator.findById(stat);
+  if (!moderator) {
+    return res.status(404).send({ error: "Moderator does not exist" });
+  }
   try {
     const request = await CarRenter.findOne({
       "drivingLicenseRequest.status": "Pending",
@@ -210,6 +218,10 @@ router.put("/view/drivingLicenseRequests/:id/respond", async (req, res) => {
     }
     stat = decoded.id;
   });
+  var moderator = await Moderator.findById(stat);
+  if (!moderator) {
+    return res.status(404).send({ error: "Moderator does not exist" });
+  }
   try {
     if (!req.body.response) {
       return res.status(400).send({ msg: "please choose a response" });
@@ -256,6 +268,10 @@ router.get("/view/carLicenseRequests", async (req, res) => {
     }
     stat = decoded.id;
   });
+  var moderator = await Moderator.findById(stat);
+  if (!moderator) {
+    return res.status(404).send({ error: "Moderator does not exist" });
+  }
   try {
     const cars = await Car.find({
       status: "PendingApproval"
@@ -286,6 +302,10 @@ router.get("/view/carLicenseRequests/:id", async (req, res) => {
     }
     stat = decoded.id;
   });
+  var moderator = await Moderator.findById(stat);
+  if (!moderator) {
+    return res.status(404).send({ error: "Moderator does not exist" });
+  }
   try {
     const cars = await Car.findOne({
       status: "PendingApproval",
@@ -319,6 +339,10 @@ router.put("/view/carLicenseRequests/:id/respond", async (req, res) => {
     }
     stat = decoded.id;
   });
+  var moderator = await Moderator.findById(stat);
+  if (!moderator) {
+    return res.status(404).send({ error: "Moderator does not exist" });
+  }
   try {
     if (!req.body.status) {
       return res.status(400).send({ msg: "please choose a response" });
@@ -360,6 +384,10 @@ router.get("/view/complaints", async (req, res) => {
     }
     stat = decoded.id;
   });
+  var moderator = await Moderator.findById(stat);
+  if (!moderator) {
+    return res.status(404).send({ error: "Moderator does not exist" });
+  }
   try {
     const complaints = await Complaint.find({
      reviewed:false

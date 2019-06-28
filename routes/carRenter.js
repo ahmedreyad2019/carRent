@@ -141,6 +141,10 @@ router.get("/view/availableCars", async (req, res) => {
       }
       stat = decoded.id;
     });
+    const renter = await CarRenter.findById(stat);
+    if (!renter) {
+      return res.status(404).send({ error: "Renter does not exist" });
+    }
     const cars = await Car.find({ status: "UpForRent" });
     if (cars.length === 0) {
       return res.send({ msg: "no cars avaialble at the moment" });
@@ -172,6 +176,10 @@ router.get("/view/availableCars/filter", async (req, res) => {
       }
       stat = decoded.id;
     });
+    const renter = await CarRenter.findById(stat);
+    if (!renter) {
+      return res.status(404).send({ error: "Renter does not exist" });
+    }
     const cars = await Car.find({ ...req.body, status: "UpForRent" });
     if (cars.length === 0) {
       return res.send({ msg: "no cars avaialble at the moment" });
@@ -201,6 +209,10 @@ router.get("/view/availableCars/:id", async (req, res) => {
       }
       stat = decoded.id;
     });
+    const renter = await CarRenter.findById(stat);
+    if (!renter) {
+      return res.status(404).send({ error: "Renter does not exist" });
+    }
     const cars = await Car.findOne({
       _id: req.params.id,
       status: "UpForRent",
@@ -231,6 +243,10 @@ router.post("/drivingLicense/submit", async (req, res) => {
     }
     stat = decoded.id;
   });
+  const renter = await CarRenter.findById(stat);
+  if (!renter) {
+    return res.status(404).send({ error: "Renter does not exist" });
+  }
   try {
     if (!req.body.drivingLicenseLink) {
       return res.status(400).send({ msg: "please add your driving license" });
@@ -305,34 +321,37 @@ router.post("/view/availableCars/:id/rent", async (req, res) => {
     }
     stat = decoded.id;
   });
+  const renter = await CarRenter.findById(stat);
+  if (!renter) {
+    return res.status(404).send({ error: "Renter does not exist" });
+  }
   try {
     const Renter = await CarRenter.findOne({ _id: stat });
-    if (Renter.drivingLicenseRequest.status!=='Accepted')
+    if (Renter.drivingLicenseRequest.status !== "Accepted")
       return res.status(401).send({ msg: "Please add your driving license" });
     if (!Renter.personalID)
       return res.status(401).send({ msg: "Please add your personalID" });
-   
+
     const cars = await Car.findOne({
       _id: req.params.id,
       status: "UpForRent"
     });
     if (!cars) {
       console.log("no cars");
-      return res.status(204).send({ msg: "no cars avaialble at the moment" });
+      return res.status(404).send({ msg: "no cars avaialble at the moment" });
     }
-    const transaction = await Transaction.create({
-      carRenterID: stat,
-      carID: cars._id,
-      carOwnerID: cars.carOwnerID,
-      rentingDateStart: req.body.rentingDateStart,
-      rentingDateEnd: req.body.rentingDateEnd
-    });
+    const transaction = await Transaction.findOneAndUpdate(
+      { carID: cars._id, carOwnerID: cars.carOwnerID },
+      {
+        carRenterID: stat
+      }
+    );
     if (!transaction) {
       console.log("no");
-      return res.status(204).send({ msg: "renting failed" });
+      return res.status(404).send({ msg: "renting failed" });
     }
 
-    await Car.findOneAndUpdate(
+   const car= await Car.findOneAndUpdate(
       { _id: cars._id },
       {
         status: "Rented",
@@ -342,7 +361,7 @@ router.post("/view/availableCars/:id/rent", async (req, res) => {
 
     return res
       .status(200)
-      .json({ msg: "Cars Rented", data: cars, transaction: transaction });
+      .json({ msg: "Cars Rented", data: car, transaction: transaction });
   } catch (error) {
     console.log(error);
     return res.status(400).send({ msg: "error", error: error });
@@ -366,6 +385,10 @@ router.put("/PaymentMethod/change", async (req, res) => {
     }
     stat = decoded.id;
   });
+  const renter = await CarRenter.findById(stat);
+  if (!renter) {
+    return res.status(404).send({ error: "Renter does not exist" });
+  }
   try {
     if (req.body.paymentMethod === "Cash") {
       await CarRenter.findOneAndUpdate(
@@ -404,6 +427,10 @@ router.get("/view/availableCars/:id/ownerDetails", async (req, res) => {
     }
     stat = decoded.id;
   });
+  const renter = await CarRenter.findById(stat);
+  if (!renter) {
+    return res.status(404).send({ error: "Renter does not exist" });
+  }
   try {
     const cars = await Car.findOne({
       _id: req.params.id,
@@ -438,6 +465,10 @@ router.get("/view/upComingRentals", async (req, res) => {
     }
     stat = decoded.id;
   });
+  const renter = await CarRenter.findById(stat);
+  if (!renter) {
+    return res.status(404).send({ error: "Renter does not exist" });
+  }
   try {
     const transactions = await Transaction.find({
       carRenterID: stat,
@@ -470,6 +501,10 @@ router.get("/view/pastRentals", async (req, res) => {
     }
     stat = decoded.id;
   });
+  const renter = await CarRenter.findById(stat);
+  if (!renter) {
+    return res.status(404).send({ error: "Renter does not exist" });
+  }
   try {
     const transactions = await Transaction.find({
       carRenterID: stat,
@@ -501,6 +536,10 @@ router.post("/view/pastRentals/:id/fileComplaint", async (req, res) => {
     }
     stat = decoded.id;
   });
+  const renter = await CarRenter.findById(stat);
+  if (!renter) {
+    return res.status(404).send({ error: "Renter does not exist" });
+  }
   try {
     const transaction = await Transaction.findOne({
       _id: req.params.id,

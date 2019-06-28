@@ -1,16 +1,29 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-transaction = require("./Transaction.models");
-const TransactionSchema = mongoose.model("transaction").schema;
-
+const DrivingLicenseRequestSchema = new Schema({
+  date: {
+    type: Date,
+    required: true,
+    default: Date.now()
+  },
+  responseDate: {
+    type: Date
+  },
+  status: {
+    type: String,
+    required: true,
+    default: "Pending",
+    enum: ["Pending", "Accepted", "Rejected"]
+  },
+  comment: { type: String },
+  drivingLicenseLink: { type: String, required: true }
+});
 const CarRenterSchema = new Schema({
   FirstName: { type: String, required: true },
   LastName: { type: String, required: true },
   mobileNumber: { type: String, required: true },
-  drivingLicenseLink: { type: String },
   personalID: { type: String },
-  transaction: [TransactionSchema],
   balance: { type: Number, required: true, default: 0.0 },
   password: { type: String, required: true },
   statusID: { type: String, enum: ["Pending", "Rejected", "Accepted"] },
@@ -21,7 +34,7 @@ const CarRenterSchema = new Schema({
     required: true
   },
   cardNumber: { type: String },
-  validated: { type: Boolean, default: false }
+  drivingLicenseRequest: DrivingLicenseRequestSchema
 });
 
 module.exports = mongoose.model("carRenter", CarRenterSchema);

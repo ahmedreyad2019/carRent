@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
-complaint = require("./Complaint.models");
 
-const ComplaintSchema = mongoose.model("complaint").schema;
 
 const TransactionSchema = new Schema({
   carRenterID: { type: String },
@@ -16,7 +14,6 @@ const TransactionSchema = new Schema({
     enum: ["Done", "In process", "Upcoming"],
     default: "Upcoming"
   },
-  complaints: [ComplaintSchema],
   carRating: { type: Number, required: true, default: 5.0 },
   renterRating: { type: Number, required: true, default: 5.0 },
   ownerRating: { type: Number, required: true, default: 5.0 },

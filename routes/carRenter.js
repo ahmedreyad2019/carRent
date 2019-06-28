@@ -232,12 +232,28 @@ router.post("/drivingLicense/submit", async (req, res) => {
     stat = decoded.id;
   });
   try {
-    const Renter = await CarRenter.findOneAndUpdate(
+    if (!req.body.drivingLicenseLink) {
+      return res.status(400).send({ msg: "please add your driving license" });
+    }
+    var updated = await CarRenter.findOneAndUpdate(
       { _id: stat },
-      { drivingLicenseLink: req.body.drivingLicenseLink }
+      {
+        $set: {
+          drivingLicenseRequest: {
+            drivingLicenseLink: req.body.drivingLicenseLink
+          }
+        }
+      }
     );
-    if (!Renter) return res.status(401).send({ msg: "authorization failed" });
-    return res.status(200).send({ msg: "updated successfully", data: Renter });
+    updated = await CarRenter.findById(stat);
+    if (!updated) {
+      return res.status(400).send({ msg: "something went wrong" });
+    }
+    return res.status(200).send({
+      msg:
+        "Request made successfully and should get a response within 24 hours",
+      data: updated
+    });
   } catch (error) {
     console.log(error);
     return res.status(400).send({ msg: "error", error: error });
@@ -291,14 +307,11 @@ router.post("/view/availableCars/:id/rent", async (req, res) => {
   });
   try {
     const Renter = await CarRenter.findOne({ _id: stat });
-    if (!Renter.drivingLicenseLink)
+    if (Renter.drivingLicenseRequest.status!=='Accepted')
       return res.status(401).send({ msg: "Please add your driving license" });
     if (!Renter.personalID)
       return res.status(401).send({ msg: "Please add your personalID" });
-    if (!Renter.validated)
-      return res
-        .status(401)
-        .send({ msg: "your driving license is not validated yet" });
+   
     const cars = await Car.findOne({
       _id: req.params.id,
       status: "UpForRent"
@@ -318,23 +331,15 @@ router.post("/view/availableCars/:id/rent", async (req, res) => {
       console.log("no");
       return res.status(204).send({ msg: "renting failed" });
     }
-    console.log(transaction);
-    await CarRenter.findOneAndUpdate(
-      { _id: stat },
-      { $push: { transaction: transaction } }
-    );
+
     await Car.findOneAndUpdate(
       { _id: cars._id },
       {
-        $push: { transaction: transaction },
         status: "Rented",
         currentRenter: Renter
       }
     );
-    await CarOwner.findOneAndUpdate(
-      { _id: cars.carOwnerID },
-      { $push: { transaction: transaction } }
-    );
+
     return res
       .status(200)
       .json({ msg: "Cars Rented", data: cars, transaction: transaction });
@@ -434,11 +439,11 @@ router.get("/view/upComingRentals", async (req, res) => {
     stat = decoded.id;
   });
   try {
-    const Renter = await CarRenter.findOne({ _id: stat });
-    const transactions = Renter.transaction.find(
-      transaction => transaction.status === "Upcoming"
-    );
-    if (!transactions)
+    const transactions = await Transaction.find({
+      carRenterID: stat,
+      status: "UpComing"
+    });
+    if (transactions.length === 0)
       return res.status(401).send({ msg: "no upcoming rentals" });
     return res
       .status(200)
@@ -466,13 +471,15 @@ router.get("/view/pastRentals", async (req, res) => {
     stat = decoded.id;
   });
   try {
-    const Renter = await CarRenter.findOne({ _id: stat });
-    const transactions = Renter.transaction.find(
-      transaction => transaction.status === "Done"
-    );
-    if (!transactions) return res.status(401).send({ msg: "no past rentals" });
+    const transactions = await Transaction.find({
+      carRenterID: stat,
+      status: "Done"
+    });
+    if (transactions.length === 0)
+      return res.status(401).send({ msg: "no past rentals" });
     return res.status(200).send({ msg: "past rentals:", data: transactions });
   } catch (error) {
+    console.log(error);
     return res.status(400).send({ msg: "error", error: error });
   }
 });
@@ -509,28 +516,10 @@ router.post("/view/pastRentals/:id/fileComplaint", async (req, res) => {
       comment: req.body.comment,
       transactionId: req.params.id
     });
-    const renter = await CarRenter.findOneAndUpdate(
-      { "transaction._id": req.params.id },
-      { $push: { "transaction.$.complaints": complaint } }
-    );
-    await CarOwner.findOneAndUpdate(
-      { "transaction._id": req.params.id },
-      { $push: { "transaction.$.complaints": complaint } }
-    );
-    await Car.findOneAndUpdate(
-      { "transaction._id": req.params.id },
-      { $push: { "transaction.$.complaints": complaint } }
-    );
-    await Transaction.findOneAndUpdate(
-      {
-        _id: req.params.id
-      },
-      {
-        $push: { complaints: complaint }
-      }
-    );
 
-    return res.status(200).send({ msg: "past rentals:", data: renter });
+    return res
+      .status(200)
+      .send({ msg: "complaint successfully filed:", data: complaint });
   } catch (error) {
     console.log(error);
     return res.status(400).send({ msg: "error", error: error });

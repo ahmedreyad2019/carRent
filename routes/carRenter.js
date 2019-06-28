@@ -553,7 +553,8 @@ router.post("/view/pastRentals/:id/fileComplaint", async (req, res) => {
     const complaint = await Complaint.create({
       issuedFrom: "Renter",
       comment: req.body.comment,
-      transactionId: req.params.id
+      transactionId: req.params.id,
+      issuedAgainst:req.body.issuedAgainst
     });
 
     return res

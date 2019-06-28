@@ -9,7 +9,9 @@ const CarOwnerSchema = new Schema({
   carsOwned:{type:Array,default:[]},
   balance: { type: Number, required: true, default: 0.0 },
   dateAdded:{ type: Date},
-  password:{ type: String, required: true }
+  password:{ type: String, required: true },
+  banned:{required:true,default:false,type:Boolean}
+
 });
 
 module.exports = mongoose.model("carOwner", CarOwnerSchema);

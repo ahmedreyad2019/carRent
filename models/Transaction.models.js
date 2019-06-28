@@ -14,9 +14,9 @@ const TransactionSchema = new Schema({
     enum: ["Done", "In process", "Upcoming"],
     default: "Upcoming"
   },
-  carRating: { type: Number, required: true, default: 5.0 },
-  renterRating: { type: Number, required: true, default: 5.0 },
-  ownerRating: { type: Number, required: true, default: 5.0 },
-  price: { type: Number }
+  carRating: { type: Number},
+  renterRating: { type: Number},
+  ownerRating: { type: Number},
+  price: { type: Number,required:true}
 });
 module.exports = mongoose.model("transaction", TransactionSchema);

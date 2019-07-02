@@ -26,13 +26,26 @@ handleRegister (e) {
         sessionStorage.setItem('id', data.id)
         if (data.auth) {
           sessionStorage.setItem('type', 'a')
+          sessionStorage.setItem('auth', true)
           document.location.href = '/profile'
         } else {
-          this.setState({
-            admin: {
-              c: false
+          fetch('http://localhost:3000/moderator/login', {
+            method: 'POST',
+            body: JSON.stringify(Admindata),
+            headers: {
+              'Content-Type': 'application/json'
             }
-          }, () => console.log())
+          }).then(response => {
+            response.json().then(data => {
+             
+              sessionStorage.setItem('jwtToken', data.token)
+              sessionStorage.setItem('id', data.id)
+              if (data.auth) {
+                sessionStorage.setItem('type', 'm')
+                sessionStorage.setItem('auth', true)
+                document.location.href = '/profile'
+              }
+            })})
         }
       })
     })

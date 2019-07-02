@@ -194,7 +194,7 @@ class PrimarySearchAppBar extends React.Component {
     }
     console.log(sessionStorage.getItem('type') + 'you see')
     const hidei =
-      sessionStorage.getItem('jwtToken')&&sessionStorage.getItem('type')==='a'
+      sessionStorage.getItem('jwtToken')&&(sessionStorage.getItem('type')==='a'||sessionStorage.getItem('type')==='m')
         ? {}
         : { display: 'none' }
 

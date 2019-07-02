@@ -9,6 +9,7 @@ import ViewAdmins from "./components/pages/ViewAdmins";
 import ViewModerators from "./components/pages/ViewModerators";
 import AdminDrawer from "./components/drawers/AdminDrawer";
 import Navbar from "./components/Navbar";
+import ModeratorDrawer from "./components/drawers/ModeratorDrawer";
 
 
 class App extends Component {
@@ -22,7 +23,7 @@ class App extends Component {
   render() {
     const { classes } = this.props;
     sessionStorage.setItem('lang', "en")
-    console.log("my token"+sessionStorage.getItem("jwtToken"))
+    console.log("my token"+sessionStorage.getItem("jwtToken")+"===="+ sessionStorage.getItem('type'))
     return (
       <Router>
       <React.Fragment>
@@ -43,7 +44,8 @@ class App extends Component {
                 sessionStorage.getItem('auth') &&
                 sessionStorage.getItem('type') === 'a' ? (
                   <AdminDrawer />
-                ) : (
+                ) : sessionStorage.getItem('auth') &&
+                sessionStorage.getItem('type') === 'm' ? <ModeratorDrawer/>:(
                   <SignIn />
                 )
               }

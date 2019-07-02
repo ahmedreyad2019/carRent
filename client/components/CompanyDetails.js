@@ -133,9 +133,9 @@ class CompanyDetails extends React.Component {
 const mapStateToProps = state => {
   return {
     token: state.loginReducer.token,
-    companies: state.companyReducer.companies,
+    companies: state.carReducer.companies,
     loading: state.loginReducer.loading,
-    selectedCompany: state.companyReducer.selectedCompany
+    selectedCompany: state.carReducer.selectedCompany
   };
 };
 

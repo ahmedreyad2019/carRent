@@ -2,6 +2,10 @@ import * as actionTypes from "../actionConstants/action-types";
 const initialState = {
   cars: [],
   allCompanies: [],
+  search: {
+    rentingDateStart: Date.now(),
+    rentingDateEnd: Date.now()
+  },
   selectedCompany: "",
   companyModalVisible: false,
   filterModalVisible: false,
@@ -10,14 +14,23 @@ const initialState = {
   order: "asc",
   source: "feed"
 };
-export default (companyReducer = (state = initialState, action) => {
+export default (carReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SET_CARS:
       return {
         ...state,
         cars: action.cars
       };
-
+    case actionTypes.SET_RENTING_DATE: {
+      return {
+        ...state,
+        search: {
+          ...state.search,
+          rentingDateStart: action.rentingDateStart,
+          rentingDateEnd: action.rentingDateEnd
+        }
+      };
+    }
     case actionTypes.SET_REQUESTS:
       return {
         ...state,

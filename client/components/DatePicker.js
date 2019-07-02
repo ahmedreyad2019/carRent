@@ -27,14 +27,14 @@ class DatePicker extends Component {
             style={{
               height: 40,
               borderBottomWidth: 0.3,
-              borderBottomColor: "#74808E"
+              borderBottomColor: "#eeeeee"
             }}
           />
           <DatePickerIOS
-            mode={"date"}
-            date={new Date(this.props.user.dob)}
+            mode={"datetime"}
+            date={new Date(this.props.date)}
             style={{ color: "white" }}
-            onDateChange={newDate => this.setState({ chosenDate: newDate })}
+            onDateChange={this.props.onDateChange}
           />
 
           <Ionicons
@@ -58,9 +58,9 @@ const mapStateToProps = state => {
   return {
     user: state.loginReducer.user,
     token: state.loginReducer.token,
-    companies: state.companyReducer.companies,
+    companies: state.carReducer.companies,
     loading: state.loginReducer.loading,
-    selectedCompany: state.companyReducer.selectedCompany
+    selectedCompany: state.carReducer.selectedCompany
   };
 };
 

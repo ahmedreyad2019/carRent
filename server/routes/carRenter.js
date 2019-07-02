@@ -8,6 +8,7 @@ const Transaction = require("../models/Transaction.models");
 const Complaint = require("../models/Complaint.models");
 var config = require("../config/jwt");
 var jwt = require("jsonwebtoken");
+var Db = require("mongodb").Db;
 //create
 router.post("/", async (req, res) => {
   try {
@@ -124,7 +125,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 //26
-router.get("/view/availableCars", async (req, res) => {
+router.post("/view/availableCars", async (req, res) => {
   try {
     var stat = 0;
     var token = req.headers["x-access-token"];
@@ -145,21 +146,51 @@ router.get("/view/availableCars", async (req, res) => {
     if (!renter) {
       return res.status(404).send({ error: "Renter does not exist" });
     }
-    const cars = await Car.find({ status: "UpForRent" });
-    if (cars.length === 0) {
-      return res.send({ msg: "no cars avaialble at the moment" });
-    }
+  
+    const cars = await Transaction.aggregate([
+      {
+        $lookup: {
+          from: "cars",
+          let: {
+            car: "$carID",
+            rentStart: "$rentingDateStart",
+            rentEnd: "$rentingDateEnd",
+            stat: "$status",
+            c: "$cars"
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$$stat", "Upcoming"] },
+                    { $eq: ["$_id", "$$car"] },
+                    { $lte: ["$$rentStart", new Date(req.body.rentingDateStart)] },
+                    { $gte: ["$$rentEnd", new Date(req.body.rentingDateEnd)] },
+                  ]
+                }
+              }
+            }
+          ],
+          as: "cars"
+        }
+      },
+      {
+        $match: { cars: { $ne: [] } }
+      }
+    ]);
     carsSorted = cars.sort((a, b) => {
       return b.rating - a.rating;
     });
-    res.json({ msg: "Cars available:", data: carsSorted });
+    res.status(200).send({ msg: "cars", data: cars });
   } catch (error) {
+    console.log(error);
     res.status(400).send({ msg: error });
   }
 });
 
 //27
-router.get("/view/availableCars/filter", async (req, res) => {
+router.post("/view/availableCars/filter", async (req, res) => {
   try {
     var stat = 0;
     var token = req.headers["x-access-token"];
@@ -351,7 +382,7 @@ router.post("/view/availableCars/:id/rent", async (req, res) => {
       return res.status(404).send({ msg: "renting failed" });
     }
 
-   const car= await Car.findOneAndUpdate(
+    const car = await Car.findOneAndUpdate(
       { _id: cars._id },
       {
         status: "Rented",
@@ -554,7 +585,7 @@ router.post("/view/pastRentals/:id/fileComplaint", async (req, res) => {
       issuedFrom: "Renter",
       comment: req.body.comment,
       transactionID: req.params.id,
-      issuedAgainst:req.body.issuedAgainst
+      issuedAgainst: req.body.issuedAgainst
     });
 
     return res
@@ -565,7 +596,6 @@ router.post("/view/pastRentals/:id/fileComplaint", async (req, res) => {
     return res.status(400).send({ msg: "error", error: error });
   }
 });
-
 
 router.post("/RateCar/:id", async (req, res) => {
   var stat = 0;
@@ -595,14 +625,15 @@ router.post("/RateCar/:id", async (req, res) => {
     });
     if (!transaction)
       return res.status(404).send({ msg: "transaction not found" });
-    if(!req.body.rating||req.body.rating<0||req.body.rating>5){
+    if (!req.body.rating || req.body.rating < 0 || req.body.rating > 5) {
       return res
-      .status(401)
-      .send({ error:true, message: "Please Enter A valid Rating" });
-  
+        .status(401)
+        .send({ error: true, message: "Please Enter A valid Rating" });
     }
-    transaction.renterRating=req.body.rating
-    await Transaction.findByIdAndUpdate(transaction._id,{carRating:req.body.rating})
+    transaction.renterRating = req.body.rating;
+    await Transaction.findByIdAndUpdate(transaction._id, {
+      carRating: req.body.rating
+    });
     return res
       .status(200)
       .send({ msg: "Your Rating has been Submitted:", data: transaction });

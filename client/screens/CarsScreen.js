@@ -22,9 +22,7 @@ import SearchModal from "../components/SearchModal";
 import Rating from "../components/Rating";
 
 class CarsScreen extends React.Component {
-  componentDidMount() {
-    this.props.doFetchCars();
-  }
+  componentDidMount() {}
 
   constructor(props) {
     super(props);
@@ -37,9 +35,29 @@ class CarsScreen extends React.Component {
     };
   }
   _onRefresh = () => {
-    this.props.doFetchCars();
+    this.props.doFetchCars(this.props.search);
   };
 
+  getdateString = date => {
+    var today = new Date(date);
+    var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    var month = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ];
+
+    return today.getDate() + "/" + (today.getMonth() + 1);
+  };
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: colors.backgroundMain }}>
@@ -57,15 +75,11 @@ class CarsScreen extends React.Component {
             />
           }
           leftComponent={
-            <Ionicons
-              name={"ios-arrow-back"}
-              onPress={() => (
-                this.props.navigation.navigate("Profile"),
-                this.props.doSetSource("FeedScreen")
-              )}
-              size={20}
-              color={"#74808E"}
-            />
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate("Main")}
+            >
+              <Ionicons name={"ios-arrow-back"} size={25} color={"#74808E"} />
+            </TouchableOpacity>
           }
         />
         <Modal
@@ -128,7 +142,7 @@ class CarsScreen extends React.Component {
           }}
           refreshControl={
             <RefreshControl
-              refreshing={this.state.refresh}
+              refreshing={this.props.loading}
               onRefresh={this._onRefresh}
             />
           }
@@ -164,8 +178,8 @@ class CarsScreen extends React.Component {
                       style={{
                         backgroundColor: "white",
                         zIndex: 9090909090,
-                        width: 70,
-                        height: 50,
+                        width: 75,
+                        height: 60,
                         position: "absolute",
                         top: 150,
                         right: 20,
@@ -176,21 +190,35 @@ class CarsScreen extends React.Component {
                         alignItems: "center"
                       }}
                     >
-                      <Text
-                        style={{
-                          fontSize: 18,
-                          fontFamily: "AvenirNext-Bold"
-                        }}
-                      >
-                        Price
+                      <Text>
+                        <Text
+                          style={{
+                            fontSize: 18,
+                            fontFamily: "AvenirNext-Bold"
+                          }}
+                        >
+                          {item.price}
+                        </Text>
+
+                        <Text
+                          style={{
+                            fontSize: 10,
+                            fontFamily: "AvenirNext-Bold"
+                          }}
+                        >
+                          {"EGP"}
+                        </Text>
                       </Text>
+
                       <Text
                         style={{
-                          fontSize: 10,
+                          fontSize: 12,
                           fontFamily: "Avenir-Light"
                         }}
                       >
-                        Per day
+                        {this.getdateString(item.rentingDateStart) +
+                          "-" +
+                          this.getdateString(item.rentingDateEnd)}
                       </Text>
                     </View>
                     <View
@@ -217,7 +245,7 @@ class CarsScreen extends React.Component {
                           fontFamily: "AvenirNext-Bold"
                         }}
                       >
-                        {item.make} {item.model}
+                        {item.cars[0].make} {item.cars[0].model}
                         <Text
                           style={{
                             color: colors.primary,
@@ -226,10 +254,10 @@ class CarsScreen extends React.Component {
                             fontSize: 12
                           }}
                         >
-                          {" " + item.year}
+                          {" " + item.cars[0].year}
                         </Text>
                       </Text>
-                      <Rating rating={item.rating} />
+                      <Rating rating={item.cars[0].rating} />
                     </View>
                   </View>
                 )}
@@ -246,18 +274,19 @@ class CarsScreen extends React.Component {
 }
 const mapStateToProps = state => {
   return {
-    cars: state.companyReducer.cars,
+    cars: state.carReducer.cars,
     loading: state.loginReducer.loading,
-    companyModalVisible: state.companyReducer.companyModalVisible,
-    searchModalVisible: state.companyReducer.searchModalVisible,
-    source: state.companyReducer.source,
-    filterModalVisible: state.companyReducer.filterModalVisible
+    companyModalVisible: state.carReducer.companyModalVisible,
+    searchModalVisible: state.carReducer.searchModalVisible,
+    source: state.carReducer.source,
+    filterModalVisible: state.carReducer.filterModalVisible,
+    search: state.carReducer.search
   };
 };
 
 const mapDispatchToProps = dispatch => ({
-  doFetchCars: () => {
-    dispatch(actions.fetchCars());
+  doFetchCars: (search) => {
+    dispatch(actions.fetchCars(search));
   },
   doOpenFilterModal: () => {
     dispatch(actions.openFilterModal());

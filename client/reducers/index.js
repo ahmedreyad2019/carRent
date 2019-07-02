@@ -1,10 +1,10 @@
 import { combineReducers } from "redux";
 import filterReducer from "./filterReducer";
 import loginReducer from "./loginReducer";
-import companyReducer from "./companyReducer";
+import carReducer from "./carReducer";
 
 const rootReducer = combineReducers({
   loginReducer,
-  companyReducer
+  carReducer
 });
 export default rootReducer;

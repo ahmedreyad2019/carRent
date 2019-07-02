@@ -54,6 +54,13 @@ export const setSource = source => {
     source
   };
 };
+export const setRentingDate = (rentingDateStart, rentingDateEnd) => {
+  return {
+    type: types.SET_RENTING_DATE,
+    rentingDateStart,
+    rentingDateEnd
+  };
+};
 export const openCarModal = () => {
   return {
     type: types.OPEN_CAR_MODAL
@@ -123,7 +130,7 @@ export const login = (mobileNumber, password) => {
       AsyncStorage.getAllKeys()
         .then(AsyncStorage.multiRemove)
         .then(
-          fetch("http://192.168.0.110:3000/carRenter/login", {
+          fetch("http://192.168.1.9:3000/carRenter/login", {
             method: "POST",
             body: JSON.stringify({
               mobileNumber: mobileNumber,
@@ -135,6 +142,7 @@ export const login = (mobileNumber, password) => {
           }).then(response => {
             response.json().then(data => {
               if (data.auth) {
+                console.log("hi");
                 AsyncStorage.setItem("jwt", data.token);
                 AsyncStorage.getItem("jwt").then(res => {
                   console.log(res);
@@ -176,24 +184,24 @@ export const signUp = user => {
   };
 };
 
-export const fetchCars = () => {
+export const fetchCars = search => {
   return dispatch => {
     dispatch(loading(true));
     AsyncStorage.getItem("jwt").then(token =>
-      axios
-        .get(
-          `http://192.168.0.110:3000/carRenter/view/availableCars`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Headers": "x-access-token",
-              "x-access-token": token
-            }
-          }
-        )
-        .then(res => {
-          console.log(res.data.data)
-          dispatch(setCars(res.data.data));
+      fetch("http://192.168.1.9:3000/carRenter/view/availableCars", {
+        method: "POST",
+        body: JSON.stringify({
+          rentingDateStart: search.rentingDateStart,
+          rentingDateEnd: search.rentingDateEnd
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": token
+        }
+      })
+      .then(res => res.json())
+      .then(res => {
+          dispatch(setCars(res.data));
           dispatch(loading(false));
         })
         .catch(error => {
@@ -232,7 +240,7 @@ export const fetchRequests = () => {
 export const fetchProfile = (userId, token) => {
   return dispatch => {
     dispatch(loading(true));
-    fetch(`http://192.168.0.110:3000/carRenter/${userId}`, {
+    fetch(`http://192.168.1.9:3000/carRenter/${userId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

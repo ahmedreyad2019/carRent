@@ -15,8 +15,8 @@ import RegisterScreen from "../screens/RegisterScreen";
 import React from "react";
 import ProfileScreen from "../screens/ProfileScreen";
 import CarsScreen from "../screens/CarsScreen";
-import CompaniesScreen from "../screens/CompaniesScreen";
 import FilterScreen from "../screens/FilterScreen";
+import MainScreen from "../screens/MainScreen";
 
 const getTabBarIcon = (navigation, focused, tintColor) => {
   const { routeName } = navigation.state;
@@ -35,7 +35,7 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
 
 const filterNav = createStackNavigator(
   {
-    content: { screen: CompaniesScreen },
+    content: { screen: CarsScreen },
     modal: { screen: FilterScreen }
   },
   {
@@ -127,10 +127,21 @@ const CustomDrawerContentComponent = props => (
   </ScrollView>
 );
 
+const RentScreen = createAppContainer(
+  createStackNavigator(
+    {
+      Main: { screen: MainScreen },
+      Cars: { screen: CarsScreen },
+    }
+    ,{
+      headerMode:'none'
+    }
+  )
+);
 const tabNav = createAppContainer(
   createDrawerNavigator(
     {
-      Home: { screen: CarsScreen },
+      Home: { screen: RentScreen },
       Companies: { screen: filterNav },
       Profile: { screen: ProfileScreen }
     },
@@ -141,6 +152,7 @@ const tabNav = createAppContainer(
     }
   )
 );
+
 
 const MainNavigator = createAppContainer(
   createSwitchNavigator(

@@ -53,14 +53,8 @@ class Filter extends React.Component {
         this.compare(this.state.selectedKey, this.props.order)
       )
     );
-
-   
   };
-  componentDidUpdate() {
-    if (this.props.eventId !== this.state.selectedKey) {
-      this.props.chooseEvent(this.state.selectedKey);
-    }
-  }
+  componentDidUpdate() {}
 
   onValueChange = selectedKey => {
     if (selectedKey) this.setState({ selectedKey: selectedKey });
@@ -98,51 +92,57 @@ class Filter extends React.Component {
       transform: [{ rotate: RotateData }]
     };
     return (
-      <View
-        style={{
-          ...styles.CompanyDetails,
-          padding: 0,
-          height: 250,
-          position: "absolute",
-          bottom: 0
-        }}
-      >
+      <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.3)" }}>
         <View
           style={{
-            height: 40,
-            borderBottomWidth: 0.3,
-            borderBottomColor: "#74808E"
-          }}
-        />
-        <Animated.View style={labelStyle}>
-          <Ionicons
-            size={40}
-            color={"#74808E"}
-            name={this.state.iconName}
-            onPress={this.handlePassword}
-          />
-        </Animated.View>
-        <PickerIOS
-          itemStyle={{ color: "white" }}
-          selectedValue={this.state.selectedKey}
-          onValueChange={this.onValueChange}
-        >
-          {this.state.keys.map((keySelection, i) => (
-            <PickerItemIOS key={i} value={keySelection} label={keySelection} />
-          ))}
-        </PickerIOS>
-        <TouchableOpacity
-          style={{
+            ...styles.CompanyDetails,
+            padding: 0,
+            height: "80%",
             position: "absolute",
-            top: 0,
-            right: 15
-          }}
-          onPress={() => {
-            this.props.doCloseFilterModal();
+            bottom: 0
           }}
         >
-          <Ionicons name={"ios-close"} size={40} color={"#F08080"} />
-        </TouchableOpacity>
+          <View
+            style={{
+              height: 40,
+              borderBottomWidth: 0.3,
+              borderBottomColor: "#74808E"
+            }}
+          />
+          <Animated.View style={labelStyle}>
+            <Ionicons
+              size={40}
+              color={"#74808E"}
+              name={this.state.iconName}
+              onPress={this.handlePassword}
+            />
+          </Animated.View>
+          <PickerIOS
+            itemStyle={{ color: "black" }}
+            selectedValue={this.state.selectedKey}
+            onValueChange={this.onValueChange}
+          >
+            {this.state.keys.map((keySelection, i) => (
+              <PickerItemIOS
+                key={i}
+                value={keySelection}
+                label={keySelection}
+              />
+            ))}
+          </PickerIOS>
+          <TouchableOpacity
+            style={{
+              position: "absolute",
+              top: 0,
+              right: 15
+            }}
+            onPress={() => {
+              this.props.doCloseFilterModal();
+            }}
+          >
+            <Ionicons name={"ios-close"} size={40} color={"#F08080"} />
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -151,10 +151,10 @@ class Filter extends React.Component {
 const mapStateToProps = state => {
   return {
     token: state.loginReducer.token,
-    cars: state.companyReducer.cars,
+    cars: state.carReducer.cars,
     loading: state.loginReducer.loading,
-    selectedCar: state.companyReducer.selectedCar,
-    order: state.companyReducer.order
+    selectedCar: state.carReducer.selectedCar,
+    order: state.carReducer.order
   };
 };
 
@@ -165,10 +165,9 @@ const mapDispatchToProps = dispatch => ({
   doSetOrder: () => {
     dispatch(actions.setOrder());
   },
-doSetCars: car => {
+  doSetCars: car => {
     dispatch(actions.setCars(car));
   }
-  
 });
 export default connect(
   mapStateToProps,

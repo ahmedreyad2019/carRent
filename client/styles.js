@@ -11,8 +11,8 @@ export const styles = {
     shadowColor: "#000",
     width: "90%",
     borderRadius: 20,
-    shadowOpacity: 0.7,
-    shadowRadius: 10,
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
     shadoOffset: {
       width: 0,
       height: 1

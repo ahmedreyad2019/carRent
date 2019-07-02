@@ -197,6 +197,7 @@ class LinksScreen extends React.Component {
                 >
                   <Ionicons
                     name={"ios-pin"}
+                    onPress={()=>this.props.navigation.navigate("Cars")}
                     style={{ flex: 0.1 }}
                     size={20}
                     color={"#90F6DE"}
@@ -313,7 +314,7 @@ const mapStateToProps = state => {
     loading: state.loginReducer.loading,
     token: state.loginReducer.token,
     userId: state.loginReducer.userId,
-    dateModalVisible: state.companyReducer.dateModalVisible
+    dateModalVisible: state.carReducer.dateModalVisible
   };
 };
 const mapDispatchToProps = dispatch => ({

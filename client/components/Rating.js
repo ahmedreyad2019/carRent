@@ -19,9 +19,20 @@ class Rating extends React.Component {
     rat[i] = rating;
     console.log(rat);
     return (
-      <View style={{  flexDirection: "row" }}>
+      <View style={{ flexDirection: "row" }}>
         {rat.map((item, i) => (
-          <Ionicons key={i} name={rat[i]===1?"ios-star":rat[i]===0?"ios-star-outline":"ios-star-half"} size={15} color={"black"} />
+          <Ionicons
+            key={i}
+            name={
+              rat[i] === 1
+                ? "ios-star"
+                : rat[i] === 0
+                ? "ios-star-outline"
+                : "ios-star-half"
+            }
+            size={15}
+            color={"black"}
+          />
         ))}
       </View>
     );

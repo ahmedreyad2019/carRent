@@ -153,7 +153,16 @@ router.get("/view/drivingLicenseRequests", async (req, res) => {
     if (renters.length === 0)
       return res.status(401).send({ msg: "no pending requests" });
     var requests = [];
-    for (x in renters) requests.push(renters[x].drivingLicenseRequest);
+    console.log(renters)
+    for (x in renters){ 
+      var edited={}
+      edited.firstName=renters[x].FirstName
+      edited.lastName=renters[x].LastName
+     
+      edited.drivingLicenseRequest=renters[x].drivingLicenseRequest
+      
+      requests.push(edited);
+    console.log(edited)}
     return res.status(200).send({
       msg: "Peding requests:",
       data: requests
@@ -223,9 +232,10 @@ router.put("/view/drivingLicenseRequests/:id/respond", async (req, res) => {
     if (!req.body.response) {
       return res.status(400).send({ msg: "please choose a response" });
     }
+
     var request = await CarRenter.findOneAndUpdate(
       {
-        "drivingLicenseRequest.status": "Pending",
+     
         "drivingLicenseRequest._id": req.params.id
       },
       {

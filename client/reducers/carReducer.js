@@ -4,15 +4,17 @@ const initialState = {
   allCompanies: [],
   search: {
     rentingDateStart: Date.now(),
-    rentingDateEnd: Date.now()
+    rentingDateEnd: Date.now(),
+    location: "location"
   },
-  selectedCompany: "",
+  selectedCar: "",
   companyModalVisible: false,
   filterModalVisible: false,
+  rentModalVisible: false,
   searchModalVisible: false,
   dateModalVisible: false,
   order: "asc",
-  source: "feed"
+  source: "feed",
 };
 export default (carReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -20,6 +22,11 @@ export default (carReducer = (state = initialState, action) => {
       return {
         ...state,
         cars: action.cars
+      };
+    case actionTypes.SELECT_CAR:
+      return {
+        ...state,
+        selectedCar: action.selectedCar
       };
     case actionTypes.SET_RENTING_DATE: {
       return {
@@ -31,22 +38,25 @@ export default (carReducer = (state = initialState, action) => {
         }
       };
     }
+    case actionTypes.SET_RENTING_LOCATION: {
+      return {
+        ...state,
+        search: {
+          ...state.search,
+          location: action.location
+        }
+      };
+    }
     case actionTypes.SET_REQUESTS:
       return {
         ...state,
         companies: { ...state.companies, requested: action.requests }
       };
-    case actionTypes.SELECT_COMPANY:
-      return {
-        ...state,
-        selectedCompany: action.company
-      };
-    case actionTypes.CLOSE_COMPANY_MODAL:
-      return {
-        ...state,
-        companyModalVisible: false
-      };
     case actionTypes.CLEAR:
+      return {
+        state
+      };
+    case actionTypes.RENT:
       return {
         state
       };
@@ -74,6 +84,16 @@ export default (carReducer = (state = initialState, action) => {
       return {
         ...state,
         filterModalVisible: true
+      };
+    case actionTypes.CLOSE_RENT_MODAL:
+      return {
+        ...state,
+        rentModalVisible: false
+      };
+    case actionTypes.OPEN_RENT_MODAL:
+      return {
+        ...state,
+        rentModalVisible: true
       };
     case actionTypes.CLOSE_DATE_MODAL:
       return {

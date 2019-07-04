@@ -32,10 +32,10 @@ export const setTransactions = transactions => {
   };
 };
 
-export const selectCar = car => {
+export const selectCar = selectedCar => {
   return {
     type: types.SELECT_CAR,
-    car
+    selectedCar
   };
 };
 export const closeCarModal = () => {
@@ -61,6 +61,12 @@ export const setRentingDate = (rentingDateStart, rentingDateEnd) => {
     rentingDateEnd
   };
 };
+export const setRentingLocation = location => {
+  return {
+    type: types.SET_RENTING_LOCATION,
+    location
+  };
+};
 export const openCarModal = () => {
   return {
     type: types.OPEN_CAR_MODAL
@@ -74,6 +80,16 @@ export const closeFilterModal = () => {
 export const openFilterModal = () => {
   return {
     type: types.OPEN_FILTER_MODAL
+  };
+};
+export const closeRentModal = () => {
+  return {
+    type: types.CLOSE_RENT_MODAL
+  };
+};
+export const openRentModal = () => {
+  return {
+    type: types.OPEN_RENT_MODAL
   };
 };
 export const closeDateModal = () => {
@@ -123,6 +139,32 @@ export const setSignUp = token => {
     userId
   };
 };
+export const rent = carID => {
+  return dispatch => {
+    dispatch(loading(true));
+    AsyncStorage.getItem("jwt").then(token =>
+      fetch(
+        `http://192.168.1.4:3000/carRenter/view/availableCars/${carID}/rent`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-access-token": token
+          }
+        }
+      )
+        .then(res => res.json())
+        .then(res => {
+          dispatch(selectCar({ ...res.transaction, cars: [res.data] }));
+          console.log({ ...res.transaction, cars: [res.data] });
+          dispatch(loading(false));
+        })
+        .catch(error => {
+          console.log(error);
+        })
+    );
+  };
+};
 export const login = (mobileNumber, password) => {
   return dispatch => {
     dispatch(loading(true));
@@ -130,7 +172,7 @@ export const login = (mobileNumber, password) => {
       AsyncStorage.getAllKeys()
         .then(AsyncStorage.multiRemove)
         .then(
-          fetch("http://192.168.1.9:3000/carRenter/login", {
+          fetch("http://192.168.1.4:3000/carRenter/login", {
             method: "POST",
             body: JSON.stringify({
               mobileNumber: mobileNumber,
@@ -188,19 +230,20 @@ export const fetchCars = search => {
   return dispatch => {
     dispatch(loading(true));
     AsyncStorage.getItem("jwt").then(token =>
-      fetch("http://192.168.1.9:3000/carRenter/view/availableCars", {
+      fetch("http://192.168.1.4:3000/carRenter/view/availableCars", {
         method: "POST",
         body: JSON.stringify({
           rentingDateStart: search.rentingDateStart,
-          rentingDateEnd: search.rentingDateEnd
+          rentingDateEnd: search.rentingDateEnd,
+          location: search.location
         }),
         headers: {
           "Content-Type": "application/json",
           "x-access-token": token
         }
       })
-      .then(res => res.json())
-      .then(res => {
+        .then(res => res.json())
+        .then(res => {
           dispatch(setCars(res.data));
           dispatch(loading(false));
         })
@@ -211,36 +254,10 @@ export const fetchCars = search => {
   };
 };
 
-export const fetchRequests = () => {
-  return dispatch => {
-    dispatch(loading(true));
-
-    AsyncStorage.getItem("jwt").then(token =>
-      axios
-        .get(
-          `http://serverbrogrammers.herokuapp.com/api/investors/MyRequests/all`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              "Access-Control-Allow-Headers": "x-access-token",
-              "x-access-token": token
-            }
-          }
-        )
-        .then(res => {
-          dispatch(setRequests(res.data.data));
-          dispatch(loading(false));
-        })
-        .catch(error => {
-          console.log(error);
-        })
-    );
-  };
-};
 export const fetchProfile = (userId, token) => {
   return dispatch => {
     dispatch(loading(true));
-    fetch(`http://192.168.1.9:3000/carRenter/${userId}`, {
+    fetch(`http://192.168.1.4:3000/carRenter/${userId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

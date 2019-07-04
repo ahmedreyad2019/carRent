@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { Header } from "react-native-elements";
 import Filter from "../components/Filter";
+import RentModal from "../components/RentModal";
 import { styles, colors } from "../styles";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { LinearGradient } from "expo";
@@ -74,6 +75,22 @@ class CarsScreen extends React.Component {
               color={"#74808E"}
             />
           }
+          centerComponent={
+            <View
+              style={{
+                backgroundColor: "rgba(255,255,255,0.1)",
+                width: "100%",
+                borderRadius: 50,
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <Text style={{ color: "white" }}>
+                {this.props.search.location}
+              </Text>
+            </View>
+          }
           leftComponent={
             <TouchableOpacity
               onPress={() => this.props.navigation.navigate("Main")}
@@ -99,6 +116,16 @@ class CarsScreen extends React.Component {
           }}
         >
           <Filter />
+        </Modal>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={this.props.rentModalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+          }}
+        >
+          <RentModal />
         </Modal>
         <View
           style={{
@@ -174,12 +201,41 @@ class CarsScreen extends React.Component {
                       ...styles.carCard
                     }}
                   >
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: colors.primary,
+                        zIndex: 9090909090,
+                        width: 60,
+                        height: 30,
+                        position: "absolute",
+                        top: 25,
+                        right: 25,
+                        borderRadius: 50,
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        alignItems: "center"
+                      }}
+                      onPress={() => {
+                        this.props.doSetCar(item),
+                          this.props.doOpenRentModal();
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 14,
+                          color: "white",
+                          fontFamily: "AvenirNext-Bold"
+                        }}
+                      >
+                        Rent
+                      </Text>
+                    </TouchableOpacity>
                     <View
                       style={{
                         backgroundColor: "white",
                         zIndex: 9090909090,
-                        width: 75,
-                        height: 60,
+                        width: 80,
+                        height: 65,
                         position: "absolute",
                         top: 150,
                         right: 20,
@@ -194,7 +250,7 @@ class CarsScreen extends React.Component {
                         <Text
                           style={{
                             fontSize: 18,
-                            fontFamily: "AvenirNext-Bold"
+                            fontFamily: "AvenirNext-BoldItalic"
                           }}
                         >
                           {item.price}
@@ -217,13 +273,13 @@ class CarsScreen extends React.Component {
                         }}
                       >
                         {this.getdateString(item.rentingDateStart) +
-                          "-" +
+                          " - " +
                           this.getdateString(item.rentingDateEnd)}
                       </Text>
                     </View>
                     <View
                       style={{
-                        backgroundColor: "#3c3537",
+                        backgroundColor: "#eeeeee",
                         width: "100%",
                         height: 150
                       }}
@@ -280,23 +336,28 @@ const mapStateToProps = state => {
     searchModalVisible: state.carReducer.searchModalVisible,
     source: state.carReducer.source,
     filterModalVisible: state.carReducer.filterModalVisible,
-    search: state.carReducer.search
+    search: state.carReducer.search,
+    rentModalVisible: state.carReducer.rentModalVisible
   };
 };
 
 const mapDispatchToProps = dispatch => ({
-  doFetchCars: (search) => {
+  doFetchCars: search => {
     dispatch(actions.fetchCars(search));
+  },
+  doRent: carID => {
+    dispatch(actions.rent(carID));
   },
   doOpenFilterModal: () => {
     dispatch(actions.openFilterModal());
   },
-  doSetCompany: company => {
-    dispatch(actions.selectCar(company));
+  doOpenRentModal: () => {
+    dispatch(actions.openRentModal());
   },
-  doOpenCompanyModal: () => {
-    dispatch(actions.openCarModal());
+  doSetCar: car => {
+    dispatch(actions.selectCar(car));
   },
+
   doOpenSearchModal: () => {
     dispatch(actions.openSearchModal());
   },

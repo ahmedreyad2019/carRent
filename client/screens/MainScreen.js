@@ -23,8 +23,7 @@ import DatePicker from "../components/DatePicker";
 import PickerLocation from "../components/PickerLocation";
 
 class MainScreen extends React.Component {
-  componentDidMount() {
-  }
+  componentDidMount() {}
 
   constructor(props) {
     super(props);
@@ -63,7 +62,7 @@ class MainScreen extends React.Component {
 
     return (
       days[today.getDay()] +
-      "," +
+      ", " +
       today.getDate() +
       "/" +
       (today.getMonth() + 1)
@@ -96,13 +95,14 @@ class MainScreen extends React.Component {
           visible={this.props.dateModalVisible}
         >
           <DatePicker
+            header={this.state.source}
             date={
-              this.state.source === "start"
+              this.state.source === "From"
                 ? this.props.search.rentingDateStart
                 : this.props.search.rentingDateEnd
             }
             onDateChange={date =>
-              this.state.source === "start"
+              this.state.source === "From"
                 ? this.props.doSetRentingDate(
                     date,
                     this.props.search.rentingDateEnd
@@ -156,7 +156,7 @@ class MainScreen extends React.Component {
           >
             <TouchableOpacity
               onPress={() => (
-                this.props.openDateModal(), this.setState({ source: "start" })
+                this.props.openDateModal(), this.setState({ source: "From" })
               )}
               style={{
                 flexDirection: "column",
@@ -166,7 +166,7 @@ class MainScreen extends React.Component {
             >
               <Text
                 style={{
-                  fontSize: 14,
+                  fontSize: 12,
                   color: colors.primary,
                   fontFamily: "AvenirNext-Bold"
                 }}
@@ -175,7 +175,7 @@ class MainScreen extends React.Component {
               </Text>
               <Text
                 style={{
-                  fontSize: 18,
+                  fontSize: 20,
                   color: colors.primary,
                   fontFamily: "AvenirNext-Bold"
                 }}
@@ -192,7 +192,7 @@ class MainScreen extends React.Component {
             />
             <TouchableOpacity
               onPress={() => (
-                this.props.openDateModal(), this.setState({ source: "end" })
+                this.props.openDateModal(), this.setState({ source: "To" })
               )}
               style={{
                 flexDirection: "column",
@@ -202,7 +202,7 @@ class MainScreen extends React.Component {
             >
               <Text
                 style={{
-                  fontSize: 14,
+                  fontSize: 12,
                   color: colors.primary,
                   fontFamily: "AvenirNext-Bold"
                 }}
@@ -211,7 +211,7 @@ class MainScreen extends React.Component {
               </Text>
               <Text
                 style={{
-                  fontSize: 18,
+                  fontSize: 20,
                   color: colors.primary,
                   fontFamily: "AvenirNext-Bold"
                 }}
@@ -228,8 +228,8 @@ class MainScreen extends React.Component {
             this.props.doFetchCars(this.props.search)
           )}
           style={{
-            height: 50,
-            flexDirection: "row",
+            height:40 ,
+            flexDirection: "column",
             marginHorizontal: 100,
             alignItems: "center",
             justifyContent: "space-evenly",
@@ -252,10 +252,20 @@ class MainScreen extends React.Component {
           >
             Search
           </Text>
+          <View
+            style={{
+              width: "50%",
+              height: 5,
+              backgroundColor: "white",
+              opacity: 0.4,
+              borderRadius: 50
+            }}
+          />
         </TouchableOpacity>
       </View>
     );
   }
+
 }
 const mapStateToProps = state => {
   return {

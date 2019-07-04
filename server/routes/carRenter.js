@@ -146,7 +146,7 @@ router.post("/view/availableCars", async (req, res) => {
     if (!renter) {
       return res.status(404).send({ error: "Renter does not exist" });
     }
-  
+    console.log(req.body);
     const cars = await Transaction.aggregate([
       {
         $lookup: {
@@ -155,18 +155,26 @@ router.post("/view/availableCars", async (req, res) => {
             car: "$carID",
             rentStart: "$rentingDateStart",
             rentEnd: "$rentingDateEnd",
-            stat: "$status",
-            c: "$cars"
+            stats: "$status",
+            renterID: "$carRenterID"
           },
           pipeline: [
             {
               $match: {
                 $expr: {
                   $and: [
-                    { $eq: ["$$stat", "Upcoming"] },
+                    {
+                      $or: [
+                        { $eq: ["$$stats", "Upcoming"] },
+                        { $eq: ["$$renterID", renter._id] }
+                      ]
+                    },
                     { $eq: ["$_id", "$$car"] },
-                    { $lte: ["$$rentStart", new Date(req.body.rentingDateStart)] },
-                    { $gte: ["$$rentEnd", new Date(req.body.rentingDateEnd)] },
+                    { $eq: ["$location", req.body.location] },
+                    {
+                      $lte: ["$$rentStart", new Date(req.body.rentingDateStart)]
+                    },
+                    { $gte: ["$$rentEnd", new Date(req.body.rentingDateEnd)] }
                   ]
                 }
               }
@@ -363,18 +371,16 @@ router.post("/view/availableCars/:id/rent", async (req, res) => {
     if (!Renter.personalID)
       return res.status(401).send({ msg: "Please add your personalID" });
 
-    const cars = await Car.findOne({
-      _id: req.params.id,
-      status: "UpForRent"
-    });
+    const cars = await Car.findById(req.params.id);
     if (!cars) {
       console.log("no cars");
       return res.status(404).send({ msg: "no cars avaialble at the moment" });
     }
-    const transaction = await Transaction.findOneAndUpdate(
-      { carID: cars._id, carOwnerID: cars.carOwnerID },
+    var transaction = await Transaction.findOneAndUpdate(
+      { carID: cars._id, status: "Upcoming" },
       {
-        carRenterID: stat
+        carRenterID: stat,
+        status: "Done"
       }
     );
     if (!transaction) {
@@ -382,17 +388,21 @@ router.post("/view/availableCars/:id/rent", async (req, res) => {
       return res.status(404).send({ msg: "renting failed" });
     }
 
-    const car = await Car.findOneAndUpdate(
+    var car = await Car.findOneAndUpdate(
       { _id: cars._id },
       {
         status: "Rented",
         currentRenter: Renter
       }
     );
-
-    return res
-      .status(200)
-      .json({ msg: "Cars Rented", data: car, transaction: transaction });
+    transaction = await Transaction.findOne({ _id: transaction._id });
+    car = await Car.findOne({ _id: cars._id });
+    if (car) {
+      console.log("yesssss");
+      return res
+        .status(200)
+        .json({ msg: "Cars Rented", data: car, transaction: transaction });
+    }
   } catch (error) {
     console.log(error);
     return res.status(400).send({ msg: "error", error: error });

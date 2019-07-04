@@ -17,7 +17,6 @@ class Rating extends React.Component {
       i += 1;
     }
     rat[i] = rating;
-    console.log(rat);
     return (
       <View style={{ flexDirection: "row" }}>
         {rat.map((item, i) => (

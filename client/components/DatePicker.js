@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { View, DatePickerIOS } from "react-native";
+import { View, DatePickerIOS, Text } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import * as actions from "../actions/index";
 import { connect } from "react-redux";
-import { styles } from "../styles";
+import { styles, colors } from "../styles";
 
 class DatePicker extends Component {
   constructor(props) {
@@ -27,9 +27,22 @@ class DatePicker extends Component {
             style={{
               height: 40,
               borderBottomWidth: 0.3,
-              borderBottomColor: "#eeeeee"
+              borderBottomColor: "#eeeeee",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
             }}
-          />
+          >
+            <Text
+              style={{
+                fontSize: 25,
+                color: colors.primary,
+                fontFamily: "AvenirNext-Bold"
+              }}
+            >
+              {this.props.header}
+            </Text>
+          </View>
           <DatePickerIOS
             mode={"datetime"}
             date={new Date(this.props.date)}

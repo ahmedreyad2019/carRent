@@ -17,6 +17,7 @@ import ProfileScreen from "../screens/ProfileScreen";
 import CarsScreen from "../screens/CarsScreen";
 import FilterScreen from "../screens/FilterScreen";
 import MainScreen from "../screens/MainScreen";
+import RentModal from "../components/RentModal";
 
 const getTabBarIcon = (navigation, focused, tintColor) => {
   const { routeName } = navigation.state;
@@ -132,9 +133,10 @@ const RentScreen = createAppContainer(
     {
       Main: { screen: MainScreen },
       Cars: { screen: CarsScreen },
-    }
-    ,{
-      headerMode:'none'
+      Rent: { screen: RentModal }
+    },
+    {
+      headerMode: "none"
     }
   )
 );
@@ -152,7 +154,6 @@ const tabNav = createAppContainer(
     }
   )
 );
-
 
 const MainNavigator = createAppContainer(
   createSwitchNavigator(

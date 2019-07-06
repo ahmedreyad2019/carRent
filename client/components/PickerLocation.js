@@ -104,7 +104,7 @@ class PickerLocation extends Component {
           <ScrollView
             style={{
               flexDirection: "column",
-              width: "100%"
+              width: "100%",paddingTop:15
             }}
             contentContainerStyle={{ alignItems: "flex-start" }}
           >

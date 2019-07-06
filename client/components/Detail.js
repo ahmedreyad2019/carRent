@@ -1,5 +1,6 @@
 import { View, Text } from "react-native";
 import React, { Component } from "react";
+import AppText from "./AppText";
 class Detail extends Component {
   constructor(props) {
     super(props);
@@ -17,10 +18,8 @@ class Detail extends Component {
           borderBottomColor: "#eeeeee"
         }}
       >
-        <Text style={{ fontFamily: "AvenirNext-Bold" }}>
-          {this.props.field}
-        </Text>
-        <Text>{this.props.data}</Text>
+        <AppText fontStyle={"bold"} text={this.props.field} />
+        <AppText text={this.props.field} text={this.props.data} />
       </View>
     );
   }

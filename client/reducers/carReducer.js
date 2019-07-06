@@ -5,7 +5,7 @@ const initialState = {
   search: {
     rentingDateStart: Date.now(),
     rentingDateEnd: Date.now(),
-    location: "location"
+    location: "1st Settlement"
   },
   selectedCar: "",
   companyModalVisible: false,
@@ -14,7 +14,7 @@ const initialState = {
   searchModalVisible: false,
   dateModalVisible: false,
   order: "asc",
-  source: "feed",
+  source: "feed"
 };
 export default (carReducer = (state = initialState, action) => {
   switch (action.type) {

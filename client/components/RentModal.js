@@ -2,10 +2,7 @@ import { connect } from "react-redux";
 import React from "react";
 import {
   View,
-  PickerIOS,
-  Easing,
   TouchableOpacity,
-  Animated,
   ScrollView,
   ActivityIndicator,
   Text
@@ -15,6 +12,8 @@ import { styles, colors } from "../styles";
 import * as actions from "../actions/index";
 import Rating from "../components/Rating";
 import Detail from "./Detail";
+import AppText from "./AppText";
+import { Header } from "react-native-elements";
 
 class RentModal extends React.Component {
   constructor(props) {
@@ -48,8 +47,7 @@ class RentModal extends React.Component {
       today.getDate() +
       "/" +
       (today.getMonth() + 1) +
-      "/" +
-      (year ? today.getFullYear() : "")
+      (year ? "/" + today.getFullYear() : "")
     );
   };
 
@@ -57,69 +55,88 @@ class RentModal extends React.Component {
     const { selectedCar } = this.props;
     const transaction = selectedCar;
     const car = selectedCar.cars[0];
+    date1 = new Date(transaction.rentingDateStart);
+    date2 = new Date(transaction.rentingDateEnd);
+    const diffTime = Math.abs(date2.getTime() - date1.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return (
       <View
-        style={{
-          flex: 1,
-          backgroundColor: "rgba(0,0,0,0.6)",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center"
-        }}
+        style={{ flexDirection: "column", justifyContent: "center", flex: 1 }}
       >
-        <View
-          style={{
-            ...styles.CompanyDetails,
-            padding: 10,
-            paddingTop: 40
-          }}
-        >
-          <TouchableOpacity
+        <Header
+          backgroundColor={colors.primary}
+          centerComponent={
+            <AppText
+              size={24}
+              style={{ color: "white" }}
+              text={car.make + " " + car.model}
+            />
+          }
+          leftComponent={
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate("Cars")}
+            >
+              <Ionicons name={"ios-arrow-back"} size={25} color={"#74808E"} />
+            </TouchableOpacity>
+          }
+        />
+        <ScrollView>
+          <View
             style={{
-              position: "absolute",
-              top: 0,
-              right: 15
-            }}
-            onPress={() => {
-              this.props.doCloseRentModal();
+              flex: 1,
+              backgroundColor: "#eeeeee",
+              width: "100%",
+              height: 150
             }}
           >
-            <Ionicons name={"ios-close"} size={40} color={"#F08080"} />
-          </TouchableOpacity>
-          <ScrollView>
-            <View
+            <Text>images appear here</Text>
+          </View>
+          <View style={{ marginHorizontal: 10 }}>
+            <Text
               style={{
-                backgroundColor: "#eeeeee",
-                width: "100%",
-                height: 150
+                color: colors.primary,
+                fontSize: 28,
+                fontFamily: "AvenirNext-Bold"
               }}
             >
-              <Text>images appear here</Text>
-            </View>
-            <View>
-              <Text
-                style={{
-                  color: colors.primary,
-                  fontSize: 28,
-                  fontFamily: "AvenirNext-Bold"
-                }}
-              >
-                Details
-              </Text>
-              <Detail data={car.make} field={"Manufacturer"} />
-              <Detail data={car.model} field={"Model"} />
-              <Detail data={car.year} field={"Year"} />
-              <Detail data={car.location} field={"Location"} />
-              <Detail
-                data={this.getdateString(transaction.rentingDateStart, true)}
-                field={"Renting start date"}
-              />
-              <Detail
-                data={this.getdateString(transaction.rentingDateEnd, true)}
-                field={"Renting end date"}
-              />
-            </View>
-          </ScrollView>
+              Details
+            </Text>
+
+            <Detail data={car.make} field={"Manufacturer"} />
+            <Detail data={car.model} field={"Model"} />
+            <Detail data={car.year} field={"Year"} />
+            <Detail data={car.location} field={"Location"} />
+            <Detail data={car.rating + "/5"} field={"Rating"} />
+            <Detail
+              data={this.getdateString(transaction.rentingDateStart, true)}
+              field={"Renting start date"}
+            />
+            <Detail
+              data={this.getdateString(transaction.rentingDateEnd, true)}
+              field={"Renting end date"}
+            />
+          </View>
+        </ScrollView>
+        <View
+          style={{
+            borderTopWidth: 1,
+            borderTopColor:'#eeeeee',
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "white",
+            padding: 20
+          }}
+        >
+          <AppText
+            text={
+              "Total Price: " +
+              (transaction.price * diffDays).toLocaleString() +
+              " EGP (" +
+              transaction.price.toLocaleString() +
+              " EGP/day)"
+            }
+          />
           <TouchableOpacity
             disabled={transaction.status === "Done"}
             onPress={() => (
@@ -129,15 +146,10 @@ class RentModal extends React.Component {
             style={{
               backgroundColor:
                 transaction.status !== "Done" ? colors.primary : "green",
-              position: "absolute",
-              bottom: 10,
-              width: "25%",
-              height: 50,
-              alignSelf: "flex-end",
-              right: 10,
-              borderRadius: 50,
               flexDirection: "row",
               justifyContent: "center",
+              height: 50,
+              width: "100%",
               alignItems: "center"
             }}
           >
@@ -148,7 +160,7 @@ class RentModal extends React.Component {
                 color: "white"
               }}
             >
-              Rent
+              {"Rent" + (transaction.status === "Done" ? "ed" : "")}
             </Text>
             {this.props.loading ? (
               <ActivityIndicator animating={true} />

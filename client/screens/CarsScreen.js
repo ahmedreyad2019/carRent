@@ -5,22 +5,23 @@ import {
   Alert,
   TouchableOpacity,
   RefreshControl,
-  Text,
   StatusBar,
   Modal,
+  ImageBackground,
   View
 } from "react-native";
-import { Header } from "react-native-elements";
+import { Header, Image } from "react-native-elements";
 import Filter from "../components/Filter";
 import RentModal from "../components/RentModal";
 import { styles, colors } from "../styles";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { LinearGradient } from "expo";
 import { connect } from "react-redux";
 import * as actions from "../actions/index";
 import CompanyDetials from "../components/CompanyDetails";
 import SearchModal from "../components/SearchModal";
+
 import Rating from "../components/Rating";
+import AppText from "../components/AppText";
 
 class CarsScreen extends React.Component {
   componentDidMount() {}
@@ -38,10 +39,24 @@ class CarsScreen extends React.Component {
   _onRefresh = () => {
     this.props.doFetchCars(this.props.search);
   };
-
-  getdateString = date => {
+  getTimeString = date => {
+    var today = new Date(date);
+    var hours = today.getHours();
+    var minutes = today.getMinutes();
+    var ampm = hours >= 12 ? "pm" : "am";
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    var strTime = hours + ":" + minutes + " " + ampm;
+    return strTime;
+  };
+  getdateString = (date, hi) => {
     var today = new Date(date);
     var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    var year = today
+      .getFullYear()
+      .toLocaleString()
+      .substring(3);
     var month = [
       "Jan",
       "Feb",
@@ -56,6 +71,17 @@ class CarsScreen extends React.Component {
       "Nov",
       "Dec"
     ];
+    if (hi) {
+      return (
+        month[today.getMonth()] +
+        " " +
+        today.getDate() +
+        ", " +
+        year +
+        " " +
+        this.getTimeString(date)
+      );
+    }
 
     return today.getDate() + "/" + (today.getMonth() + 1);
   };
@@ -66,11 +92,8 @@ class CarsScreen extends React.Component {
           backgroundColor={colors.primary}
           rightComponent={
             <Ionicons
-              name={"ios-search"}
-              onPress={() => (
-                this.props.doOpenSearchModal(),
-                this.props.doSetSource("FeedScreen")
-              )}
+              name={"ios-funnel"}
+              onPress={() => this.props.doOpenFilterModal()}
               size={20}
               color={"#74808E"}
             />
@@ -86,9 +109,10 @@ class CarsScreen extends React.Component {
                 alignItems: "center"
               }}
             >
-              <Text style={{ color: "white" }}>
-                {this.props.search.location}
-              </Text>
+              <AppText
+                style={{ color: "white" }}
+                text={this.props.search.location}
+              />
             </View>
           }
           leftComponent={
@@ -99,14 +123,7 @@ class CarsScreen extends React.Component {
             </TouchableOpacity>
           }
         />
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={this.props.searchModalVisible}
-          key={2}
-        >
-          <SearchModal key={4} />
-        </Modal>
+
         <Modal
           animationType="slide"
           transparent={true}
@@ -117,16 +134,7 @@ class CarsScreen extends React.Component {
         >
           <Filter />
         </Modal>
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={this.props.rentModalVisible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-          }}
-        >
-          <RentModal />
-        </Modal>
+
         <View
           style={{
             height: 50,
@@ -138,24 +146,33 @@ class CarsScreen extends React.Component {
             backgroundColor: "white"
           }}
         >
-          <TouchableOpacity
+          <View
             onPress={() => this.props.doOpenFilterModal()}
-            style={{ flexDirection: "row" }}
+            style={{ flexDirection: "column" }}
           >
-            <Text>{"Filter "}</Text>
-            <Ionicons name={"ios-options"} size={20} color={"black"} />
-          </TouchableOpacity>
+            <AppText text={"From "} />
+            <AppText
+              style={{ color: "#aaaaaa" }}
+              text={this.getdateString(
+                this.props.search.rentingDateStart,
+                true
+              )}
+            />
+          </View>
           <View
             style={{
               borderRightColor: "#cccccc",
               borderRightWidth: 1,
-              height: "100%"
+              height: "50%"
             }}
           />
-          <TouchableOpacity style={{ flexDirection: "row" }}>
-            <Text>{"Map "}</Text>
-            <Ionicons name={"ios-pin"} size={20} color={"black"} />
-          </TouchableOpacity>
+          <View style={{ flexDirection: "column" }}>
+            <AppText text={"To "} />
+            <AppText
+              style={{ color: "#aaaaaa" }}
+              text={this.getdateString(this.props.search.rentingDateEnd, true)}
+            />
+          </View>
         </View>
 
         <ScrollView
@@ -176,151 +193,149 @@ class CarsScreen extends React.Component {
         >
           <StatusBar barStyle={"light-content"} />
           <>
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={this.props.companyModalVisible}
-              onRequestClose={() => {
-                Alert.alert("Modal has been closed.");
-              }}
-            >
-              <CompanyDetials />
-            </Modal>
             <View>
-              <FlatList
-                snapToInterval={240}
-                bouncesZoom
-                indicatorStyle={"white"}
-                snapToAlignment={"start"}
-                decelerationRate="fast"
-                data={this.props.cars}
-                renderItem={({ item }) => (
-                  <View
-                    colors={["transparent", "rgba(0,0,0,0.2)"]}
-                    style={{
-                      ...styles.carCard
-                    }}
-                  >
-                    <TouchableOpacity
+              {this.props.cars.length === 0 && !this.props.loading ? (
+                <AppText
+                  style={{ alignSelf: "center" }}
+                  text={
+                    "No cars available at the moment! Please try again later."
+                  }
+                />
+              ) : (
+                <FlatList
+                  snapToInterval={240}
+                  bouncesZoom
+                  indicatorStyle={"white"}
+                  snapToAlignment={"start"}
+                  decelerationRate="fast"
+                  data={this.props.cars}
+                  renderItem={({ item }) => (
+                    <View
+                      colors={["transparent", "rgba(0,0,0,0.2)"]}
                       style={{
-                        backgroundColor: colors.primary,
-                        zIndex: 9090909090,
-                        width: 60,
-                        height: 30,
-                        position: "absolute",
-                        top: 25,
-                        right: 25,
-                        borderRadius: 50,
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center"
-                      }}
-                      onPress={() => {
-                        this.props.doSetCar(item),
-                          this.props.doOpenRentModal();
+                        ...styles.carCard
                       }}
                     >
-                      <Text
+                      <TouchableOpacity
                         style={{
-                          fontSize: 14,
-                          color: "white",
-                          fontFamily: "AvenirNext-Bold"
+                          backgroundColor: colors.primary,
+                          zIndex: 9090909090,
+                          width: 60,
+                          height: 30,
+                          position: "absolute",
+                          top: 25,
+                          right: 25,
+                          borderRadius: 50,
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          alignItems: "center"
+                        }}
+                        onPress={() => {
+                          this.props.doSetCar(item),
+                            this.props.navigation.navigate("Rent");
                         }}
                       >
-                        Rent
-                      </Text>
-                    </TouchableOpacity>
-                    <View
-                      style={{
-                        backgroundColor: "white",
-                        zIndex: 9090909090,
-                        width: 80,
-                        height: 65,
-                        position: "absolute",
-                        top: 150,
-                        right: 20,
-                        borderBottomLeftRadius: 50,
-                        borderTopLeftRadius: 50,
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        alignItems: "center"
-                      }}
-                    >
-                      <Text>
-                        <Text
+                        <AppText
+                          fontStyle={"bold"}
+                          size={14}
                           style={{
-                            fontSize: 18,
-                            fontFamily: "AvenirNext-BoldItalic"
+                            color: "white"
+                          }}
+                          text={"Book"}
+                        />
+                      </TouchableOpacity>
+                      <View
+                        style={{
+                          backgroundColor: "white",
+                          zIndex: 9090909090,
+                          width: 80,
+                          height: 65,
+                          position: "absolute",
+                          top: 150,
+                          right: 20,
+                          borderBottomLeftRadius: 50,
+                          borderTopLeftRadius: 50,
+                          flexDirection: "column",
+                          justifyContent: "center",
+                          alignItems: "center"
+                        }}
+                      >
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "center"
                           }}
                         >
-                          {item.price}
-                        </Text>
+                          <AppText
+                            fontStyle={"italic"}
+                            size={18}
+                            text={item.price.toLocaleString()}
+                          />
+                          <AppText text={"EGP"} fontStyle={"bold"} size={10} />
+                        </View>
+                        <AppText
+                          fontStyle={"light"}
+                          size={12}
+                          text={
+                            this.getdateString(item.rentingDateStart) +
+                            " - " +
+                            this.getdateString(item.rentingDateEnd)
+                          }
+                        />
+                      </View>
 
-                        <Text
-                          style={{
-                            fontSize: 10,
-                            fontFamily: "AvenirNext-Bold"
-                          }}
-                        >
-                          {"EGP"}
-                        </Text>
-                      </Text>
-
-                      <Text
+                      <ImageBackground
+                        source={require("../images/bmw-3-series-render.jpg")}
                         style={{
-                          fontSize: 12,
-                          fontFamily: "Avenir-Light"
+                          backgroundColor: "#eeeeee",
+                          width: "100%",
+                          height: 150
                         }}
                       >
-                        {this.getdateString(item.rentingDateStart) +
-                          " - " +
-                          this.getdateString(item.rentingDateEnd)}
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        backgroundColor: "#eeeeee",
-                        width: "100%",
-                        height: 150
-                      }}
-                    >
-                      <Text>images appear here</Text>
-                    </View>
-                    <View
-                      style={{
-                        height: 60,
-                        width: "100%",
-                        paddingLeft: 5,
-                        alignItems: "flex-start"
-                      }}
-                    >
-                      <Text
+                        <AppText text={"images appear here"} />
+                      </ImageBackground>
+                      <View
                         style={{
-                          color: colors.primary,
-                          fontSize: 23,
-                          fontFamily: "AvenirNext-Bold"
+                          height: 60,
+                          width: "100%",
+                          paddingLeft: 5,
+                          alignItems: "flex-start"
                         }}
                       >
-                        {item.cars[0].make} {item.cars[0].model}
-                        <Text
+                        <View
                           style={{
-                            color: colors.primary,
-                            fontFamily: "AvenirNext-DemiBold",
-                            opacity: 0.5,
-                            fontSize: 12
+                            flexDirection: "row",
+                            alignItems: "baseline"
                           }}
                         >
-                          {" " + item.cars[0].year}
-                        </Text>
-                      </Text>
-                      <Rating rating={item.cars[0].rating} />
+                          <AppText
+                            fontStyle={"bold"}
+                            size={23}
+                            style={{
+                              color: colors.primary
+                            }}
+                            text={item.cars[0].make + " " + item.cars[0].model}
+                          />
+                          <AppText
+                            size={12}
+                            style={{
+                              color: colors.primary,
+                              fontFamily: "AvenirNext-DemiBold",
+                              opacity: 0.7
+                            }}
+                            text={" " + item.cars[0].year}
+                          />
+                        </View>
+                        <Rating rating={item.cars[0].rating} />
+                      </View>
                     </View>
-                  </View>
-                )}
-                keyExtractor={item => {
-                  return item._id;
-                }}
-              />
+                  )}
+                  keyExtractor={item => {
+                    return item._id;
+                  }}
+                />
+              )}
             </View>
           </>
         </ScrollView>

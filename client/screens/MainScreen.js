@@ -45,21 +45,6 @@ class MainScreen extends React.Component {
   getdateString = date => {
     var today = new Date(date);
     var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    var month = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec"
-    ];
-
     return (
       days[today.getDay()] +
       ", " +
@@ -67,6 +52,17 @@ class MainScreen extends React.Component {
       "/" +
       (today.getMonth() + 1)
     );
+  };
+  getTimeString = date => {
+    var today = new Date(date);
+    var hours = today.getHours();
+    var minutes = today.getMinutes();
+    var ampm = hours >= 12 ? "pm" : "am";
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    var strTime = hours + ":" + minutes + " " + ampm;
+    return strTime;
   };
   render() {
     return (
@@ -166,21 +162,21 @@ class MainScreen extends React.Component {
             >
               <Text
                 style={{
-                  fontSize: 12,
-                  color: colors.primary,
-                  fontFamily: "AvenirNext-Bold"
-                }}
-              >
-                {"From"}
-              </Text>
-              <Text
-                style={{
                   fontSize: 20,
                   color: colors.primary,
                   fontFamily: "AvenirNext-Bold"
                 }}
               >
                 {this.getdateString(this.props.search.rentingDateStart)}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: colors.primary,
+                  fontFamily: "AvenirNext-DemiBold"
+                }}
+              >
+                {this.getTimeString(this.props.search.rentingDateStart)}
               </Text>
             </TouchableOpacity>
             <View
@@ -189,7 +185,30 @@ class MainScreen extends React.Component {
                 borderRightWidth: 1,
                 height: "100%"
               }}
-            />
+            >
+              <View
+                style={{
+                  borderRadius: 50,
+                  borderColor: "#eeeeee",
+                  borderWidth: 1,
+                  backgroundColor: "white",
+                  height: 40,
+                  width: 40,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  position: "absolute",
+                  right: -20,
+                  top: 15
+                }}
+              >
+                <Ionicons
+                  name={"ios-arrow-round-forward"}
+                  size={40}
+                  color={"#cccccc"}
+                />
+              </View>
+            </View>
             <TouchableOpacity
               onPress={() => (
                 this.props.openDateModal(), this.setState({ source: "To" })
@@ -202,21 +221,21 @@ class MainScreen extends React.Component {
             >
               <Text
                 style={{
-                  fontSize: 12,
-                  color: colors.primary,
-                  fontFamily: "AvenirNext-Bold"
-                }}
-              >
-                {"To"}
-              </Text>
-              <Text
-                style={{
                   fontSize: 20,
                   color: colors.primary,
                   fontFamily: "AvenirNext-Bold"
                 }}
               >
                 {this.getdateString(this.props.search.rentingDateEnd)}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: colors.primary,
+                  fontFamily: "AvenirNext-DemiBold"
+                }}
+              >
+                {this.getTimeString(this.props.search.rentingDateEnd)}
               </Text>
             </TouchableOpacity>
           </View>
@@ -228,7 +247,7 @@ class MainScreen extends React.Component {
             this.props.doFetchCars(this.props.search)
           )}
           style={{
-            height:40 ,
+            height: 40,
             flexDirection: "column",
             marginHorizontal: 100,
             alignItems: "center",
@@ -265,7 +284,6 @@ class MainScreen extends React.Component {
       </View>
     );
   }
-
 }
 const mapStateToProps = state => {
   return {

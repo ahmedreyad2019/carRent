@@ -8,6 +8,7 @@ import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
+import DirectionsCar from"@material-ui/icons/DirectionsCar"
 import NavBar from "../Navbar";
 import ViewList from "@material-ui/icons/ViewList";
 import Identity from "@material-ui/icons/Person";
@@ -24,6 +25,7 @@ import RegisterModerator from "../pages/RegisterModerator";
 import ViewAdmins from "../pages/ViewAdmins";
 import ViewModerators from "../pages/ViewModerators";
 import ViewLicenses from "../pages/ViewLicenses";
+import ViewCarLicenses from "../pages/ViewCarLicenses";
 
 const drawerWidth = 240;
 
@@ -50,7 +52,7 @@ class ClippedDrawer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      clicked: "MV",
+      clicked: "CV",
       mobileOpen: false,
       drawerOpen: false
     };
@@ -68,24 +70,24 @@ class ClippedDrawer extends Component {
         return (
             <RegisterModerator/>
         );
-      case "AV":
+      case "CV":
         return (
-          <ViewAdmins/>
+          <ViewCarLicenses/>
         );
-      case "MV":
+      case "DV":
         return (
           <ViewLicenses/>
         );
     default:return   <div></div>
     }
   };
-  handleAdminC = () => {
-    this.setState({ clicked: "AC" });
+  handleLicenseView = () => {
+    this.setState({ clicked: "DV" });
     this.handleDrawerClose();
   };
 
-  handleAdminV = () => {
-    this.setState({ clicked: "AV" });
+  handleCarLicenseView = () => {
+    this.setState({ clicked: "CV" });
     this.handleDrawerClose();
   };
   handleModeratorC = () => {
@@ -128,16 +130,16 @@ class ClippedDrawer extends Component {
           <List>
             
 
-            <ListItem button key={"Create Lawyer"} onClick={this.handleAdminC}>
+            <ListItem button key={"Create Lawyer"} onClick={this.handleLicenseView}>
               <ListItemIcon>
-                <Add />
+                <Identity />
               </ListItemIcon>
               <ListItemText
                 primary={
                     <b style={{ color: "#ffffff" }}>
                       {
                   sessionStorage.getItem("lang") === "en"
-                    ? "Create new Admin"
+                    ? "View Driving Licenses"
                     : "محامي جديد"
                 }
                   </b>
@@ -147,65 +149,24 @@ class ClippedDrawer extends Component {
             <ListItem
               button
               key={"Create Reviewer"}
-              onClick={this.handleModeratorC}
+              onClick={this.handleCarLicenseView}
             >
               <ListItemIcon>
-                <Add />
+                <DirectionsCar />
               </ListItemIcon>
               <ListItemText
                 primary={
                     <b style={{ color: "#ffffff" }}>
                       {
                   sessionStorage.getItem("lang") === "en"
-                    ? "Create new Moderator"
+                    ? "View Car Licenses"
                     : "مراجع جديد"
                 }
                   </b>
                   }
               />
             </ListItem>
-            <Divider />
-            <ListItem
-              button
-              key={"View Lawyers"}
-              onClick={this.handleAdminV}
-            >
-              <ListItemIcon>
-                <Identity />
-              </ListItemIcon>
-              <ListItemText
-                primary={
-                    <b style={{ color: "#ffffff" }}>
-                      {
-                  sessionStorage.getItem("lang") === "en"
-                    ? "View Admins"
-                    : "اظهار المحاميين"
-                }
-                  </b>
-                  }
-              />
-            </ListItem>
-
-            <ListItem
-              button
-              key={"View Moderators"}
-              onClick={this.handleModeratorV}
-            >
-              <ListItemIcon>
-                <Identity />
-              </ListItemIcon>
-              <ListItemText
-                primary={
-                    <b style={{ color: "#ffffff" }}>
-                      {
-                  sessionStorage.getItem("lang") === "en"
-                    ? "View Moderators"
-                    : "اظهار المراجعين"
-                }
-                  </b>
-                  }
-              />
-            </ListItem>
+            
           </List>
           </ClickAwayListener>
         </Drawer>

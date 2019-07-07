@@ -285,11 +285,24 @@ router.get("/view/carLicenseRequests", async (req, res) => {
     });
     if (cars.length === 0)
       return res.status(401).send({ msg: "no pending requests" });
+    var requests = [];
+    for (var i=0;i<cars.length;i++){ 
+        var edited={}
+        edited.car=cars[i]
+        var theCarOwner=await CarOwner.findById(cars[i].carOwnerID)
+        if(theCarOwner){
+        edited.firstName=theCarOwner.firstName
+        edited.lastName=theCarOwner.lastName
+        console.log(edited.firstName)
+        console.log(edited)
+        requests.push(edited)
+    }}
     return res.status(200).send({
-      msg: "Peding requests:",
-      data: cars
+      msg: "Pending requests:",
+      data: requests
     });
   } catch (error) {
+    console.log(error+" k")
     return res.status(400).send({ msg: "error", error: error });
   }
 });
@@ -331,6 +344,7 @@ router.get("/view/carLicenseRequests/:id", async (req, res) => {
 
 //42,43
 router.put("/view/carLicenseRequests/:id/respond", async (req, res) => {
+  console.log("loooooooooooool")
   var stat = 0;
   var token = req.headers["x-access-token"];
   if (!token) {
@@ -351,16 +365,23 @@ router.put("/view/carLicenseRequests/:id/respond", async (req, res) => {
     return res.status(404).send({ error: "Moderator does not exist" });
   }
   try {
-    if (!req.body.status) {
+    if (!req.body.response) {
       return res.status(400).send({ msg: "please choose a response" });
     }
-
-    var cars = await Car.findOneAndUpdate(
-      {
-        status: "PendingApproval",
-        _id: req.params.id
-      },
-      { status: req.body.status }
+    // {
+     
+    //   "drivingLicenseRequest._id": req.params.id
+    // },
+    // {
+    //   "drivingLicenseRequest.status": req.body.response,
+    //   "drivingLicenseRequest.comment": req.body.comment,
+    //   "drivingLicenseRequest.responseDate": Date.now()
+    // }
+    console.log(req.params.id)
+    var thisCar=await Car.findById(req.param.id)
+    console.log(thisCar)
+    var cars = await Car.findByIdAndUpdate(req.params.id,
+      { status: req.body.response }
     );
 
     if (!cars) return res.status(401).send({ msg: "request not available" });

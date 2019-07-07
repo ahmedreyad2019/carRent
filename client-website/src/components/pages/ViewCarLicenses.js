@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import LinearDeterminate from "../layout/loading/CustomizedProgress"
 import LicenseCard from '../cards/LicenseCard';
+import CarLicenseCards from '../cards/CarLicenseCards';
 
-class ViewLicenses extends Component {
+class ViewCarLicenses extends Component {
   constructor (props) {
     super(props)
     this.state =  { // id : this.params.id,
@@ -14,7 +15,7 @@ class ViewLicenses extends Component {
   }
 
   componentDidMount () {
-    fetch(`http://localhost:3000/moderator/view/drivingLicenseRequests`, {
+    fetch(`http://localhost:3000/moderator/view/carLicenseRequests`, {
       headers: new Headers({
         'x-access-token': sessionStorage.getItem("jwtToken")
       }) })
@@ -38,13 +39,18 @@ class ViewLicenses extends Component {
         else{
       const listItems =
       this.state.licenses.map((element, i) => (
-        <div>
-          <LicenseCard key={i} title={'helo'} 
+        <div align="center">
+          <CarLicenseCards key={i} title={'helo'} 
           name={element.firstName+" "+element.lastName}
-           pic={element.drivingLicenseRequest.drivingLicenseLink}
-           date={element.drivingLicenseRequest.date}
-            id={element.drivingLicenseRequest._id}
-            expiryDate={element.drivingLicenseRequest.expiryDate}
+           licensePic={element.car.licenseLink}
+           date={element.car.dateAdded}
+            id={element.car._id}
+            expiryDate={element.car.licenseExpiryDate}
+            plateNumber={element.car.plateNumber}
+            carPhotos={element.car.photosLink}
+            make={element.car.make}
+            model={element.car.model}
+            year={element.car.year}
           />
           <br />
         </div>
@@ -55,7 +61,7 @@ class ViewLicenses extends Component {
         <div>
             <br/>
              <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"></link>
-          <h1 class="display-4" align="center">Licenses</h1>
+          <h1 class="display-4" align="center">Car Licenses</h1>
          
 <br/>
                 {listItems}
@@ -67,4 +73,4 @@ class ViewLicenses extends Component {
   }
 }
 }
-export default ViewLicenses
+export default ViewCarLicenses

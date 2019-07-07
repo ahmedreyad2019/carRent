@@ -22,7 +22,7 @@ const CarSchema = new Schema({
   location: { type: String, required: true },
   category: { type: String, enum: ["A", "B", "C"] },
   carOwnerID: { type: String, required: true },
-  photosLink: { type: String },
+  photosLink: { type: String,required:true },
   banned:{required:true,default:false,type:Boolean}
 });
 module.exports = mongoose.model("Car", CarSchema);

@@ -17,7 +17,11 @@ const DrivingLicenseRequestSchema = new Schema({
     enum: ["Pending", "Accepted", "Rejected"]
   },
   comment: { type: String },
-  drivingLicenseLink: { type: String, required: true }
+  drivingLicenseLink: { type: String, required: true },
+  expiryDate:{
+    type:Date,
+    required:true
+  }
 });
 const CarRenterSchema = new Schema({
   FirstName: { type: String, required: true },

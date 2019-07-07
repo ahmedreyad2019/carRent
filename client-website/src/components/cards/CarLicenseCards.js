@@ -8,12 +8,13 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography'
 import CardActionArea from '@material-ui/core/CardActionArea';
+import Grid from '@material-ui/core/Grid';
 var dateFormat = require('dateformat');
 
 const styles = {
   card: {
     minWidth: 275,
-    width:500
+    width:1000
   },
   bullet: {
     display: 'inline-block',
@@ -28,7 +29,7 @@ const styles = {
   }
 }
 
-class LicenseCard extends React.Component {
+class CarLicenseCard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -41,7 +42,7 @@ class LicenseCard extends React.Component {
   }
 
   rejectHandler(){
-    fetch('http://localhost:3000/moderator/view/drivingLicenseRequests/'+this.props.id+'/respond', {
+    fetch('http://localhost:3000/moderator/view/carLicenseRequests/'+this.props.id+'/respond', {
         method: 'PUT',
         body: JSON.stringify({"response":"Rejected"}),
         headers: {
@@ -61,7 +62,7 @@ class LicenseCard extends React.Component {
       })
 }
   acceptHandler(){
-    fetch('http://localhost:3000/moderator/view/drivingLicenseRequests/'+this.props.id+'/respond', {
+    fetch('http://localhost:3000/moderator/view/carLicenseRequests/'+this.props.id+'/respond', {
         method: 'PUT',
         body: JSON.stringify({"response":"Accepted"}),
         headers: {
@@ -83,22 +84,51 @@ class LicenseCard extends React.Component {
 
   render() {
     const { classes } = this.props
-    console.log("Proooops: "+this.props.pic)
+    console.log("Proooops: "+this.props.licensePic)
     return (
-        <div>
+        <div justify="center">
       <Card className={classes.card}>
        <CardActionArea>
+
+       <Grid container spacing={3} justify="center">
+       <Grid item xs={4}>
+       
         <CardMedia
         square
         style = {{ height: 0, paddingTop: '40%'}}
           className={classes.media}
-          image={this.props.pic}
-          title="Driver Licenses"
-          onClick={()=>{ window.open(this.props.pic, "_blank")}}
+          image={this.props.licensePic}
+          title="Car License"
+          onClick={()=>{ window.open(this.props.licensePic, "_blank")}}
         />
+        </Grid>
+        <Grid item xs={4}>
+          <CardMedia
+        square
+        style = {{ height: 0, paddingTop: '40%'}}
+          className={classes.media}
+          image={this.props.carPhotos}
+          title="Car Picture"
+          onClick={()=>{ window.open(this.props.carPhotos, "_blank")}}
+        />
+        </Grid>
+      </Grid>
+        
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
             {this.props.name}
+          </Typography>
+          <Typography variant="body2" color="textSecondary" component="p">
+           {"Plate Number:"+this.props.plateNumber}
+          </Typography>
+          <Typography variant="body2" color="textSecondary" component="p">
+           {"Car Make:"+this.props.make}
+          </Typography>
+          <Typography variant="body2" color="textSecondary" component="p">
+           {"Car Model:"+this.props.model}
+          </Typography>
+          <Typography variant="body2" color="textSecondary" component="p">
+           {"Car Year:"+this.props.year}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
            {"License Expiry Date:"+dateFormat(this.props.expiryDate,"yyyy-mm-dd")}
@@ -123,8 +153,8 @@ class LicenseCard extends React.Component {
   }
 }
 
-LicenseCard.propTypes = {
+CarLicenseCard.propTypes = {
   classes: PropTypes.object.isRequired
 }
 
-export default withStyles(styles)(LicenseCard)
+export default withStyles(styles)(CarLicenseCard)

@@ -295,7 +295,8 @@ router.post("/drivingLicense/submit", async (req, res) => {
       {
         $set: {
           drivingLicenseRequest: {
-            drivingLicenseLink: req.body.drivingLicenseLink
+            drivingLicenseLink: req.body.drivingLicenseLink,
+            expiryDate:req.body.expiryDate
           }
         }
       }

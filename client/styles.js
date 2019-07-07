@@ -17,7 +17,7 @@ export const styles = {
       width: 0,
       height: 1
     },
-    alignSelf: "center",
+   
     justifyContent:'space-between',
     paddingBottom:200,
     marginVertical: 20,

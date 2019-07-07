@@ -22,6 +22,7 @@ import SearchModal from "../components/SearchModal";
 
 import Rating from "../components/Rating";
 import AppText from "../components/AppText";
+import ImageCarousel from "../components/ImageCarousel";
 
 class CarsScreen extends React.Component {
   componentDidMount() {}
@@ -86,6 +87,12 @@ class CarsScreen extends React.Component {
     return today.getDate() + "/" + (today.getMonth() + 1);
   };
   render() {
+    const images = [
+      require("../images/bmw-3-series-render.jpg"),
+      require("../images/bmw-4-series-render.jpg"),
+      require("../images/bmw-5-series-render.jpg"),
+   
+    ];
     return (
       <View style={{ flex: 1, backgroundColor: colors.backgroundMain }}>
         <Header
@@ -125,12 +132,10 @@ class CarsScreen extends React.Component {
         />
 
         <Modal
-          animationType="slide"
+          animationType="fade"
           transparent={true}
           visible={this.props.filterModalVisible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-          }}
+         
         >
           <Filter />
         </Modal>
@@ -218,7 +223,7 @@ class CarsScreen extends React.Component {
                     >
                       <TouchableOpacity
                         style={{
-                          backgroundColor: colors.primary,
+                          backgroundColor:item.status!=="Done"? colors.primary:"green",
                           zIndex: 9090909090,
                           width: 60,
                           height: 30,
@@ -241,7 +246,7 @@ class CarsScreen extends React.Component {
                           style={{
                             color: "white"
                           }}
-                          text={"Book"}
+                          text={item.status!=='Done'?"Book":"Booked"}
                         />
                       </TouchableOpacity>
                       <View
@@ -253,8 +258,8 @@ class CarsScreen extends React.Component {
                           position: "absolute",
                           top: 150,
                           right: 20,
-                          borderBottomLeftRadius: 50,
-                          borderTopLeftRadius: 50,
+                          borderBottomLeftRadius: 15,
+                          borderTopLeftRadius: 15,
                           flexDirection: "column",
                           justifyContent: "center",
                           alignItems: "center"
@@ -272,7 +277,7 @@ class CarsScreen extends React.Component {
                             size={18}
                             text={item.price.toLocaleString()}
                           />
-                          <AppText text={"EGP"} fontStyle={"bold"} size={10} />
+                          <AppText text={"EGP"} size={10} />
                         </View>
                         <AppText
                           fontStyle={"light"}
@@ -284,17 +289,8 @@ class CarsScreen extends React.Component {
                           }
                         />
                       </View>
+                      <ImageCarousel images={images} />
 
-                      <ImageBackground
-                        source={require("../images/bmw-3-series-render.jpg")}
-                        style={{
-                          backgroundColor: "#eeeeee",
-                          width: "100%",
-                          height: 150
-                        }}
-                      >
-                        <AppText text={"images appear here"} />
-                      </ImageBackground>
                       <View
                         style={{
                           height: 60,

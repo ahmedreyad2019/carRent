@@ -14,6 +14,7 @@ import Rating from "../components/Rating";
 import Detail from "./Detail";
 import AppText from "./AppText";
 import { Header } from "react-native-elements";
+import ImageCarousel from "./ImageCarousel";
 
 class RentModal extends React.Component {
   constructor(props) {
@@ -59,6 +60,12 @@ class RentModal extends React.Component {
     date2 = new Date(transaction.rentingDateEnd);
     const diffTime = Math.abs(date2.getTime() - date1.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const images = [
+      require("../images/bmw-3-series-render.jpg"),
+      require("../images/bmw-4-series-render.jpg"),
+      require("../images/bmw-5-series-render.jpg"),
+   
+    ];
     return (
       <View
         style={{ flexDirection: "column", justifyContent: "center", flex: 1 }}
@@ -81,16 +88,8 @@ class RentModal extends React.Component {
           }
         />
         <ScrollView>
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: "#eeeeee",
-              width: "100%",
-              height: 150
-            }}
-          >
-            <Text>images appear here</Text>
-          </View>
+        <ImageCarousel images={images} full={400} />
+      
           <View style={{ marginHorizontal: 10 }}>
             <Text
               style={{

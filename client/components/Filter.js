@@ -4,6 +4,8 @@ import {
   View,
   PickerIOS,
   Easing,
+  Text,
+  Switch,
   TouchableOpacity,
   Animated
 } from "react-native";
@@ -92,12 +94,15 @@ class Filter extends React.Component {
       transform: [{ rotate: RotateData }]
     };
     return (
-      <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.3)" }}>
+      <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.7)" }}>
         <View
           style={{
             ...styles.CompanyDetails,
+            margin: 0,
             padding: 0,
+            width: "100%",
             height: "80%",
+            alignContent: "flex-end",
             position: "absolute",
             bottom: 0
           }}
@@ -109,7 +114,7 @@ class Filter extends React.Component {
               borderBottomColor: "#74808E"
             }}
           />
-          <Animated.View style={labelStyle}>
+          {/* <Animated.View style={labelStyle}>
             <Ionicons
               size={40}
               color={"#74808E"}
@@ -117,7 +122,7 @@ class Filter extends React.Component {
               onPress={this.handlePassword}
             />
           </Animated.View>
-          <PickerIOS
+         <PickerIOS
             itemStyle={{ color: "black" }}
             selectedValue={this.state.selectedKey}
             onValueChange={this.onValueChange}
@@ -129,7 +134,19 @@ class Filter extends React.Component {
                 label={keySelection}
               />
             ))}
-          </PickerIOS>
+          </PickerIOS> */}
+          <Switch value={this.state} />
+          <View
+            style={{
+              position: "absolute",
+              top: 0,
+              alignSelf:'center'
+            }}
+           
+          >
+            <Text>{"Filters"}</Text>
+            <Text>{this.props.cars.length+" cars"}</Text>
+          </View>
           <TouchableOpacity
             style={{
               position: "absolute",
@@ -140,7 +157,7 @@ class Filter extends React.Component {
               this.props.doCloseFilterModal();
             }}
           >
-            <Ionicons name={"ios-close"} size={40} color={"#F08080"} />
+            <Ionicons name={"ios-close"} size={40} color={"black"} />
           </TouchableOpacity>
         </View>
       </View>

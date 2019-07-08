@@ -13,7 +13,7 @@ class SignIn extends React.Component {
 handleRegister (e) {
     e.preventDefault()
     let Admindata = this.state
-    fetch('http://localhost:3000/admin/login', {
+    fetch('https://carrentalserver.herokuapp.com/admin/login', {
       method: 'POST',
       body: JSON.stringify(Admindata),
       headers: {
@@ -29,7 +29,7 @@ handleRegister (e) {
           sessionStorage.setItem('auth', true)
           document.location.href = '/profile'
         } else {
-          fetch('http://localhost:3000/moderator/login', {
+          fetch('https://carrentalserver.herokuapp.com/moderator/login', {
             method: 'POST',
             body: JSON.stringify(Admindata),
             headers: {

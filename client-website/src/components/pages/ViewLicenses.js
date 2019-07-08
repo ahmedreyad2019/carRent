@@ -14,7 +14,7 @@ class ViewLicenses extends Component {
   }
 
   componentDidMount () {
-    fetch(`http://localhost:3000/moderator/view/drivingLicenseRequests`, {
+    fetch(`https://carrentalserver.herokuapp.com/moderator/view/drivingLicenseRequests`, {
       headers: new Headers({
         'x-access-token': sessionStorage.getItem("jwtToken")
       }) })
@@ -38,7 +38,7 @@ class ViewLicenses extends Component {
         else{
       const listItems =
       this.state.licenses.map((element, i) => (
-        <div>
+        <div align="center">
           <LicenseCard key={i} title={'helo'} 
           name={element.firstName+" "+element.lastName}
            pic={element.drivingLicenseRequest.drivingLicenseLink}

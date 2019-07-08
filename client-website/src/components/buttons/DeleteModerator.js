@@ -31,7 +31,7 @@ class DeleteModerator extends React.Component {
 
   deleteLawyer()
 {
-  fetch(`http://localhost:3000/admin/DeleteModerator/${this.props.id}`, {
+  fetch(`https://carrentalserver.herokuapp.com/admin/DeleteModerator/${this.props.id}`, {
     method: "DELETE",
    
     headers: {

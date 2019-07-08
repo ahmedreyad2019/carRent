@@ -63,7 +63,7 @@ class RegisterAdmin extends React.Component {
 
     
     console.log(sessionStorage.getItem('jwtToken'))
-    fetch('http://localhost:3000/admin/', {
+    fetch('https://carrentalserver.herokuapp.com/admin/', {
       method: 'POST',
       body: JSON.stringify(userData),
       headers: {

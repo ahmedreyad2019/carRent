@@ -7,6 +7,9 @@ const initialState = {
     rentingDateEnd: Date.now(),
     location: "1st Settlement"
   },
+  currentTransactions:"",
+  pastTransactions:"",
+  upcomingTransactions:"",
   selectedCar: "",
   companyModalVisible: false,
   filterModalVisible: false,
@@ -22,6 +25,16 @@ export default (carReducer = (state = initialState, action) => {
       return {
         ...state,
         cars: action.cars
+      };
+    case actionTypes.SET_UPCOMING_TRANSACTIONS:
+      return {
+        ...state,
+        upcomingTransactions: action.upcomingTransactions
+      };
+    case actionTypes.SET_PAST_TRANSACTIONS:
+      return {
+        ...state,
+        pastTransactions: action.pastTransactions
       };
     case actionTypes.SELECT_CAR:
       return {
@@ -47,11 +60,7 @@ export default (carReducer = (state = initialState, action) => {
         }
       };
     }
-    case actionTypes.SET_REQUESTS:
-      return {
-        ...state,
-        companies: { ...state.companies, requested: action.requests }
-      };
+   
     case actionTypes.CLEAR:
       return {
         state

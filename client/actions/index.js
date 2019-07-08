@@ -31,6 +31,24 @@ export const setTransactions = transactions => {
     allCompanies: transactions
   };
 };
+export const setCurrentTransactions = currentTransactions => {
+  return {
+    type: types.SET_CURRENT_TRANSACTIONS,
+    currentTransactions: currentTransactions
+  };
+};
+export const setPastTransactions = pastTransactions => {
+  return {
+    type: types.SET_PAST_TRANSACTIONS,
+    pastTransactions: pastTransactions
+  };
+};
+export const setUpcomingTransactions = upcomingTransactions => {
+  return {
+    type: types.SET_UPCOMING_TRANSACTIONS,
+    upcomingTransactions: upcomingTransactions
+  };
+};
 
 export const selectCar = selectedCar => {
   return {
@@ -253,7 +271,50 @@ export const fetchCars = search => {
     );
   };
 };
-
+export const fetchPastTransactions = () => {
+  return dispatch => {
+    dispatch(loading(true));
+    AsyncStorage.getItem("jwt").then(token =>
+    fetch(`http://192.168.0.107:3000/carRenter/view/pastRentals`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-token": token
+      }
+    })
+      .then(response => response.json())
+      .then(response => {
+        console.log(response);
+        dispatch(setPastTransactions(response.data));
+        dispatch(loading(false));
+      })
+      .catch(error => {
+        dispatch(error());
+      }));
+  };
+};
+export const fetchUpcomingTransactions = () => {
+  return dispatch => {
+    dispatch(loading(true));
+    AsyncStorage.getItem("jwt").then(token =>
+    fetch(`http://192.168.0.107:3000/carRenter/view/upComingRentals`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-token": token
+      }
+    })
+      .then(response => response.json())
+      .then(response => {
+        console.log(response);
+        dispatch(setUpcomingTransactions(response.data));
+        dispatch(loading(false));
+      })
+      .catch(error => {
+        dispatch(error());
+      }));
+  };
+};
 export const fetchProfile = (userId, token) => {
   return dispatch => {
     dispatch(loading(true));

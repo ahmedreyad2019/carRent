@@ -18,6 +18,7 @@ import CarsScreen from "../screens/CarsScreen";
 import FilterScreen from "../screens/FilterScreen";
 import MainScreen from "../screens/MainScreen";
 import RentModal from "../components/RentModal";
+import TransactionsScreen from "../screens/TransactionsScreen";
 
 const getTabBarIcon = (navigation, focused, tintColor) => {
   const { routeName } = navigation.state;
@@ -145,7 +146,8 @@ const tabNav = createAppContainer(
     {
       Home: { screen: RentScreen },
       Companies: { screen: filterNav },
-      Profile: { screen: ProfileScreen }
+      Profile: { screen: ProfileScreen },
+      Transaction:{screen:TransactionsScreen}
     },
     {
       contentComponent: CustomDrawerContentComponent,

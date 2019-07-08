@@ -32,10 +32,9 @@ class TransactionsScreen extends React.Component {
   componentDidMount = () => {
     this.props.doFetchTransactions();
   };
-  _onRefresh=()=>{
+  _onRefresh = () => {
     this.props.doFetchTransactions();
-
-  }
+  };
   getTimeString = date => {
     var today = new Date(date);
     var hours = today.getHours();
@@ -157,7 +156,10 @@ class TransactionsScreen extends React.Component {
           }
           renderItem={({ item }) => (
             <TouchableOpacity
-            onPress={()=>this.props.navigation.navigate("TransactionDetails")}
+              onPress={() => {
+                this.props.navigation.navigate("TransactionDetails"),
+                  this.props.doSelectTransaction(item);
+              }}
               style={{
                 borderBottomWidth: 0.5,
                 borderBottomColor: "#ddd",
@@ -169,22 +171,27 @@ class TransactionsScreen extends React.Component {
                 style={{ position: "absolute", right: 15, top: 15 }}
               />
               <View
-                style={{backgroundColor:'white',
+                style={{
+                  backgroundColor: "white",
                   flexDirection: "column",
                   justifyContent: "center",
                   alignItems: "center",
                   position: "absolute",
                   left: 15,
-                  top:15
+                  top: 15
                 }}
               >
                 <AppText
                   text={this.getdateString(item.rentingDateStart, true)}
                 />
-                <View style={{ borderRightWidth: 2 ,borderRightColor:"#aaa",height:10}} />
-                <AppText
-                  text={this.getdateString(item.rentingDateEnd, true)}
+                <View
+                  style={{
+                    borderRightWidth: 2,
+                    borderRightColor: "#aaa",
+                    height: 10
+                  }}
                 />
+                <AppText text={this.getdateString(item.rentingDateEnd, true)} />
               </View>
             </TouchableOpacity>
           )}
@@ -227,6 +234,9 @@ const mapDispatchToProps = dispatch => ({
 
   doRent: carID => {
     dispatch(actions.rent(carID));
+  },
+  doSelectTransaction: selectedTransaction => {
+    dispatch(actions.selectTransaction(selectedTransaction));
   }
 });
 export default connect(

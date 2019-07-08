@@ -104,7 +104,8 @@ router.put("/:id", async (req, res) => {
       stat = decoded.id;
     });
     var moderator = await Moderator.findById(stat);
-    if (!moderator) {
+    var admin = await Admin.findById(stat);
+    if (!moderator&&!admin) {
       return res.status(404).send({ error: "Moderator does not exist" });
     }
     if (stat != req.params.id)
@@ -143,7 +144,8 @@ router.get("/view/drivingLicenseRequests", async (req, res) => {
     stat = decoded.id;
   });
   var moderator = await Moderator.findById(stat);
-  if (!moderator) {
+  var admin = await Admin.findById(stat);
+  if (!moderator&&!admin) {
     return res.status(404).send({ error: "Moderator does not exist" });
   }
   try {
@@ -188,7 +190,8 @@ router.get("/view/drivingLicenseRequests/:id", async (req, res) => {
     stat = decoded.id;
   });
   var moderator = await Moderator.findById(stat);
-  if (!moderator) {
+  var admin = await Admin.findById(stat);
+  if (!moderator&&!admin) {
     return res.status(404).send({ error: "Moderator does not exist" });
   }
   try {
@@ -225,7 +228,8 @@ router.put("/view/drivingLicenseRequests/:id/respond", async (req, res) => {
     stat = decoded.id;
   });
   var moderator = await Moderator.findById(stat);
-  if (!moderator) {
+  var admin = await Admin.findById(stat);
+  if (!moderator&&!admin) {
     return res.status(404).send({ error: "Moderator does not exist" });
   }
   try {
@@ -276,7 +280,8 @@ router.get("/view/carLicenseRequests", async (req, res) => {
     stat = decoded.id;
   });
   var moderator = await Moderator.findById(stat);
-  if (!moderator) {
+  var admin = await Admin.findById(stat);
+  if (!moderator&&!admin) {
     return res.status(404).send({ error: "Moderator does not exist" });
   }
   try {
@@ -323,7 +328,8 @@ router.get("/view/carLicenseRequests/:id", async (req, res) => {
     stat = decoded.id;
   });
   var moderator = await Moderator.findById(stat);
-  if (!moderator) {
+  var admin = await Admin.findById(stat);
+  if (!moderator&&!admin) {
     return res.status(404).send({ error: "Moderator does not exist" });
   }
   try {
@@ -361,7 +367,8 @@ router.put("/view/carLicenseRequests/:id/respond", async (req, res) => {
     stat = decoded.id;
   });
   var moderator = await Moderator.findById(stat);
-  if (!moderator) {
+  var admin = await Admin.findById(stat);
+  if (!moderator&&!admin) {
     return res.status(404).send({ error: "Moderator does not exist" });
   }
   try {
@@ -413,7 +420,8 @@ router.get("/view/complaints", async (req, res) => {
     stat = decoded.id;
   });
   var moderator = await Moderator.findById(stat);
-  if (!moderator) {
+  var admin = await Admin.findById(stat);
+  if (!moderator&&!admin) {
     return res.status(404).send({ error: "Moderator does not exist" });
   }
   try {
@@ -448,7 +456,8 @@ router.get("/view/complaints/:id", async (req, res) => {
     stat = decoded.id;
   });
   var moderator = await Moderator.findById(stat);
-  if (!moderator) {
+  var admin = await Admin.findById(stat);
+  if (!moderator&&!admin) {
     return res.status(404).send({ error: "Moderator does not exist" });
   }
   try {
@@ -486,7 +495,8 @@ router.put("/view/complaints/:id", async (req, res) => {
     stat = decoded.id;
   });
   var moderator = await Moderator.findById(stat);
-  if (!moderator) {
+  var admin = await Admin.findById(stat);
+  if (!moderator&&!admin) {
     return res.status(404).send({ error: "Moderator does not exist" });
   }
   try {

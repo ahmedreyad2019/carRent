@@ -15,7 +15,7 @@ class ViewCarLicenses extends Component {
   }
 
   componentDidMount () {
-    fetch(`http://localhost:3000/moderator/view/carLicenseRequests`, {
+    fetch(`https://carrentalserver.herokuapp.com/moderator/view/carLicenseRequests`, {
       headers: new Headers({
         'x-access-token': sessionStorage.getItem("jwtToken")
       }) })

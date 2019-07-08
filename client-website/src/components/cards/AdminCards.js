@@ -10,7 +10,13 @@ import Typography from '@material-ui/core/Typography'
 const styles = {
   card: {
     minWidth: 20,
-    backgroundColor: 'linear-gradient(to top, #000000, #DCDCDC)'
+    width:500,
+    margin:8,
+    borderRadius: 3,
+    border: 0,
+    padding: '0 30px',
+    boxShadow: '0 3px 5px 2px rgba(21, 33, 99, .3)',
+    
   },
   bullet: {
     display: 'inline-block',
@@ -21,7 +27,7 @@ const styles = {
     fontSize: 14
   },
   pos: {
-    marginBottom: 12
+    margin: 12
   }
 }
 

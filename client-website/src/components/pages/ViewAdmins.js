@@ -16,7 +16,7 @@ class ViewAdmins extends React.Component {
   componentDidMount () {
     // insert the method by replacing the below one
     
-      fetch('http://localhost:3000/admin/', {
+      fetch('https://carrentalserver.herokuapp.com/admin/', {
         headers: new Headers({
           'x-access-token': this.props.token
         })
@@ -35,7 +35,7 @@ class ViewAdmins extends React.Component {
 
 if(!this.state.isLoaded){return <LinearDeterminate/>}
     const listItems = this.state.lawyersOnSystem.map((item, i) => (
-      <div>
+      <div align="center">
         <ViewLawyersByAdminCard key={i}
           token={this.props.token}
           id={item._id}

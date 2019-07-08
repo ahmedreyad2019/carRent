@@ -18,7 +18,6 @@ import Add from "@material-ui/icons/PersonAdd";
 // import LinearDeterminate from "../loading/CustomizedProgress";
 import { connect } from "react-redux";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-
 import EditProfile from "@material-ui/icons/BorderColor";
 import RegisterAdmin from "../pages/RegisterAdmin";
 import RegisterModerator from "../pages/RegisterModerator";
@@ -40,7 +39,7 @@ const styles = theme => ({
   },
   drawerPaper: {
     width: drawerWidth,
-    backgroundColor: "#103755"
+    backgroundColor: "#000080"
   },
   content: {
     flexGrow: 1

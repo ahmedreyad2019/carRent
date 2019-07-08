@@ -13,7 +13,13 @@ var dateFormat = require('dateformat');
 const styles = {
   card: {
     minWidth: 275,
-    width:500
+    width:500,
+    margin:8,
+    borderRadius: 3,
+    border: 0,
+    padding: '0 30px',
+    boxShadow: '0 3px 5px 2px rgba(21, 33, 99, .3)',
+    
   },
   bullet: {
     display: 'inline-block',
@@ -41,7 +47,7 @@ class LicenseCard extends React.Component {
   }
 
   rejectHandler(){
-    fetch('http://localhost:3000/moderator/view/drivingLicenseRequests/'+this.props.id+'/respond', {
+    fetch('https://carrentalserver.herokuapp.com/moderator/view/drivingLicenseRequests/'+this.props.id+'/respond', {
         method: 'PUT',
         body: JSON.stringify({"response":"Rejected"}),
         headers: {
@@ -61,7 +67,7 @@ class LicenseCard extends React.Component {
       })
 }
   acceptHandler(){
-    fetch('http://localhost:3000/moderator/view/drivingLicenseRequests/'+this.props.id+'/respond', {
+    fetch('https://carrentalserver.herokuapp.com/moderator/view/drivingLicenseRequests/'+this.props.id+'/respond', {
         method: 'PUT',
         body: JSON.stringify({"response":"Accepted"}),
         headers: {

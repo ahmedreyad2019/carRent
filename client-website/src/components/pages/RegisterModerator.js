@@ -63,7 +63,7 @@ class RegisterModerator extends React.Component {
 
     
     console.log(sessionStorage.getItem('jwtToken'))
-    fetch('http://localhost:3000/moderator/', {
+    fetch('https://carrentalserver.herokuapp.com/moderator/', {
       method: 'POST',
       body: JSON.stringify(userData),
       headers: {

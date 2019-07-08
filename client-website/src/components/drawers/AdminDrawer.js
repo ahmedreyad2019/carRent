@@ -17,12 +17,14 @@ import Add from "@material-ui/icons/PersonAdd";
 // import LinearDeterminate from "../loading/CustomizedProgress";
 import { connect } from "react-redux";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-
+import DirectionsCar from"@material-ui/icons/DirectionsCar"
 import EditProfile from "@material-ui/icons/BorderColor";
 import RegisterAdmin from "../pages/RegisterAdmin";
 import RegisterModerator from "../pages/RegisterModerator";
 import ViewAdmins from "../pages/ViewAdmins";
 import ViewModerators from "../pages/ViewModerators";
+import ViewCarLicenses from "../pages/ViewCarLicenses";
+import ViewLicenses from "../pages/ViewLicenses";
 
 const drawerWidth = 240;
 
@@ -37,7 +39,7 @@ const styles = theme => ({
   },
   drawerPaper: {
     width: drawerWidth,
-    backgroundColor: "#103755"
+    backgroundColor: "#000080"
   },
   content: {
     flexGrow: 1
@@ -75,8 +77,25 @@ class ClippedDrawer extends Component {
         return (
           <ViewModerators/>
         );
+        case "CV":
+        return (
+          <ViewCarLicenses/>
+        );
+      case "DV":
+        return (
+          <ViewLicenses/>
+        );
     default:return   <div></div>
     }
+  };
+  handleLicenseView = () => {
+    this.setState({ clicked: "DV" });
+    this.handleDrawerClose();
+  };
+
+  handleCarLicenseView = () => {
+    this.setState({ clicked: "CV" });
+    this.handleDrawerClose();
   };
   handleAdminC = () => {
     this.setState({ clicked: "AC" });
@@ -200,6 +219,43 @@ class ClippedDrawer extends Component {
                   sessionStorage.getItem("lang") === "en"
                     ? "View Moderators"
                     : "اظهار المراجعين"
+                }
+                  </b>
+                  }
+              />
+            </ListItem>
+            <Divider />
+            <ListItem button key={"Create Lawyer"} onClick={this.handleLicenseView}>
+              <ListItemIcon>
+                <Identity />
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                    <b style={{ color: "#ffffff" }}>
+                      {
+                  sessionStorage.getItem("lang") === "en"
+                    ? "View Driving Licenses"
+                    : "محامي جديد"
+                }
+                  </b>
+                  }
+              />
+            </ListItem>
+            <ListItem
+              button
+              key={"Create Reviewer"}
+              onClick={this.handleCarLicenseView}
+            >
+              <ListItemIcon>
+                <DirectionsCar />
+              </ListItemIcon>
+              <ListItemText
+                primary={
+                    <b style={{ color: "#ffffff" }}>
+                      {
+                  sessionStorage.getItem("lang") === "en"
+                    ? "View Car Licenses"
+                    : "مراجع جديد"
                 }
                   </b>
                   }

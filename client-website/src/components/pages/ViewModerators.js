@@ -16,7 +16,7 @@ class ViewModerators extends React.Component {
   componentDidMount () {
     // insert the method by replacing the below one
     
-      fetch('http://localhost:3000/moderator/', {
+      fetch('https://carrentalserver.herokuapp.com/moderator/', {
         headers: new Headers({
           'x-access-token': this.props.token
         })
@@ -35,7 +35,7 @@ class ViewModerators extends React.Component {
 
 if(!this.state.isLoaded){return <LinearDeterminate/>}
     const listItems = this.state.lawyersOnSystem.map((item, i) => (
-      <div>
+      <div align="center">
         <ViewLawyersByAdminCard key={i}
           id={item._id}
           firstName={item.firstName}

@@ -1,4 +1,5 @@
 import React from "react";
+import {Platform} from "react-native"
 import {
   ScrollView,
   FlatList,
@@ -317,7 +318,7 @@ class CarsScreen extends React.Component {
                             size={12}
                             style={{
                               color: colors.primary,
-                              fontFamily: "AvenirNext-DemiBold",
+                              fontFamily: Platform.OS==='ios'? "AvenirNext-DemiBold":'Roboto',
                               opacity: 0.7
                             }}
                             text={" " + item.cars[0].year}

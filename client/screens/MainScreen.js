@@ -1,4 +1,5 @@
 import React from "react";
+import {Platform} from 'react-native';
 import {
   ScrollView,
   FlatList,
@@ -120,7 +121,8 @@ class MainScreen extends React.Component {
             shadowOpacity: 0.2,
             flexDirection: "column",
             justifyContent: "center",
-            alignSelf: "center"
+            alignSelf: "center",
+            elevation:1
           }}
         >
           <View
@@ -164,7 +166,7 @@ class MainScreen extends React.Component {
                 style={{
                   fontSize: 20,
                   color: colors.primary,
-                  fontFamily: "AvenirNext-Bold"
+                  fontFamily:Platform.OS === 'ios'? "AvenirNext-Bold":'Roboto',
                 }}
               >
                 {this.getdateString(this.props.search.rentingDateStart)}
@@ -173,7 +175,7 @@ class MainScreen extends React.Component {
                 style={{
                   fontSize: 14,
                   color: colors.primary,
-                  fontFamily: "AvenirNext-DemiBold"
+                  fontFamily:Platform.OS === 'ios'? "AvenirNext-DemiBold":'Roboto',
                 }}
               >
                 {this.getTimeString(this.props.search.rentingDateStart)}
@@ -223,8 +225,8 @@ class MainScreen extends React.Component {
                 style={{
                   fontSize: 20,
                   color: colors.primary,
-                  fontFamily: "AvenirNext-Bold"
-                }}
+                  fontFamily:Platform.OS === 'ios'? "AvenirNext-Bold":'Roboto',
+                      }}
               >
                 {this.getdateString(this.props.search.rentingDateEnd)}
               </Text>
@@ -232,7 +234,7 @@ class MainScreen extends React.Component {
                 style={{
                   fontSize: 14,
                   color: colors.primary,
-                  fontFamily: "AvenirNext-DemiBold"
+                  fontFamily:Platform.OS === 'ios'? "AvenirNext-DemiBold":'Roboto',
                 }}
               >
                 {this.getTimeString(this.props.search.rentingDateEnd)}
@@ -265,7 +267,7 @@ class MainScreen extends React.Component {
           <Text
             style={{
               fontSize: 18,
-              fontFamily: "AvenirNext-DemiBold",
+              fontFamily:Platform.OS === 'ios'? "AvenirNext-DemiBold":'Roboto',
               color: "white"
             }}
           >

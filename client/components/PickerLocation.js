@@ -11,6 +11,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import * as actions from "../actions/index";
 import { styles, colors } from "../styles";
 import { connect } from "react-redux";
+import Platform from "react-native"
 
 class PickerLocation extends Component {
   constructor(props) {
@@ -83,7 +84,7 @@ class PickerLocation extends Component {
             this.setState(prevState => ({ listOpen: !prevState.listOpen }))
           }
         >
-          <Text style={{ fontFamily: "AvenirNext-DemiBold", color: "white" }}>
+          <Text style={{ fontFamily:Platform.OS==='ios'? "AvenirNext-DemiBold":"Roboto", color: "white" }}>
             {this.props.search.location}
           </Text>
           <Ionicons
@@ -126,7 +127,7 @@ class PickerLocation extends Component {
               >
                 <Text
                   style={{
-                    fontFamily: "AvenirNext-DemiBold",
+                    fontFamily: Platform.OS==='ios'?"AvenirNext-DemiBold":"Roboto",
                     fontSize: 18,
                     color: "black"
                   }}

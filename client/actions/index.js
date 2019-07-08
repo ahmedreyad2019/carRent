@@ -162,7 +162,7 @@ export const rent = carID => {
     dispatch(loading(true));
     AsyncStorage.getItem("jwt").then(token =>
       fetch(
-        `http:// 192.168.1.6:3000/carRenter/view/availableCars/${carID}/rent`,
+        `https://carrentalserver.herokuapp.com/carRenter/view/availableCars/${carID}/rent`,
         {
           method: "POST",
           headers: {
@@ -190,7 +190,7 @@ export const login = (mobileNumber, password) => {
       AsyncStorage.getAllKeys()
         .then(AsyncStorage.multiRemove)
         .then(
-          fetch("http:// 192.168.1.6:3000/carRenter/login", {
+          fetch("https://carrentalserver.herokuapp.com/carRenter/login", {
             method: "POST",
             body: JSON.stringify({
               mobileNumber: mobileNumber,
@@ -248,7 +248,7 @@ export const fetchCars = search => {
   return dispatch => {
     dispatch(loading(true));
     AsyncStorage.getItem("jwt").then(token =>
-      fetch("http:// 192.168.1.6:3000/carRenter/view/availableCars", {
+      fetch("https://carrentalserver.herokuapp.com/carRenter/view/availableCars", {
         method: "POST",
         body: JSON.stringify({
           rentingDateStart: search.rentingDateStart,
@@ -320,7 +320,7 @@ export const fetchUpcomingTransactions = () => {
 export const fetchProfile = (userId, token) => {
   return dispatch => {
     dispatch(loading(true));
-    fetch(`http:// 192.168.1.6:3000/carRenter/${userId}`, {
+    fetch(`https://carrentalserver.herokuapp.com/carRenter/${userId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

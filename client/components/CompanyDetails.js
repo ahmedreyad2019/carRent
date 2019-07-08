@@ -5,6 +5,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { styles } from "../styles";
 import * as actions from "../actions/index";
 import Status from "../components/Status";
+import Platform from "react-native"
 class CompanyDetails extends React.Component {
   constructor(props) {
     super(props);
@@ -18,7 +19,7 @@ class CompanyDetails extends React.Component {
             color: "#DBD7DF",
             textAlign:'center',
             fontSize: 23,
-            fontFamily: "AvenirNext-DemiBold"
+            fontFamily: Platform.OS==='ios'?"AvenirNext-DemiBold":"Roboto"
           }}
         >
           
@@ -30,7 +31,7 @@ class CompanyDetails extends React.Component {
             color: "#DBD7DF",
 
             fontSize: 15,
-            fontFamily: "AvenirNext-DemiBold"
+            fontFamily: Platform.OS==='ios'?"AvenirNext-DemiBold":"Roboto"
           }}
         >
           Regulation Law: {this.props.selectedCompany.regulationLaw}
@@ -40,7 +41,7 @@ class CompanyDetails extends React.Component {
             color: "#DBD7DF",
 
             fontSize: 15,
-            fontFamily: "AvenirNext-DemiBold"
+            fontFamily: Platform.OS==='ios'?"AvenirNext-DemiBold":"Roboto"
           }}
         >
           cityHQ: {this.props.selectedCompany.cityHQ}
@@ -50,7 +51,7 @@ class CompanyDetails extends React.Component {
             color: "#DBD7DF",
 
             fontSize: 15,
-            fontFamily: "AvenirNext-DemiBold"
+            fontFamily: Platform.OS==='ios'?"AvenirNext-DemiBold":"Roboto"
           }}
         >
           addressHQ: {this.props.selectedCompany.addressHQ}
@@ -60,7 +61,7 @@ class CompanyDetails extends React.Component {
             color: "#DBD7DF",
 
             fontSize: 15,
-            fontFamily: "AvenirNext-DemiBold"
+            fontFamily: Platform.OS==='ios'?"AvenirNext-DemiBold":"Roboto"
           }}
         >
           governerateHQ: {this.props.selectedCompany.governerateHQ}
@@ -70,7 +71,7 @@ class CompanyDetails extends React.Component {
             color: "#DBD7DF",
 
             fontSize: 15,
-            fontFamily: "AvenirNext-DemiBold"
+            fontFamily: Platform.OS==='ios'?"AvenirNext-DemiBold":"Roboto"
           }}
         >
           telephoneHQ: {this.props.selectedCompany.telephoneHQ}
@@ -80,7 +81,7 @@ class CompanyDetails extends React.Component {
             color: "#DBD7DF",
 
             fontSize: 15,
-            fontFamily: "AvenirNext-DemiBold"
+            fontFamily: Platform.OS==='ios'?"AvenirNext-DemiBold":"Roboto"
           }}
         >
           faxHQ: {this.props.selectedCompany.faxHQ}
@@ -91,7 +92,7 @@ class CompanyDetails extends React.Component {
             color: "#DBD7DF",
 
             fontSize: 15,
-            fontFamily: "AvenirNext-DemiBold"
+            fontFamily: Platform.OS==='ios'?"AvenirNext-DemiBold":"Roboto"
           }}
         >
           Capital:{" "}
@@ -103,7 +104,7 @@ class CompanyDetails extends React.Component {
             color: "#DBD7DF",
 
             fontSize: 15,
-            fontFamily: "AvenirNext-DemiBold"
+            fontFamily: Platform.OS==='ios'?"AvenirNext-DemiBold":"Roboto"
           }}
         >
           Investor Name: {this.props.selectedCompany.investorName}
@@ -118,6 +119,7 @@ class CompanyDetails extends React.Component {
             alignSelf: "flex-end",
             shadowOpacity: 0.4,
             shadowRadius: 3,
+            elevation:1,
             shadoOffset: {
               height: 3
             }

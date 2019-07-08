@@ -381,7 +381,7 @@ router.post("/view/availableCars/:id/rent", async (req, res) => {
       { carID: cars._id, status: "Upcoming" },
       {
         carRenterID: stat,
-        status: "Done"
+        status: "Booked"
       }
     );
     if (!transaction) {
@@ -573,32 +573,27 @@ router.get("/view/pastRentals", async (req, res) => {
           as: "cars"
         }
       },
-      {   $unwind:"$cars" }, 
+      { $unwind: "$cars" },
       {
         $lookup: {
-          from: "carOwners",
+          from: "carowners",
           let: {
-            car: "$carOwnerID",
-            stats: "$status"
+            carOwnerID: "$carOwnerID",
+            renterID: "$carRenterID"
           },
           pipeline: [
             {
               $match: {
                 $expr: {
-                  $and: [
-                    {
-                      $or: [{ $eq: ["$$stats", "Upcoming"] }]
-                    },
-                    { $eq: ["$_id", "$$car"] }
-                  ]
+                  $and: [{ $eq: ["$_id", "$$carOwnerID"] }]
                 }
               }
             }
           ],
-          as: "carOwner"
+          as: "carOwners"
         }
       },
-      {   $unwind:"$carOwner" }, 
+      { $unwind: "$carOwners" },
 
       {
         $match: { cars: { $ne: [] } }

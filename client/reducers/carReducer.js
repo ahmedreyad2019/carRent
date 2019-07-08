@@ -11,6 +11,7 @@ const initialState = {
   pastTransactions:"",
   upcomingTransactions:"",
   selectedCar: "",
+  selectedTransaction: "",
   companyModalVisible: false,
   filterModalVisible: false,
   rentModalVisible: false,
@@ -40,6 +41,11 @@ export default (carReducer = (state = initialState, action) => {
       return {
         ...state,
         selectedCar: action.selectedCar
+      };
+    case actionTypes.SELECT_TRANSACTION:
+      return {
+        ...state,
+        selectedTransaction: action.selectedTransaction
       };
     case actionTypes.SET_RENTING_DATE: {
       return {

@@ -82,24 +82,19 @@ class TransactionDetailsScreen extends React.Component {
       this.props.upcomingTransactions,
       []
     ];
+    const transaction = this.props.selectedTransaction;
+    const { carOwners, cars } = transaction;
     return (
       <View style={{ flex: 1 }}>
         <Header
           barStyle={"light-content"}
           backgroundColor={colors.primary}
           centerComponent={
-            <View
-              style={{
-                backgroundColor: "rgba(255,255,255,0.1)",
-                width: "100%",
-                borderRadius: 50,
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
-              <AppText style={{ color: "white" }} text={"Details"} />
-            </View>
+            <AppText
+              size={24}
+              style={{ color: "white" }}
+              text={"Details"}
+            />
           }
           leftComponent={
             <TouchableOpacity
@@ -137,56 +132,10 @@ class TransactionDetailsScreen extends React.Component {
             }}
           />
         </View>
-        <FlatList
-          refreshControl={
-            <RefreshControl
-              refreshing={this.props.loading}
-              onRefresh={this._onRefresh}
-            />
-          }
-          data={
-            this.state.selectedIndex === 0
-              ? this.props.pastTransactions
-              : this.state.selectedIndex === 1
-              ? this.props.upcomingTransactions
-              : []
-          }
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={{
-                borderBottomWidth: 0.5,
-                borderBottomColor: "#ddd",
-                height: 120
-              }}
-            >
-              <AppText
-                text={"EGP " + item.price.toLocaleString()}
-                style={{ position: "absolute", right: 15, top: 15 }}
-              />
-              <View
-                style={{
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  position: "absolute",
-                  left: 15,
-                  top:15
-                }}
-              >
-                <AppText
-                  text={this.getdateString(item.rentingDateStart, true)}
-                />
-                <View style={{ borderRightWidth: 2 ,borderRightColor:"#aaa",height:10}} />
-                <AppText
-                  text={this.getdateString(item.rentingDateEnd, true)}
-                />
-              </View>
-            </TouchableOpacity>
-          )}
-          keyExtractor={item => {
-            return item._id;
-          }}
-        />
+        <View>
+          <AppText text={cars.make} />
+          <AppText text={carOwners.firstName} />
+        </View>
       </View>
     );
   }
@@ -198,6 +147,7 @@ const mapStateToProps = state => {
     cars: state.carReducer.cars,
     loading: state.loginReducer.loading,
     selectedCar: state.carReducer.selectedCar,
+    selectedTransaction: state.carReducer.selectedTransaction,
     order: state.carReducer.order,
     search: state.carReducer.search,
     upcomingTransactions: state.carReducer.upcomingTransactions,

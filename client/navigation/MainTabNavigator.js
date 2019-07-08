@@ -128,7 +128,7 @@ const tabNav = createAppContainer(
     {
       contentComponent: CustomDrawerContentComponent,
 
-      drawerWidth: 300
+     
     }
   )
 );

@@ -19,6 +19,7 @@ import FilterScreen from "../screens/FilterScreen";
 import MainScreen from "../screens/MainScreen";
 import RentModal from "../components/RentModal";
 import TransactionsScreen from "../screens/TransactionsScreen";
+import TransactionDetailsScreen from "../screens/TransactionDetailsScreen";
 
 const getTabBarIcon = (navigation, focused, tintColor) => {
   const { routeName } = navigation.state;
@@ -35,43 +36,7 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
   return <IconComponent name={`ios-` + iconName} size={25} color={tintColor} />;
 };
 
-const filterNav = createStackNavigator(
-  {
-    content: { screen: CarsScreen },
-    modal: { screen: FilterScreen }
-  },
-  {
-    headerMode: "none",
-    mode: "modal",
-    initialRouteName: "content",
-    transparentCard: true,
-    transitionConfig: () => ({
-      transitionSpec: {
-        duration: 550,
-        easing: Easing.out(Easing.poly(4)),
-        timing: Animated.timing,
-        useNativeDriver: true
-      },
-      screenInterpolator: sceneProps => {
-        const { layout, position, scene } = sceneProps;
-        const thisSceneIndex = scene.index;
 
-        const height = layout.initHeight;
-        const translateY = position.interpolate({
-          inputRange: [thisSceneIndex - 1, thisSceneIndex, thisSceneIndex + 1],
-          outputRange: [height, 0, 0]
-        });
-
-        const opacity = position.interpolate({
-          inputRange: [thisSceneIndex - 1, thisSceneIndex, thisSceneIndex + 1],
-          outputRange: [1, 1, 0.5]
-        });
-
-        return { opacity, transform: [{ translateY }] };
-      }
-    })
-  }
-);
 const user = { name: "ahmed reyad" };
 const Profile = () => (
   <View
@@ -141,13 +106,24 @@ const RentScreen = createAppContainer(
     }
   )
 );
+const TransactionsScreens = createAppContainer(
+  createStackNavigator(
+    {
+     Transaction:{screen:TransactionsScreen},
+     TransactionDetails:{screen:TransactionDetailsScreen}
+    },
+    {
+      headerMode: "none"
+    }
+  )
+);
 const tabNav = createAppContainer(
   createDrawerNavigator(
     {
       Home: { screen: RentScreen },
-      Companies: { screen: filterNav },
+     
       Profile: { screen: ProfileScreen },
-      Transaction:{screen:TransactionsScreen}
+      Transaction:{screen:TransactionsScreens}
     },
     {
       contentComponent: CustomDrawerContentComponent,

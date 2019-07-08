@@ -266,6 +266,8 @@ export const fetchCars = search => {
           dispatch(loading(false));
         })
         .catch(error => {
+          dispatch(setError(error));
+
           console.log(error);
         })
     );
@@ -284,12 +286,13 @@ export const fetchPastTransactions = () => {
     })
       .then(response => response.json())
       .then(response => {
-        console.log(response);
+        console.log(response.data)
         dispatch(setPastTransactions(response.data));
         dispatch(loading(false));
       })
       .catch(error => {
-        dispatch(error());
+        console.log(error)
+        dispatch(setError(error));
       }));
   };
 };
@@ -306,12 +309,11 @@ export const fetchUpcomingTransactions = () => {
     })
       .then(response => response.json())
       .then(response => {
-        console.log(response);
         dispatch(setUpcomingTransactions(response.data));
         dispatch(loading(false));
       })
       .catch(error => {
-        dispatch(error());
+        dispatch(setError(error));
       }));
   };
 };
@@ -332,7 +334,7 @@ export const fetchProfile = (userId, token) => {
         dispatch(loading(false));
       })
       .catch(error => {
-        dispatch(error());
+        dispatch(setError(error));
       });
   };
 };

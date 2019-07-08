@@ -296,7 +296,7 @@ router.post("/drivingLicense/submit", async (req, res) => {
         $set: {
           drivingLicenseRequest: {
             drivingLicenseLink: req.body.drivingLicenseLink,
-            expiryDate:req.body.expiryDate
+            expiryDate: req.body.expiryDate
           }
         }
       }
@@ -512,10 +512,6 @@ router.get("/view/upComingRentals", async (req, res) => {
     return res.status(404).send({ error: "Renter does not exist" });
   }
   try {
-    const transactions = await Transaction.find({
-      carRenterID: stat,
-      status: "UpComing"
-    });
     if (transactions.length === 0)
       return res.status(401).send({ msg: "no upcoming rentals" });
     return res
@@ -548,10 +544,66 @@ router.get("/view/pastRentals", async (req, res) => {
     return res.status(404).send({ error: "Renter does not exist" });
   }
   try {
-    const transactions = await Transaction.find({
-      carRenterID: stat,
-      status: "Done"
-    });
+    const transactions = await Transaction.aggregate([
+      {
+        $lookup: {
+          from: "cars",
+          let: {
+            car: "$carID",
+            stats: "$status",
+            renterID: "$carRenterID"
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    {
+                      $or: [
+                        { $eq: ["$$stats", "Upcoming"] },
+                        { $eq: ["$$renterID", renter._id] }
+                      ]
+                    },
+                    { $eq: ["$_id", "$$car"] }
+                  ]
+                }
+              }
+            }
+          ],
+          as: "cars"
+        }
+      },
+      {   $unwind:"$cars" }, 
+      {
+        $lookup: {
+          from: "carOwners",
+          let: {
+            car: "$carOwnerID",
+            stats: "$status"
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    {
+                      $or: [{ $eq: ["$$stats", "Upcoming"] }]
+                    },
+                    { $eq: ["$_id", "$$car"] }
+                  ]
+                }
+              }
+            }
+          ],
+          as: "carOwner"
+        }
+      },
+      {   $unwind:"$carOwner" }, 
+
+      {
+        $match: { cars: { $ne: [] } }
+      }
+    ]);
     if (transactions.length === 0)
       return res.status(401).send({ msg: "no past rentals" });
     return res.status(200).send({ msg: "past rentals:", data: transactions });

@@ -280,7 +280,7 @@ export const fetchPastTransactions = () => {
   return dispatch => {
     dispatch(loading(true));
     AsyncStorage.getItem("jwt").then(token =>
-    fetch(`https://carrentalserver.herokuapp.com/carRenter/view/pastRentals`, {
+    fetch(`http://192.168.0.107:3000/carRenter/view/pastRentals`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -289,6 +289,7 @@ export const fetchPastTransactions = () => {
     })
       .then(response => response.json())
       .then(response => {
+        console.log(response.data)
         dispatch(setPastTransactions(response.data));
         dispatch(loading(false));
       })

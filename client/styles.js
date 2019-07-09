@@ -10,10 +10,11 @@ export const styles = {
     padding: 40,
     backgroundColor: colors.backgroundCard,
     shadowColor: "#000",
-    width: "90%",
-    borderRadius: 20,
+    width: "100%",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
     shadowOpacity: 0.2,
-    shadowRadius: 5,
+    shadowRadius: 2,
     shadoOffset: {
       width: 0,
       height: 1,
@@ -21,7 +22,6 @@ export const styles = {
    
     justifyContent:'space-between',
     paddingBottom:200,
-    marginVertical: 20,
     flex: 1,
     
   },

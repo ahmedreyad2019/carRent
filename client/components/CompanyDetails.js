@@ -1,11 +1,10 @@
 import { connect } from "react-redux";
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity ,Platform} from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { styles } from "../styles";
 import * as actions from "../actions/index";
 import Status from "../components/Status";
-import Platform from "react-native"
 class CompanyDetails extends React.Component {
   constructor(props) {
     super(props);

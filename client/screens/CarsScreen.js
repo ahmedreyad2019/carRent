@@ -1,5 +1,4 @@
 import React from "react";
-import {Platform} from "react-native"
 import {
   ScrollView,
   FlatList,
@@ -9,7 +8,7 @@ import {
   StatusBar,
   Modal,
   ImageBackground,
-  View
+  View,Platform
 } from "react-native";
 import { Header, Image } from "react-native-elements";
 import Filter from "../components/Filter";

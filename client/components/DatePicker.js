@@ -1,10 +1,9 @@
 import React, { Component } from "react";
-import { View, DatePickerIOS, Text } from "react-native";
+import { View, DatePickerIOS, Text,Platform } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import * as actions from "../actions/index";
 import { connect } from "react-redux";
 import { styles, colors } from "../styles";
-import Platform from "react-native"
 
 class DatePicker extends Component {
   constructor(props) {
@@ -54,7 +53,7 @@ class DatePicker extends Component {
           <Ionicons
             name={"ios-close"}
             size={40}
-            color={"#F08080"}
+            color={"black"}
             style={{
               position: "absolute",
               top: 0,

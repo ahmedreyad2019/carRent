@@ -5,13 +5,13 @@ import {
   TouchableOpacity,
   ScrollView,
   Animated,
-  Easing
+  Easing,
+  Platform
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import * as actions from "../actions/index";
 import { styles, colors } from "../styles";
 import { connect } from "react-redux";
-import Platform from "react-native"
 
 class PickerLocation extends Component {
   constructor(props) {
@@ -85,7 +85,14 @@ class PickerLocation extends Component {
             this.setState(prevState => ({ listOpen: !prevState.listOpen }))
           }
         >
-          <Text style={{ fontFamily:Platform.OS==='ios'? "AvenirNext-DemiBold":"Roboto", color: "white" }}>
+          <Text
+            style={{
+              fontFamily:
+                Platform.OS === "ios" ? "AvenirNext-DemiBold" : "Roboto",
+              color: "white",
+              fontSize:16
+            }}
+          >
             {this.props.search.location}
           </Text>
           <Ionicons
@@ -107,9 +114,8 @@ class PickerLocation extends Component {
             style={{
               flexDirection: "column",
               width: "100%",
-              paddingTop: 15,
-              borderBottomLeftRadius: 20,
-              borderBottomRightRadius: 20
+              paddingHorizontal: 10,
+            
             }}
             contentContainerStyle={{ alignItems: "flex-start" }}
           >
@@ -123,15 +129,16 @@ class PickerLocation extends Component {
                 }}
                 key={i}
                 style={{
-                
                   width: "100%",
-                  marginBottom: 15,
-                  borderBottomColor: "#000"
+                  marginVertical: 8,
+                  borderBottomColor: "#223344",
+                  borderBottomWidth:1
                 }}
               >
                 <Text
                   style={{
-                    fontFamily: Platform.OS==='ios'?"AvenirNext-DemiBold":"Roboto",
+                    fontFamily:
+                      Platform.OS === "ios" ? "AvenirNext-DemiBold" : "Roboto",
                     fontSize: 16,
                     color: "white"
                   }}

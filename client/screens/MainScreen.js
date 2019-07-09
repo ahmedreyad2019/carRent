@@ -1,25 +1,17 @@
 import React from "react";
-import {Platform} from 'react-native';
 import {
-  ScrollView,
-  FlatList,
   Alert,
   TouchableOpacity,
-  RefreshControl,
   Text,
-  StatusBar,
+  Platform,
   Modal,
   View
 } from "react-native";
-import { Header } from "react-native-elements";
 import Filter from "../components/Filter";
 import { styles, colors } from "../styles";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { LinearGradient } from "expo";
 import { connect } from "react-redux";
 import * as actions from "../actions/index";
-import SearchModal from "../components/SearchModal";
-import Rating from "../components/Rating";
 import DatePicker from "../components/DatePicker";
 import PickerLocation from "../components/PickerLocation";
 
@@ -113,176 +105,183 @@ class MainScreen extends React.Component {
         </Modal>
         <View
           style={{
-            marginTop: 100,
-            marginHorizontal: 5,
-            shadowRadius: 3,
+            shadowRadius: 10,
             shadowOffset: { height: 2 },
             shadowColor: "black",
-            shadowOpacity: 0.2,
-            flexDirection: "column",
-            justifyContent: "center",
-            alignSelf: "center",
-            elevation:1
+            shadowOpacity: 0.2,elevation:1
           }}
         >
           <View
             style={{
-              height: 50,
-              flexDirection: "row",
-              marginHorizontal: 50,
-              paddingTop: 20,
-              justifyContent: "space-evenly",
-              backgroundColor: colors.backgroundCard,
-              borderTopLeftRadius: 50,
-              borderTopRightRadius: 50,
-              zIndex: 5000000000000
-            }}
-          >
-            <PickerLocation />
-          </View>
+              marginTop: 100,
+              marginHorizontal: 5,
 
-          <View
-            style={{
-              height: 70,
-              width: "100%",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-evenly",
-              backgroundColor: colors.backgroundCard,
-              borderRadius: 50
+              flexDirection: "column",
+              justifyContent: "center",
+              alignSelf: "center",
+              elevation: 1
             }}
           >
-            <TouchableOpacity
-              onPress={() => (
-                this.props.openDateModal(), this.setState({ source: "From" })
-              )}
-              style={{
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 20,
-                  color: colors.primary,
-                  fontFamily:Platform.OS === 'ios'? "AvenirNext-Bold":'Roboto',
-                }}
-              >
-                {this.getdateString(this.props.search.rentingDateStart)}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 14,
-                  color: colors.primary,
-                  fontFamily:Platform.OS === 'ios'? "AvenirNext-DemiBold":'Roboto',
-                }}
-              >
-                {this.getTimeString(this.props.search.rentingDateStart)}
-              </Text>
-            </TouchableOpacity>
             <View
               style={{
-                borderRightColor: "#eeeeee",
-                borderRightWidth: 1,
-                height: "100%"
+                height: 50,
+                flexDirection: "row",
+                marginHorizontal: 50,
+                paddingTop: 20,
+                justifyContent: "space-evenly",
+                backgroundColor: colors.backgroundCard,
+                borderTopLeftRadius: 50,
+                borderTopRightRadius: 50,
+                zIndex: 5000000000000
               }}
             >
+              <PickerLocation />
+            </View>
+
+            <View
+              style={{
+                height: 70,
+                width: "100%",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-evenly",
+                backgroundColor: colors.backgroundCard,
+                borderRadius: 50
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => (
+                  this.props.openDateModal(), this.setState({ source: "From" })
+                )}
+                style={{
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center"
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 20,
+                    color: colors.primary,
+                    fontFamily:
+                      Platform.OS === "ios" ? "AvenirNext-Bold" : "Roboto"
+                  }}
+                >
+                  {this.getdateString(this.props.search.rentingDateStart)}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    color: colors.primary,
+                    fontFamily:
+                      Platform.OS === "ios" ? "AvenirNext-DemiBold" : "Roboto"
+                  }}
+                >
+                  {this.getTimeString(this.props.search.rentingDateStart)}
+                </Text>
+              </TouchableOpacity>
               <View
                 style={{
-                  borderRadius: 50,
-                  borderColor: "#eeeeee",
-                  borderWidth: 1,
-                  backgroundColor: "white",
-                  height: 40,
-                  width: 40,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  flexDirection: "column",
-                  position: "absolute",
-                  right: -20,
-                  top: 15
+                  borderRightColor: "#eeeeee",
+                  borderRightWidth: 1,
+                  height: "100%"
                 }}
               >
-                <Ionicons
-                  name={"ios-arrow-round-forward"}
-                  size={40}
-                  color={"#cccccc"}
-                />
+                <View
+                  style={{
+                    borderRadius: 50,
+                    borderColor: "#eeeeee",
+                    borderWidth: 1,
+                    backgroundColor: "white",
+                    height: 40,
+                    width: 40,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "column",
+                    position: "absolute",
+                    right: -20,
+                    top: 15
+                  }}
+                >
+                  <Ionicons
+                    name={"ios-arrow-round-forward"}
+                    size={40}
+                    color={"#cccccc"}
+                  />
+                </View>
               </View>
-            </View>
-            <TouchableOpacity
-              onPress={() => (
-                this.props.openDateModal(), this.setState({ source: "To" })
-              )}
-              style={{
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
-              <Text
+              <TouchableOpacity
+                onPress={() => (
+                  this.props.openDateModal(), this.setState({ source: "To" })
+                )}
                 style={{
-                  fontSize: 20,
-                  color: colors.primary,
-                  fontFamily:Platform.OS === 'ios'? "AvenirNext-Bold":'Roboto',
-                      }}
-              >
-                {this.getdateString(this.props.search.rentingDateEnd)}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 14,
-                  color: colors.primary,
-                  fontFamily:Platform.OS === 'ios'? "AvenirNext-DemiBold":'Roboto',
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center"
                 }}
               >
-                {this.getTimeString(this.props.search.rentingDateEnd)}
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    color: colors.primary,
+                    fontFamily:
+                      Platform.OS === "ios" ? "AvenirNext-Bold" : "Roboto"
+                  }}
+                >
+                  {this.getdateString(this.props.search.rentingDateEnd)}
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    color: colors.primary,
+                    fontFamily:
+                      Platform.OS === "ios" ? "AvenirNext-DemiBold" : "Roboto"
+                  }}
+                >
+                  {this.getTimeString(this.props.search.rentingDateEnd)}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-
-        <TouchableOpacity
-          onPress={() => (
-            this.props.navigation.navigate("Cars"),
-            this.props.doFetchCars(this.props.search)
-          )}
-          style={{
-            height: 40,
-            flexDirection: "column",
-            marginHorizontal: 100,
-            alignItems: "center",
-            justifyContent: "space-evenly",
-            backgroundColor: colors.primary,
-            borderBottomLeftRadius: 50,
-            borderBottomRightRadius: 50,
-            shadowRadius: 3,
-            shadowOffset: { height: 2 },
-            shadowColor: "black",
-            shadowOpacity: 0.2,
-            zIndex: -1
-          }}
-        >
-          <Text
+          <TouchableOpacity
+            onPress={() => (
+              this.props.navigation.navigate("Cars"),
+              this.props.doFetchCars(this.props.search)
+            )}
             style={{
-              fontSize: 18,
-              fontFamily:Platform.OS === 'ios'? "AvenirNext-DemiBold":'Roboto',
-              color: "white"
+              height: 40,
+              flexDirection: "column",
+              marginHorizontal: 100,
+              alignItems: "center",
+              justifyContent: "space-evenly",
+              backgroundColor: colors.primary,
+              borderBottomLeftRadius: 50,
+              borderBottomRightRadius: 50,
+
+              zIndex: -1
             }}
           >
-            Search
-          </Text>
-          <View
-            style={{
-              width: "50%",
-              height: 5,
-              backgroundColor: "white",
-              opacity: 0.4,
-              borderRadius: 50
-            }}
-          />
-        </TouchableOpacity>
+            <Text
+              style={{
+                fontSize: 18,
+                fontFamily:
+                  Platform.OS === "ios" ? "AvenirNext-DemiBold" : "Roboto",
+                color: "white"
+              }}
+            >
+              Search
+            </Text>
+            <View
+              style={{
+                width: "50%",
+                height: 5,
+                backgroundColor: "white",
+                opacity: 0.4,
+                borderRadius: 50
+              }}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }

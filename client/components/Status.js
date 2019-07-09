@@ -1,10 +1,9 @@
 import { connect } from "react-redux";
 import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity,Platform } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { styles } from "../styles";
 import * as actions from "../actions/index";
-import Platform from "react-native"
 
 class Status extends React.Component {
   constructor(props) {

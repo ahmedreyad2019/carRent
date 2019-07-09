@@ -1,12 +1,11 @@
 import { connect } from "react-redux";
 import React from "react";
-import Platform from "react-native"
 import {
   View,
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
-  Text
+  Text,Platform
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { styles, colors } from "../styles";

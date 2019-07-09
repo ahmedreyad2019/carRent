@@ -1,11 +1,10 @@
 import React from "react";
-import {Platform} from "react-native"
 import {
   KeyboardAvoidingView,
   Text,
   TouchableOpacity,
   View,
-  Vibration,
+  Vibration,Platform,
   StatusBar,
   ActivityIndicator,
   Animated,
@@ -64,9 +63,26 @@ class HomeScreen extends React.Component {
               style={styles.button}
               colors={["transparent", "rgba(0,0,0,0.3)"]}
             >
-              <View style={{ flex: 1,flexDirection:"row",justifyContent:Platform.OS === 'ios'? 'flex-start ':null,alignItems:"center"}}>
-                <Text style={{flex:0.6, color: "#FFF",fontSize:22,fontFamily:Platform.OS === 'ios'? "Avenir-Black":'Roboto', }}>Sign in</Text>
-                <View style={{flex:0.1}}/>
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: "row",
+                  justifyContent: Platform.OS === "ios" ? "flex-start " : null,
+                  alignItems: "center"
+                }}
+              >
+                <Text
+                  style={{
+                    flex: 0.6,
+                    color: "#FFF",
+                    fontSize: 22,
+                    fontFamily:
+                      Platform.OS === "ios" ? "Avenir-Black" : "Roboto"
+                  }}
+                >
+                  Sign in
+                </Text>
+                <View style={{ flex: 0.1 }} />
                 {!this.props.loading ? (
                   <Ionicons
                     name={"ios-arrow-forward"}

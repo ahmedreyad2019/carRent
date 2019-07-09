@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import { Text } from "react-native";
-import {Platform} from 'react-native'
+import { Text,Platform } from "react-native";
 class AppText extends Component {
   constructor(props) {
     super(props);

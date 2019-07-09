@@ -1,5 +1,5 @@
 import * as types from "../actionConstants/action-types";
-import { AsyncStorage } from "react-native";
+import { AsyncStorage ,Alert} from "react-native";
 const axios = require("axios");
 export const loading = loading => {
   return {
@@ -228,8 +228,7 @@ export const signUp = user => {
     AsyncStorage.getAllKeys()
       .then(AsyncStorage.multiRemove)
       .then(
-        fetch("http://serverbrogrammers.herokuapp.com/api/investors/register", {
-          //What is this?
+        fetch("https://carrentalserver.herokuapp.com/carRenter", {
           method: "POST",
           body: JSON.stringify(user),
           headers: {
@@ -237,8 +236,26 @@ export const signUp = user => {
           }
         }).then(response => {
           response.json().then(data => {
-            if (data.auth) {
-              dispatch(setSignUp(data.token, data.id));
+            if (!data.error) {
+              //dispatch(setSignUp(data.token, data.id));
+              //Mobile verification here
+              Alert.alert(
+                'Success!',
+                'Your Account was Created succefully, Please check your Email to verify your account.',
+                [
+                  {text: 'OK'},
+                ],
+                {cancelable: false},
+              );
+            }else{
+              Alert.alert(
+                'Sorry',
+                'An account is already Registered with this number.',
+                [
+                  {text: 'OK'},
+                ],
+                {cancelable: false},
+              );
             }
             dispatch(loading(false));
           });

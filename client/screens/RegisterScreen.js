@@ -7,8 +7,10 @@ import {
   Vibration,
   StatusBar,
   ActivityIndicator,
+  Platform,
   Animated,
-  Easing
+  Easing,
+  Keyboard
 } from "react-native";
 import { LinearGradient } from "expo";
 import { connect } from "react-redux";
@@ -27,7 +29,8 @@ class RegisterScreen extends React.Component {
         password: ""
       },
       RepeatPassword: "",
-
+      errorMessage1:null,
+      errorMessage2:null,
       passwordMatch: true
     };
     this.RotateValueHolder = new Animated.Value(0);
@@ -42,9 +45,11 @@ class RegisterScreen extends React.Component {
       easing: Easing.quad
     }).start();
   }
-  handleVerification = () => {
+  handleVerification =async () => {
+    Keyboard.dismiss()
     const { password } = this.state.user;
     const { RepeatPassword } = this.state;
+    var isRight=true;
     if (password.length < 8) {
       this.setState(prevState => ({
         ...prevState,
@@ -57,7 +62,7 @@ class RegisterScreen extends React.Component {
         errorMessage1: ""
       }));
     }
-    if (password !== RepeatPassword) {
+    if (password !== RepeatPassword&&password.length > 8) {
       this.setState(prevState => ({
         ...prevState,
         errorMessage2: "*passwords do not match"
@@ -76,7 +81,10 @@ class RegisterScreen extends React.Component {
         errorMessage1: "",
         errorMessage2: ""
       }));
+      await this.props.doLogin(this.state.user)
+      this.props.navigation.navigate("Home")
     }
+   
   };
 
   componentDidUpdate = () => {
@@ -100,21 +108,25 @@ class RegisterScreen extends React.Component {
         <Animated.View style={labelStyle}>
           <TouchableOpacity
             onPress={() => {
-              this.handleVerification(), this.props.doLogin(this.state.user);
+              this.handleVerification();
             }}
           >
-            <LinearGradient
-              style={{
-                ...styles.button,
-                backgroundColor: "#4FDBBA"
-              }}
+           <View
+              style={styles.button}
               colors={["transparent", "rgba(0,0,0,0.3)"]}
-              alignItems="center"
             >
+              <View
+                style={{
+                  flex: 1,
+                  flexDirection: "row",
+                  justifyContent: Platform.OS === "ios" ? "flex-start " : null,
+                  alignItems: "center"
+                }}
+              >
               {!this.props.loading ? (
                 <>
                 
-                <Text paddingTop="10" style={{ color: "#FFF",paddingTop:13 }}>Sign Up</Text>
+                <Text paddingTop="10" style={{ color: "#FFF" }}>Sign Up</Text>
                 </>
               ) : (
                 <ActivityIndicator
@@ -124,7 +136,8 @@ class RegisterScreen extends React.Component {
                   style={{paddingTop:7}}
                 />
               )}
-            </LinearGradient>
+            </View>
+            </View>
           </TouchableOpacity>
         </Animated.View>
       </View>
@@ -205,7 +218,7 @@ class RegisterScreen extends React.Component {
                   style={{
                     color: "#FF8080",
                     position: "absolute",
-                    bottom: -15
+                    bottom: 0
                   }}
                 >
                   {this.state.errorMessage2}

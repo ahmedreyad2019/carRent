@@ -216,6 +216,40 @@ router.get("/pending",async (req,res)=>{
   }
 })
 
+//test UserStory 9
+router.get("/myCars",async (req,res)=>{
+  try{
+    var stat = 0;
+    var token = req.headers["x-access-token"];
+    if (!token) {
+      return res
+        .status(401)
+        .send({ auth: false, message: "Please login first." });
+    }
+    jwt.verify(token, config.secret, async function(err, decoded) {
+      if (err) {
+        return res
+          .status(500)
+          .send({ auth: false, message: "Failed to authenticate token." });
+      }
+      stat = decoded.id;
+    });
+    const owner = await CarRenter.findById(stat);
+    if (!owner) {
+      return res.status(404).send({ error: "Owner does not exist" });
+    }
+    const cars = await Car.find({carOwnerID:stat});
+    if (cars.length === 0) {
+      return res.send({ msg: "You Don't have any cars" });
+    }
+    res.json({ msg: "Your available Cars:", data: cars });
+
+  }catch(error){
+    console.log(error);
+    res.status(400).send({ msg: error });
+  }
+})
+
 router.get("/MyCar/:id", async (req, res) => {
   try {
     var stat = 0;

@@ -20,6 +20,7 @@ import MainScreen from "../screens/MainScreen";
 import RentModal from "../components/RentModal";
 import TransactionsScreen from "../screens/TransactionsScreen";
 import TransactionDetailsScreen from "../screens/TransactionDetailsScreen";
+import OwnedCarsScreen from "../screens/OwnedCarsScreen";
 
 const getTabBarIcon = (navigation, focused, tintColor) => {
   const { routeName } = navigation.state;
@@ -137,6 +138,7 @@ const tabNav = createAppContainer(
       Home: { screen: RentScreen },
       Transaction:{screen:TransactionsScreens},
       Profile: { screen: ProfileScreen },
+      MyCars:{screen:OwnedCarsScreen}
     },
     {
       defaultNavigationOptions: ({ navigation }) => ({

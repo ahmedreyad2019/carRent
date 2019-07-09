@@ -70,7 +70,7 @@ class CarLicenseCard extends React.Component {
   acceptHandler(){
     fetch('https://carrentalserver.herokuapp.com/moderator/view/carLicenseRequests/'+this.props.id+'/respond', {
         method: 'PUT',
-        body: JSON.stringify({"response":"Accepted"}),
+        body: JSON.stringify({"response":"Idle"}),
         headers: {
           'Content-Type': 'application/json',
           'x-access-token':sessionStorage.getItem('jwtToken')

@@ -26,7 +26,8 @@ class RegisterScreen extends React.Component {
         FirstName: null,
         LastName: null,
         mobileNumber: null,
-        password: ""
+        password: "",
+        email:null
       },
       RepeatPassword: "",
       errorMessage1:null,
@@ -49,7 +50,6 @@ class RegisterScreen extends React.Component {
     Keyboard.dismiss()
     const { password } = this.state.user;
     const { RepeatPassword } = this.state;
-    var isRight=true;
     if (password.length < 8) {
       this.setState(prevState => ({
         ...prevState,
@@ -170,6 +170,7 @@ class RegisterScreen extends React.Component {
               padding: 30
             }}
           >
+            
             <FloatingLabelInput
                 style={styles.text}
                 label={"First Name"}
@@ -192,7 +193,18 @@ class RegisterScreen extends React.Component {
                 }}
                 value={this.state.user.LastName}
               />
-
+<FloatingLabelInput
+                style={styles.text}
+                label={"Email"}
+                onChangeText={text => {
+                  this.setState(prevState => ({
+                    ...prevState,
+                    user: { ...prevState.user, email: text }
+                  }));
+                }}
+                value={this.state.user.email}
+                keyboardType="email-address"
+              />
             <FloatingLabelInput
               style={styles.text}
               label="Mobile Number"

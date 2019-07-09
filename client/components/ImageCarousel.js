@@ -29,7 +29,7 @@ class ImageCarousel extends Component {
           renderItem={({ item, index }) => (
             <Image
               style={{ height: 140, width: this.props.full ? 400 : 350 }}
-              source={item}
+              source={{uri:item}}
               loadingIndicatorSource={require("../images/transparent-background-loading.gif")}
             />
           )}

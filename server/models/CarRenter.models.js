@@ -26,6 +26,7 @@ const DrivingLicenseRequestSchema = new Schema({
 const CarRenterSchema = new Schema({
   FirstName: { type: String, required: true },
   LastName: { type: String, required: true },
+  email: { type: String, required: true },
   mobileNumber: { type: String, required: true },
   personalID: { type: String },
   personalIDPhoto:{type:String},

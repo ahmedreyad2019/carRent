@@ -7,6 +7,8 @@ import {
   Modal,
   View
 } from "react-native";
+import { Header } from "react-native-elements";
+
 import Filter from "../components/Filter";
 import { styles, colors } from "../styles";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -14,6 +16,7 @@ import { connect } from "react-redux";
 import * as actions from "../actions/index";
 import DatePicker from "../components/DatePicker";
 import PickerLocation from "../components/PickerLocation";
+import AppText from "../components/AppText";
 
 class MainScreen extends React.Component {
   componentDidMount() {}
@@ -60,23 +63,18 @@ class MainScreen extends React.Component {
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: colors.backgroundMain }}>
-        <TouchableOpacity
-          onPress={() => this.props.navigation.openDrawer()}
-          style={{ position: "absolute", top: 25, left: 10 }}
-        >
-          <Ionicons name={"ios-menu"} size={30} color={"#888"} />
-        </TouchableOpacity>
+        <Header
+          barStyle={"light-content"}
+          backgroundColor={colors.primary}
+          centerComponent={
+            <AppText
+              size={16}
+              style={{ color: "white" }}
+              text={"Choose Date and Location"}
+            />
+          }
+        />
 
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={this.props.filterModalVisible}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-          }}
-        >
-          <Filter />
-        </Modal>
         <Modal
           style={{ alignItems: "flex-end" }}
           transparent={true}
@@ -108,14 +106,14 @@ class MainScreen extends React.Component {
             shadowRadius: 10,
             shadowOffset: { height: 2 },
             shadowColor: "black",
-            shadowOpacity: 0.2,elevation:1
+            shadowOpacity: 0.2,
+            elevation: 1
           }}
         >
           <View
             style={{
-              marginTop: 100,
+              marginTop: 20,
               marginHorizontal: 5,
-
               flexDirection: "column",
               justifyContent: "center",
               alignSelf: "center",

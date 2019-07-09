@@ -25,11 +25,11 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
   const { routeName } = navigation.state;
   let IconComponent = Ionicons;
   let iconName;
-  if (routeName === "Feed") {
+  if (routeName === "Home") {
     iconName = `home`;
   } else if (routeName === "Profile") {
     iconName = `person`;
-  } else if (routeName === "Companies") {
+  } else if (routeName === "Transaction") {
     iconName = `paper`;
   }
 
@@ -132,17 +132,25 @@ const LoginScreen = createAppContainer(
 );
 
 const tabNav = createAppContainer(
-  createDrawerNavigator(
+  createBottomTabNavigator(
     {
       Home: { screen: RentScreen },
-     
+      Transaction:{screen:TransactionsScreens},
       Profile: { screen: ProfileScreen },
-      Transaction:{screen:TransactionsScreens}
     },
     {
-      contentComponent: CustomDrawerContentComponent,
+      defaultNavigationOptions: ({ navigation }) => ({
+        tabBarIcon: ({ focused, tintColor }) =>
+          getTabBarIcon(navigation, focused, tintColor)
+      }),
+      tabBarOptions: {
 
-     
+        activeTintColor: "white",
+        inactiveTintColor: "#999999",
+        style: {
+          backgroundColor: colors.primary
+        }
+      }
     }
   )
 );

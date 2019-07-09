@@ -111,8 +111,8 @@ const RentScreen = createAppContainer(
 const CarOwnerScreen = createAppContainer(
   createStackNavigator(
     {
-      Main: { screen: AddCarScreen },
-      AddCar: { screen: OwnedCarsScreen }
+      Main: { screen: OwnedCarsScreen },
+      AddCar: { screen: AddCarScreen }
     },
     {
       headerMode: "none"
@@ -158,8 +158,8 @@ const tabNav = createAppContainer(
   createBottomTabNavigator(
     {
       Home: { screen: RentScreen },
-      Profile: { screen: ProfileScreen },
-      MyCars:{screen:CarOwnerScreen}
+      MyCars:{screen:CarOwnerScreen},
+      Profile: { screen: ProfileScreen }
     },
     {
       defaultNavigationOptions: ({ navigation }) => ({

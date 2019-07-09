@@ -5,7 +5,8 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
-  Text,Platform
+  Text,
+  Platform
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { styles, colors } from "../styles";
@@ -61,10 +62,9 @@ class RentModal extends React.Component {
     const diffTime = Math.abs(date2.getTime() - date1.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     const images = [
-      require("../images/bmw-3-series-render.jpg"),
-      require("../images/bmw-4-series-render.jpg"),
-      require("../images/bmw-5-series-render.jpg"),
-   
+      "../images/bmw-3-series-render.jpg",
+      "../images/bmw-4-series-render.jpg",
+      "../images/bmw-5-series-render.jpg"
     ];
     return (
       <View
@@ -88,14 +88,14 @@ class RentModal extends React.Component {
           }
         />
         <ScrollView>
-        <ImageCarousel images={images} full={400} />
-      
+          <ImageCarousel images={car.photosLink} full={400} />
+
           <View style={{ marginHorizontal: 10 }}>
             <Text
               style={{
                 color: colors.primary,
                 fontSize: 28,
-                fontFamily: Platform.OS==='ios'?"AvenirNext-Bold":"Roboto"
+                fontFamily: Platform.OS === "ios" ? "AvenirNext-Bold" : "Roboto"
               }}
             >
               Details
@@ -119,7 +119,7 @@ class RentModal extends React.Component {
         <View
           style={{
             borderTopWidth: 1,
-            borderTopColor:'#eeeeee',
+            borderTopColor: "#eeeeee",
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",

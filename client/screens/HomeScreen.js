@@ -20,8 +20,8 @@ class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "012",
-      password: "12345678"
+      email: "",
+      password: ""
     };
     this.RotateValueHolder = new Animated.Value(0);
   }

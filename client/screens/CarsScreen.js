@@ -8,7 +8,8 @@ import {
   StatusBar,
   Modal,
   ImageBackground,
-  View,Platform
+  View,
+  Platform
 } from "react-native";
 import { Header, Image } from "react-native-elements";
 import Filter from "../components/Filter";
@@ -87,19 +88,13 @@ class CarsScreen extends React.Component {
     return today.getDate() + "/" + (today.getMonth() + 1);
   };
   render() {
-    const images = [
-      require("../images/bmw-3-series-render.jpg"),
-      require("../images/bmw-4-series-render.jpg"),
-      require("../images/bmw-5-series-render.jpg")
-    ];
+   
     return (
       <View style={{ flex: 1, backgroundColor: colors.backgroundMain }}>
         <Header
           backgroundColor={colors.primary}
           rightComponent={
-            <TouchableOpacity
-              onPress={() => this.props.doOpenFilterModal()}
-            >
+            <TouchableOpacity onPress={() => this.props.doOpenFilterModal()}>
               <Ionicons name={"ios-funnel"} size={20} color={"#74808E"} />
             </TouchableOpacity>
           }
@@ -287,7 +282,7 @@ class CarsScreen extends React.Component {
                           }
                         />
                       </View>
-                      <ImageCarousel images={images} />
+                      <ImageCarousel images={item.cars[0].photosLink} />
 
                       <View
                         style={{
@@ -315,7 +310,10 @@ class CarsScreen extends React.Component {
                             size={12}
                             style={{
                               color: colors.primary,
-                              fontFamily: Platform.OS==='ios'? "AvenirNext-DemiBold":'Roboto',
+                              fontFamily:
+                                Platform.OS === "ios"
+                                  ? "AvenirNext-DemiBold"
+                                  : "Roboto",
                               opacity: 0.7
                             }}
                             text={" " + item.cars[0].year}

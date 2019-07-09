@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Image, TouchableOpacity } from "react-native";
+import { View, Text, FlatList, Image, TouchableOpacity,ActivityIndicator } from "react-native";
 import React, { Component } from "react";
 import { colors } from "../styles";
 class ImageCarousel extends Component {
@@ -26,16 +26,14 @@ class ImageCarousel extends Component {
           snapToAlignment={'center'}
           decelerationRate={"fast"}
           snapToInterval={!this.props.full ? 350 : this.props.full}
-          renderItem={({ item, index }) => (
+          renderItem={({ item }) => (
             <Image
               style={{ height: 140, width: this.props.full ? 400 : 350 }}
               source={{uri:item}}
-              loadingIndicatorSource={require("../images/transparent-background-loading.gif")}
+              loadingIndicatorSource={<ActivityIndicator animating={true}/>}
             />
           )}
-          keyExtractor={index => {
-            return index.toString();
-          }}
+          keyExtractor={(item, index) => index.toString()}
           ListEmptyComponent={
             <View>
               <Text>no images</Text>
@@ -52,7 +50,7 @@ class ImageCarousel extends Component {
             alignSelf: "center"
           }}
         >
-          {this.props.images.map((item, i) => (
+          {this.props.images?this.props.images.map((item, i) => (
             <TouchableOpacity
               onPress={() => {
                 this.scrollToIndex(i), console.log(i + "  " + this.state.index);
@@ -68,7 +66,7 @@ class ImageCarousel extends Component {
                 borderRadius: 12
               }}
             />
-          ))}
+          )):console.log()}
         </View>
       </View>
     );

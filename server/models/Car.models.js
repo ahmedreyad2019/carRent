@@ -24,7 +24,7 @@ const CarSchema = new Schema({
   transmission: { type: String, enum: ["Automatic", "Manual"] },
   color: { type: String },
   seatingCapacity: { type: Number },
-  photosLink: { type: String,required:true },
-  banned:{required:true,default:false,type:Boolean}
+  photosLink: [{ type: String,required:true }],
+  banned: { required: true, default: false, type: Boolean }
 });
 module.exports = mongoose.model("Car", CarSchema);

@@ -23,7 +23,7 @@ class RegisterScreen extends React.Component {
     super(props);
     this.state = {
       user: {
-        FirstName: null,
+        firstName: null,
         LastName: null,
         mobileNumber: null,
         password: "",
@@ -177,10 +177,10 @@ class RegisterScreen extends React.Component {
                 onChangeText={text => {
                   this.setState(prevState => ({
                     ...prevState,
-                    user: { ...prevState.user, FirstName: text }
+                    user: { ...prevState.user, firstName: text }
                   }));
                 }}
-                value={this.state.user.FirstName}
+                value={this.state.user.firstName}
               />
               <FloatingLabelInput
                 style={styles.text}

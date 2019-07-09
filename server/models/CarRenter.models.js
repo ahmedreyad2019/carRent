@@ -18,18 +18,18 @@ const DrivingLicenseRequestSchema = new Schema({
   },
   comment: { type: String },
   drivingLicenseLink: { type: String, required: true },
-  expiryDate:{
-    type:Date,
-    required:true
+  expiryDate: {
+    type: Date,
+    required: true
   }
 });
 const CarRenterSchema = new Schema({
-  FirstName: { type: String, required: true },
-  LastName: { type: String, required: true },
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
   email: { type: String, required: true },
   mobileNumber: { type: String, required: true },
   personalID: { type: String },
-  personalIDPhoto:{type:String},
+  personalIDPhoto: { type: String },
   balance: { type: Number, required: true, default: 0.0 },
   password: { type: String, required: true },
   statusID: { type: String, enum: ["Pending", "Rejected", "Accepted"] },
@@ -42,8 +42,8 @@ const CarRenterSchema = new Schema({
   cardNumber: { type: String },
   drivingLicenseRequest: DrivingLicenseRequestSchema,
   banned: { required: true, default: false, type: Boolean },
-  carsOwned:{type:Array,default:[]},
-  dateAdded:{ type: Date}
+  carsOwned: { type: Array, default: [] },
+  dateAdded: { type: Date }
 });
 
 module.exports = mongoose.model("carRenter", CarRenterSchema);

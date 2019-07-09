@@ -91,18 +91,7 @@ class TransactionsScreen extends React.Component {
           barStyle={"light-content"}
           backgroundColor={colors.primary}
           centerComponent={
-            <View
-              style={{
-                backgroundColor: "rgba(255,255,255,0.1)",
-                width: "100%",
-                borderRadius: 50,
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
-              <AppText style={{ color: "white" }} text={"My Rentals"} />
-            </View>
+            <AppText size={16} style={{ color: "white" }} text={"My Rentals"} />
           }
           leftComponent={
             <TouchableOpacity

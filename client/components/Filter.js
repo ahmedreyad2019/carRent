@@ -140,12 +140,11 @@ class Filter extends React.Component {
             style={{
               position: "absolute",
               top: 0,
-              alignSelf:'center'
+              alignSelf: "center"
             }}
-           
           >
             <Text>{"Filters"}</Text>
-            <Text>{this.props.cars.length+" cars"}</Text>
+            <Text>{this.props.cars.length + " cars"}</Text>
           </View>
           <TouchableOpacity
             style={{

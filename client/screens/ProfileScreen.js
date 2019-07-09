@@ -2,10 +2,12 @@ import React from "react";
 import {
   ActivityIndicator,
   Button,
+  Switch,
   Text,
   TextInput,
   View,
   TouchableOpacity,
+  Platform,
   StatusBar,
   Modal,
   ScrollView,
@@ -15,10 +17,12 @@ import { AsyncStorage } from "react-native";
 
 import { Header } from "react-native-elements";
 import { connect } from "react-redux";
-import { styles ,colors} from "../styles";
+import { styles, colors } from "../styles";
 import * as actions from "../actions/index";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import DatePicker from "../components/DatePicker";
+import AppText from "../components/AppText";
+import ProfileDetail from "../components/ProfileDetail";
 
 class LinksScreen extends React.Component {
   componentDidMount() {
@@ -28,9 +32,7 @@ class LinksScreen extends React.Component {
     const { userId } = this.props;
     AsyncStorage.getItem("jwt").then(res => {
       this.props.doFetch(userId, res);
-    
     });
-
   };
 
   constructor(props) {
@@ -57,14 +59,13 @@ class LinksScreen extends React.Component {
   render() {
     const { user } = this.props;
     return (
-      <View style={{ flex: 1, backgroundColor: colors.backgroundMain }}>
-        <StatusBar barStyle={"light-content"} />
+      <View style={{ flex: 1, backgroundColor: "#fafaff" }}>
         <Header
-          backgroundColor={colors.backgroundMain}
-          centerComponent={{
-            text: "Profile",
-            style: { color: "#74808E", fontWeight: "bold", fontSize: 20 }
-          }}
+          barStyle={"light-content"}
+          backgroundColor={colors.primary}
+          centerComponent={
+            <AppText size={16} style={{ color: "white" }} text={"Profile"} />
+          }
           leftComponent={
             this.state.editable ? (
               <Button
@@ -95,199 +96,132 @@ class LinksScreen extends React.Component {
           }
         />
         <ScrollView
-          contentContainerStyle={styles.container}
           refreshControl={
             <RefreshControl
               refreshing={this.props.loading}
               onRefresh={this._onRefresh}
             />
           }
+          contentContainerStyle={{ flexDirection: "column" }}
         >
-          <>
-            <View style={{ flex: 0.25 }}>
-              <View style={styles.avatar}>
-                <Text
-                  style={{
-                    fontSize: 35,
-                    fontWeight: "bold",
-                    color: "#90F6DE"
-                  }}
-                >
-                  {user
-                    ? user.name.split(" ")[0].substring(0, 1) +
-                      user.name
-                        .split(" ")
-                        [user.name.split(" ").length - 1].substring(0, 1)
-                    : console.log()}
-                </Text>
+          <View style={styles.avatar}>
+            <AppText
+              size={35}
+              fontStyle={"bold"}
+              style={{ color: "white" }}
+              text={
+                user
+                  ? (user.firstName + " " + user.lastName)
+                      .split(" ")[0]
+                      .substring(0, 1)
+                      .toUpperCase() +
+                    (user.firstName + " " + user.lastName)
+                      .split(" ")
+                      [
+                        (user.firstName + " " + user.lastName).split(" ")
+                          .length - 1
+                      ].substring(0, 1)
+                      .toUpperCase()
+                  : console.log()
+              }
+            />
+          </View>
+
+          {user ? (
+            <>
+              <View style={{ alignSelf: "center" }}>
+                <AppText
+                  size={18}
+                  text={user.firstName + " " + user.lastName}
+                />
               </View>
+              <View >
+                <ProfileDetail
+                  text={user.mobileNumber}
+                  icon={"call"}
+                  editable={this.state.editable}
+                />
+              
+                <ProfileDetail
+                  text={user.personalID}
+                  icon={"card"}
+                  editable={this.state.editable}
+                />
+              </View>
+            </>
+          ) : (
+            console.log()
+          )}
+
+          <View>
+            <AppText
+              text={"Payment Methods"}
+              size={17}
+              style={{ color: "#888", margin: 7 }}
+            />
+            <View
+              style={{
+                width: "100%",
+                backgroundColor: "white",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                paddingHorizontal: 20,
+                paddingVertical: 10,
+                borderBottomWidth: 0.5,
+                borderBottomColor: "#ccc"
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-around",
+                  alignItems: "center"
+                }}
+              >
+                <Ionicons
+                  name={Platform.OS + "-cash"}
+                  size={35}
+                  style={{ marginRight: 15 }}
+                />
+
+                <AppText text={"Cash"} size={15} />
+              </View>
+              <Switch
+                value={this.state.paymentMethod === "cash"}
+                onValueChange={() => {
+                  this.setState(prevState => ({
+                    paymentMethod:
+                      prevState.paymentMethod !== "cash" ? "cash" : ""
+                  }));
+                }}
+              />
             </View>
-            {user ? (
-              <View style={{ flex: 0.75 }}>
-                <Text
-                  style={{
-                    fontSize: 16,
-                    color: "#bbbbbb",
-                    fontWeight: "bold",
-                    borderBottomColor: "#293749",
-                    borderBottomWidth: this.state.editable ? 1 : 0
-                  }}
-                >
-                  {user.name}
-                </Text>
-
-                <View
-                  style={{
-                    flexDirection: "row", height:30,
-                    alignItems: "center"
-                  }}
-                >
-                  <Ionicons
-                    name={"ios-mail"}
-                    style={{ flex: 0.1 }}
-                    size={20}
-                    color={"#90F6DE"}
-                  />
-                  <TextInput
-                    style={{
-                      fontSize: 16,
-                      color: "#bbbbbb",
-                      flex: 0.9,
-                      borderBottomColor: "#293749",
-                      borderBottomWidth: this.state.editable ? 1 : 0
-                    }}
-                    value={user.mail}
-                    editable={this.state.editable}
-                  />
-                </View>
-                <TouchableOpacity
-                  disabled={!this.state.editable}
-                  onPress={() => this.props.openDateModal()}
-                >
-                  <View
-                    style={{
-                      flexDirection: "row", height:30,
-                      alignItems: "center"
-                    }}
-                  >
-                    <Ionicons
-                      name={"ios-calendar"}
-                      style={{ flex: 0.1 }}
-                      size={20}
-                      color={"#90F6DE"}
-                    />
-                    <Text
-                      style={{
-                        fontSize: 16,
-                        color: "#bbbbbb",
-                        flex: 0.9,
-                        borderBottomColor: "#293749",
-                        borderBottomWidth: this.state.editable ? 1 : 0
-                      }}
-                    >
-                      {new Date(user.dob).toLocaleDateString("en-US")}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-                <View
-                  style={{
-                    flexDirection: "row", height:30,
-                    alignItems: "center"
-                  }}
-                >
-                  <Ionicons
-                    name={"ios-pin"}
-                    onPress={()=>this.props.navigation.navigate("Cars")}
-                    style={{ flex: 0.1 }}
-                    size={20}
-                    color={"#90F6DE"}
-                  />
-                  <TextInput
-                    style={{
-                      fontSize: 16,
-                      color: "#bbbbbb",
-                      flex: 0.9,
-                      borderBottomColor: "#293749",
-                      borderBottomWidth: this.state.editable ? 1 : 0
-                    }}
-                    value={user.address}
-                    editable={this.state.editable}
-                  />
-                </View>
-                <View
-                  style={{
-                    flexDirection: "row", height:30,
-                    alignItems: "center"
-                  }}
-                >
-                  <Ionicons
-                    name={"ios-call"}
-                    style={{ flex: 0.1 }}
-                    size={20}
-                    color={"#90F6DE"}
-                  />
-                  <TextInput
-                    style={{
-                      fontSize: 16,
-                      color: "#bbbbbb",
-                      flex: 0.9,
-                      borderBottomColor: "#293749",
-                      borderBottomWidth: this.state.editable ? 1 : 0
-                    }}
-                    value={user.telephone}
-                    editable={this.state.editable}
-                  />
-                </View>
-
-                <View
-                  style={{
-                    flexDirection: "row", height:30,
-                    alignItems: "center"
-                  }}
-                >
-                  <Ionicons
-                    name={"ios-flag"}
-                    style={{ flex: 0.1 }}
-                    size={20}
-                    color={"#90F6DE"}
-                  />
-                  <TextInput
-                    style={{
-                      fontSize: 16,
-                      color: "#bbbbbb",
-                      flex: 0.9,
-                      borderBottomColor: "#293749",
-                      borderBottomWidth: this.state.editable ? 1 : 0
-                    }}
-                    value={user.nationality}
-                    editable={this.state.editable}
-                  />
-                </View>
-                <TextInput
-                  style={{
-                    fontSize: 16,
-                    color: "#bbbbbb",
-                    borderBottomColor: "#293749",
-                    borderBottomWidth: this.state.editable ? 1 : 0
-                  }}
-                  value={user.gender}
-                  editable={this.state.editable}
-                />
-                <TextInput
-                  style={{
-                    fontSize: 16,
-                    color: "#bbbbbb",
-                    borderBottomColor: "#293749",
-                    borderBottomWidth: this.state.editable ? 1 : 0
-                  }}
-                  value={user.idNumber + "/" + user.idType}
-                  editable={this.state.editable}
-                />
+            <View
+              style={{
+                width: "100%",
+                backgroundColor: "white",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                paddingHorizontal: 20,
+                paddingVertical: 10,
+                borderBottomWidth: 0.5,
+                borderBottomColor: "#ccc"
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-around",
+                  alignItems: "center"
+                }}
+              >
+                <AppText text={"Add Card"} size={15} />
               </View>
-            ) : (
-              console.log()
-            )}
-          </>
+              <Ionicons name={Platform.OS + "-arrow-forward"} size={20} />
+            </View>
+          </View>
         </ScrollView>
         <Modal
           style={{ alignItems: "flex-end" }}
@@ -297,6 +231,7 @@ class LinksScreen extends React.Component {
         >
           <DatePicker />
         </Modal>
+
         <TouchableOpacity
           style={styles.buttonSignOut}
           onPress={() => this.props.signOut()}
@@ -324,7 +259,7 @@ const mapDispatchToProps = dispatch => ({
   signOut: () => {
     dispatch(actions.logout());
   },
-  
+
   openDateModal: () => {
     dispatch(actions.openDateModal());
   }

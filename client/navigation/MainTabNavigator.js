@@ -20,6 +20,7 @@ import MainScreen from "../screens/MainScreen";
 import RentModal from "../components/RentModal";
 import TransactionsScreen from "../screens/TransactionsScreen";
 import TransactionDetailsScreen from "../screens/TransactionDetailsScreen";
+import MyCarsScreen from "../screens/MyCarsScreen";
 
 const getTabBarIcon = (navigation, focused, tintColor) => {
   const { routeName } = navigation.state;
@@ -29,13 +30,12 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
     iconName = `home`;
   } else if (routeName === "Profile") {
     iconName = `person`;
-  } else if (routeName === "Transaction") {
-    iconName = `paper`;
+  } else if (routeName === "MyCars") {
+    iconName = `car`;
   }
 
   return <IconComponent name={`ios-` + iconName} size={25} color={tintColor} />;
 };
-
 
 const user = { name: "ahmed reyad" };
 const Profile = () => (
@@ -110,8 +110,8 @@ const RentScreen = createAppContainer(
 const TransactionsScreens = createAppContainer(
   createStackNavigator(
     {
-     Transaction:{screen:TransactionsScreen},
-     TransactionDetails:{screen:TransactionDetailsScreen}
+      Transaction: { screen: TransactionsScreen },
+      TransactionDetails: { screen: TransactionDetailsScreen }
     },
     {
       headerMode: "none"
@@ -130,13 +130,23 @@ const LoginScreen = createAppContainer(
     }
   )
 );
-
+const ProfileStack = createAppContainer(
+  createStackNavigator(
+    {
+      Profile: { screen: ProfileScreen },
+      Transaction: { screen: TransactionsScreens }
+    },
+    {
+      headerMode: "none"
+    }
+  )
+);
 const tabNav = createAppContainer(
   createBottomTabNavigator(
     {
       Home: { screen: RentScreen },
-      Transaction:{screen:TransactionsScreens},
-      Profile: { screen: ProfileScreen },
+      MyCars: { screen: MyCarsScreen },
+      Profile: { screen: ProfileStack }
     },
     {
       defaultNavigationOptions: ({ navigation }) => ({
@@ -144,7 +154,6 @@ const tabNav = createAppContainer(
           getTabBarIcon(navigation, focused, tintColor)
       }),
       tabBarOptions: {
-
         activeTintColor: "white",
         inactiveTintColor: "#999999",
         style: {

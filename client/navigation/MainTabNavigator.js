@@ -106,6 +106,7 @@ const RentScreen = createAppContainer(
     }
   )
 );
+
 const TransactionsScreens = createAppContainer(
   createStackNavigator(
     {
@@ -117,6 +118,19 @@ const TransactionsScreens = createAppContainer(
     }
   )
 );
+
+const LoginScreen = createAppContainer(
+  createStackNavigator(
+    {
+      Home: { screen: HomeScreen },
+      Register: { screen: RegisterScreen }
+    },
+    {
+      headerMode: "none"
+    }
+  )
+);
+
 const tabNav = createAppContainer(
   createDrawerNavigator(
     {
@@ -136,7 +150,7 @@ const tabNav = createAppContainer(
 const MainNavigator = createAppContainer(
   createSwitchNavigator(
     {
-      Home: { screen: HomeScreen },
+      Home: { screen: LoginScreen },
       Register: { screen: RegisterScreen },
       Dashboard: { screen: tabNav }
     },

@@ -5,6 +5,7 @@ const Admin = require("../models/Admin.models");
 var config = require("../config/jwt");
 var jwt = require("jsonwebtoken");
 const Moderator = require("../models/Moderator.models");
+const CarRenter = require("../models/CarRenter.models");
 
 router.post("/", async (req, res) => {
   try {
@@ -473,7 +474,7 @@ router.put("/view/complaints/:id", async (req, res) => {
       { reviewed: true }
     );
     if (complaints.issuedAgainst === "Owner")
-      await CarOwner.findOneAndUpdate(
+      await CarRenter.findOneAndUpdate(
         { _id: transaction.carOwnerID },
         { banned: req.body.ban }
       );

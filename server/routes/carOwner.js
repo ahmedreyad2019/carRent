@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const CarOwner = require("../models/CarOwner.models");
+const CarRenter = require("../models/CarRenter.models");
 var config = require("../config/jwt");
 var jwt = require("jsonwebtoken");
 const Car = require("../models/Car.models");
@@ -9,6 +10,7 @@ const Transaction = require("../models/Transaction.models");
 const Complaint = require("../models/Complaint.models");
 
 //create
+//Not needed (Do Not Use it)
 router.post("/", async (req, res) => {
   try {
     // const isValidated = validator.createCarValidation(req.body);
@@ -31,7 +33,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-
+//Not needed (Do Not Use it)
 router.post("/login", function(req, res) {
   CarOwner.findOne({ mobileNumber: req.body.mobileNumber }, function(err, user) {
     if (!user) {
@@ -54,12 +56,14 @@ router.post("/login", function(req, res) {
   })
 
 //read
+//Not needed (Do Not Use it)
 router.get("/", async (req, res) => {
   const carOwners = await CarOwner.find();
   res.json({ data: carOwners });
 });
 
 //read specific
+//Not needed (Do Not Use it)
 router.get("/Me", async (req, res) => {
   try {
     var stat = 0;
@@ -91,6 +95,7 @@ router.get("/Me", async (req, res) => {
 });
 
 //put
+//Not needed (Do Not Use it)
 router.put("/:id", async (req, res) => {
   try {
     var stat = 0;
@@ -131,6 +136,7 @@ await CarOwner.findByIdAndUpdate(req.params.id, req.body);
 
 //delete
 //Should be removed
+//Not needed (Do Not Use it)
 router.delete("/:id", async (req, res) => {
   try {
     await CarOwner.findByIdAndRemove(req.params.id);
@@ -159,7 +165,7 @@ router.get("/idleCars",async (req,res)=>{
       }
       stat = decoded.id;
     });
-    const owner = await CarOwner.findById(stat);
+    const owner = await CarRenter.findById(stat);
     if (!owner) {
       return res.status(404).send({ error: "Owner does not exist" });
     }
@@ -194,7 +200,7 @@ router.get("/pending",async (req,res)=>{
       }
       stat = decoded.id;
     });
-    const owner = await CarOwner.findById(stat);
+    const owner = await CarRenter.findById(stat);
     if (!owner) {
       return res.status(404).send({ error: "Owner does not exist" });
     }
@@ -227,7 +233,7 @@ router.get("/MyCar/:id", async (req, res) => {
       }
       stat = decoded.id;
     });
-    const owner = await CarOwner.findById(stat);
+    const owner = await CarRenter.findById(stat);
     if (!owner) {
       return res.status(404).send({ error: "Owner does not exist" });
     }
@@ -261,7 +267,7 @@ router.delete("/MyCar/:id", async (req, res) => {
       }
       stat = decoded.id;
     });
-    const owner = await CarOwner.findById(stat);
+    const owner = await CarRenter.findById(stat);
     if (!owner) {
       return res.status(404).send({ error: "Owner does not exist" });
     }
@@ -279,7 +285,7 @@ router.delete("/MyCar/:id", async (req, res) => {
     await Car.findByIdAndRemove(req.params.id);
     var index = owner.carsOwned.indexOf(car._id);
     owner.carsOwned.splice(index,1)
-    await CarOwner.findByIdAndUpdate(stat,{carsOwned:owner.carsOwned})
+    await CarRenter.findByIdAndUpdate(stat,{carsOwned:owner.carsOwned})
     res.json({ msg: "Car was deleted successfully" });
   } catch (error) {
     console.log(error);
@@ -305,7 +311,7 @@ router.post("/RentMyCar/:id", async (req, res) => {
       }
       stat = decoded.id;
     });
-    const owner = await CarOwner.findById(stat);
+    const owner = await CarRenter.findById(stat);
     if (!owner) {
       return res.status(404).send({ error: "Owner does not exist" });
     }
@@ -351,7 +357,7 @@ router.get("/UpcomingRents/:id",async(req,res)=>{
       }
       stat = decoded.id;
     });
-    const owner = await CarOwner.findById(stat);
+    const owner = await CarRenter.findById(stat);
     if (!owner) {
       return res.status(404).send({ error: "Owner does not exist" });
     }
@@ -392,7 +398,7 @@ router.get("/UpcomingRents",async(req,res)=>{
       }
       stat = decoded.id;
     });
-    const owner = await CarOwner.findById(stat);
+    const owner = await CarRenter.findById(stat);
     if (!owner) {
       return res.status(404).send({ error: "Owner does not exist" });
     }
@@ -427,7 +433,7 @@ router.post("/UnPublishMyCar/:id", async (req, res) => {
       }
       stat = decoded.id;
     });
-    const owner = await CarOwner.findById(stat);
+    const owner = await CarRenter.findById(stat);
     if (!owner) {
       return res.status(404).send({ error: "Owner does not exist" });
     }
@@ -492,7 +498,7 @@ router.get("/RenterDetails/:id", async (req, res) => {
       }
       stat = decoded.id;
     });
-    const owner = await CarOwner.findById(stat);
+    const owner = await CarRenter.findById(stat);
     if (!owner) {
       return res.status(404).send({ error: "Owner does not exist" });
     }
@@ -528,7 +534,7 @@ router.get("/PastRents/:id",async(req,res)=>{
       }
       stat = decoded.id;
     });
-    const owner = await CarOwner.findById(stat);
+    const owner = await CarRenter.findById(stat);
     if (!owner) {
       return res.status(404).send({ error: "Owner does not exist" });
     }
@@ -569,7 +575,7 @@ router.get("/PastRents",async(req,res)=>{
       }
       stat = decoded.id;
     });
-    const owner = await CarOwner.findById(stat);
+    const owner = await CarRenter.findById(stat);
     if (!owner) {
       return res.status(404).send({ error: "Owner does not exist" });
     }
@@ -601,7 +607,7 @@ router.post("/view/pastRentals/:id/fileComplaint", async (req, res) => {
     }
     stat = decoded.id;
   });
-  const owner = await CarOwner.findById(stat);
+  const owner = await CarRenter.findById(stat);
   if (!owner) {
     return res.status(404).send({ error: "Owner does not exist" });
   }
@@ -646,7 +652,7 @@ router.post("/RateRenter/:id", async (req, res) => {
     }
     stat = decoded.id;
   });
-  const owner = await CarOwner.findById(stat);
+  const owner = await CarRenter.findById(stat);
   if (!owner) {
     return res.status(404).send({ error: "Owner does not exist" });
   }

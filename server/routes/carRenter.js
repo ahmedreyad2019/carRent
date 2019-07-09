@@ -482,7 +482,7 @@ router.get("/view/availableCars/:id/ownerDetails", async (req, res) => {
     if (!cars) {
       return res.send({ msg: "no cars avaialble at the moment" });
     }
-    const Owner = await CarOwner.findOne({ _id: cars.carOwnerID });
+    const Owner = await CarRenter.findOne({ _id: cars.carOwnerID });
     return res.status(200).send({ msg: "Owner Details", data: Owner });
   } catch (error) {
     console.log(error);

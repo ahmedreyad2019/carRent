@@ -294,7 +294,7 @@ router.get("/view/carLicenseRequests", async (req, res) => {
     for (var i=0;i<cars.length;i++){ 
         var edited={}
         edited.car=cars[i]
-        var theCarOwner=await CarOwner.findById(cars[i].carOwnerID)
+        var theCarOwner=await CarRenter.findById(cars[i].carOwnerID)
         if(theCarOwner){
         edited.firstName=theCarOwner.firstName
         edited.lastName=theCarOwner.lastName
@@ -519,7 +519,7 @@ router.put("/view/complaints/:id", async (req, res) => {
       { reviewed: true }
     );
     if (complaints.issuedAgainst === "Owner")
-      await CarOwner.findOneAndUpdate(
+      await CarRenter.findOneAndUpdate(
         { _id: transaction.carOwnerID },
         { banned: req.body.ban }
       );

@@ -3,6 +3,7 @@ const router = express.Router();
 var config = require("../config/jwt");
 var jwt = require("jsonwebtoken");
 const Car = require("../models/Car.models");
+const CarRenter = require("../models/CarRenter.models");
 const CarOwner = require("../models/CarOwner.models");
 
 //create
@@ -28,7 +29,7 @@ router.post("/", async (req, res) => {
       }
       stat = decoded.id;
     });
-    const owner = await CarOwner.findById(stat);
+    const owner = await CarRenter.findById(stat);
     if (!owner) {
       return res.status(404).send({ error: "Owner does not exist" });
     }
@@ -38,7 +39,7 @@ router.post("/", async (req, res) => {
     owner.carsOwned.push(newCar._id)
     console.log(owner)
 //
-    await CarOwner.findByIdAndUpdate(stat,{carsOwned:owner.carsOwned})
+    await CarRenter.findByIdAndUpdate(stat,{carsOwned:owner.carsOwned})
     console.log(owner)
     res.json({ msg: "Car was added successfully", data: owner });
   } catch (error) {

@@ -21,17 +21,9 @@ class RegisterScreen extends React.Component {
     super(props);
     this.state = {
       user: {
-        name: "ssss",
-        type: "s",
-        gender: "male",
-        nationality: "Egypt",
-        idType: "National ID",
-        idNumber: "12345678913245",
-        dob: "04/04/1998",
-        address: "s",
-        telephone: 414141414141,
-        fax: 41441441,
-        mail: "",
+        FirstName: null,
+        LastName: null,
+        mobileNumber: null,
         password: ""
       },
       RepeatPassword: "",
@@ -68,7 +60,7 @@ class RegisterScreen extends React.Component {
     if (password !== RepeatPassword) {
       this.setState(prevState => ({
         ...prevState,
-        errorMessage2: "*passwords are not matching"
+        errorMessage2: "*passwords do not match"
       }));
       this.props.doError(true);
     } else {
@@ -117,14 +109,19 @@ class RegisterScreen extends React.Component {
                 backgroundColor: "#4FDBBA"
               }}
               colors={["transparent", "rgba(0,0,0,0.3)"]}
+              alignItems="center"
             >
               {!this.props.loading ? (
-                <Text style={{ color: "#FFF" }}>Sign Up</Text>
+                <>
+                
+                <Text paddingTop="10" style={{ color: "#FFF",paddingTop:13 }}>Sign Up</Text>
+                </>
               ) : (
                 <ActivityIndicator
                   animating={this.props.loading}
-                  size="small"
+                  size="large"
                   color={"#FFF"}
+                  style={{paddingTop:7}}
                 />
               )}
             </LinearGradient>
@@ -148,7 +145,8 @@ class RegisterScreen extends React.Component {
             flex: 1,
             flexDirection: "column",
             justifyContent: "space-evenly",
-            alignItems: "stretch"
+            alignItems: "stretch",
+            paddingTop:10
           }}
           behavior="padding"
           enabled
@@ -160,17 +158,40 @@ class RegisterScreen extends React.Component {
             }}
           >
             <FloatingLabelInput
+                style={styles.text}
+                label={"First Name"}
+                onChangeText={text => {
+                  this.setState(prevState => ({
+                    ...prevState,
+                    user: { ...prevState.user, FirstName: text }
+                  }));
+                }}
+                value={this.state.user.FirstName}
+              />
+              <FloatingLabelInput
+                style={styles.text}
+                label={"Last Name"}
+                onChangeText={text => {
+                  this.setState(prevState => ({
+                    ...prevState,
+                    user: { ...prevState.user, LastName: text }
+                  }));
+                }}
+                value={this.state.user.LastName}
+              />
+
+            <FloatingLabelInput
               style={styles.text}
-              label="Email"
+              label="Mobile Number"
               autoCapitalize={"none"}
               onChangeText={text => {
                 this.setState(prevState => ({
                   ...prevState,
-                  user: { ...prevState.user, mail: text }
+                  user: { ...prevState.user, mobileNumber: text }
                 }));
               }}
-              keyboardType="email-address"
-              value={this.state.user.mail}
+              keyboardType="phone-pad"
+              value={this.state.user.mobileNumber}
             />
 
             <>

@@ -36,7 +36,6 @@ class ProfileDetail extends Component {
             borderBottomColor: "#cccccc",
             fontFamily: Platform.OS === "ios" ? "Avenir-Light" : "Roboto",
             flex: 0.9,
-            borderBottomWidth: this.props.editable ? 1 : 0
           }}
           value={this.props.text}
           editable={this.props.editable}

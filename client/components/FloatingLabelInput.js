@@ -17,14 +17,15 @@ class FloatingLabelInput extends Component {
       passwordVisible: false,
       icon: "ios-eye-off"
     };
-  }
-  componentWillMount = () => {
     this._animatedIsFocused = new Animated.Value(0);
-  };
+
+  }
+ 
   componentDidUpdate = () => {
     Animated.timing(this._animatedIsFocused, {
       toValue: this.state.isFocused || (this.props.value !== ""&&this.props.value) ? 1 : 0,
-      duration: 200,
+      duration: 250,
+      delay:0,
       easing: Easing.linear
     }).start();
   };
@@ -50,7 +51,7 @@ class FloatingLabelInput extends Component {
       left: 0,
       top: this._animatedIsFocused.interpolate({
         inputRange: [0, 1],
-        outputRange: [30, 0]
+        outputRange: [25, 0]
       }),
       fontSize: this._animatedIsFocused.interpolate({
         inputRange: [0, 1],

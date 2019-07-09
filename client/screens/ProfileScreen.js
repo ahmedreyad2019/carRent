@@ -106,7 +106,7 @@ class LinksScreen extends React.Component {
         >
           <View style={styles.avatar}>
             <AppText
-              size={35}
+              size={32}
               fontStyle={"bold"}
               style={{ color: "white" }}
               text={

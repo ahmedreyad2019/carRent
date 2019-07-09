@@ -121,11 +121,7 @@ class OwnedCarsScreen extends React.Component {
           }));
   };
   render() {
-    const images = [
-      require("../images/bmw-3-series-render.jpg"),
-      require("../images/bmw-4-series-render.jpg"),
-      require("../images/bmw-5-series-render.jpg")
-    ];
+  
     return (
       <View style={{ flex: 1, backgroundColor: colors.backgroundMain }}>
         <Header
@@ -259,7 +255,7 @@ class OwnedCarsScreen extends React.Component {
                         />
                         </View>
                       </View>
-                      <ImageCarousel images={[item.photosLink]} />
+                      <ImageCarousel images={item.photosLink} />
 
                       <View
                         style={{

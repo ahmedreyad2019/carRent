@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Text } from "react-native";
+import {Platform} from 'react-native'
 class AppText extends Component {
   constructor(props) {
     super(props);
@@ -8,13 +9,13 @@ class AppText extends Component {
   getFont = font => {
     switch (font) {
       case "italic":
-        return "AvenirNext-BoldItalic";
+        return Platform.OS==='ios'?"AvenirNext-BoldItalic":"Roboto";
       case "bold":
-        return "AvenirNext-Bold";
+        return Platform.OS==='ios'?"AvenirNext-Bold":"Roboto";
       case "light":
-        return "Avenir-Light";
+        return Platform.OS==='ios'?"Avenir-Light":"Roboto";
       default:
-        return "AvenirNext-DemiBold";
+        return Platform.OS==='ios'?"AvenirNext-DemiBold":"Roboto";
     }
   };
   render() {

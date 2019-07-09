@@ -1,5 +1,6 @@
 import { connect } from "react-redux";
 import React from "react";
+import Platform from "react-native"
 import {
   View,
   TouchableOpacity,
@@ -95,7 +96,7 @@ class RentModal extends React.Component {
               style={{
                 color: colors.primary,
                 fontSize: 28,
-                fontFamily: "AvenirNext-Bold"
+                fontFamily: Platform.OS==='ios'?"AvenirNext-Bold":"Roboto"
               }}
             >
               Details

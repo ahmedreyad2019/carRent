@@ -4,6 +4,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { styles } from "../styles";
 import * as actions from "../actions/index";
+import Platform from "react-native"
 
 class Status extends React.Component {
   constructor(props) {
@@ -155,7 +156,7 @@ class Status extends React.Component {
             marginTop: 20,
             color: "#DBD7DF",
             fontSize: 15,
-            fontFamily: "AvenirNext-DemiBold"
+            fontFamily:Platform.OS==='ios'? "AvenirNext-DemiBold":"Roboto"
           }}
         >
           {this.props.selectedCompany.status}

@@ -1,3 +1,4 @@
+import {Platform} from 'react-native';
 export const colors={
   backgroundMain:"#FFF",
   primary:"#161D37",
@@ -15,13 +16,14 @@ export const styles = {
     shadowRadius: 5,
     shadoOffset: {
       width: 0,
-      height: 1
+      height: 1,
     },
    
     justifyContent:'space-between',
     paddingBottom:200,
     marginVertical: 20,
-    flex: 1
+    flex: 1,
+    
   },
   carCard: {
     padding: 20,
@@ -47,7 +49,7 @@ export const styles = {
     marginBottom: 20,
     fontSize: 18,
     color: "#000",
-    fontFamily:'Avenir'
+    fontFamily:Platform.OS === 'ios'?'Avenir':'Roboto',
   },
   button: {
     alignItems: "center",
@@ -91,8 +93,8 @@ export const styles = {
   },
   avatar: {
     borderColor: "#90F6DE",
-    borderRadius: "50px",
-    borderWidth: "1",
+    borderRadius: 50,
+    borderWidth: 1,
     width: 70,
     height: 70,
     backgroundColor: "#3D4858",

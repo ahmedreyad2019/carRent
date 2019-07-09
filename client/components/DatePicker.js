@@ -4,6 +4,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import * as actions from "../actions/index";
 import { connect } from "react-redux";
 import { styles, colors } from "../styles";
+import Platform from "react-native"
 
 class DatePicker extends Component {
   constructor(props) {
@@ -37,7 +38,7 @@ class DatePicker extends Component {
               style={{
                 fontSize: 25,
                 color: colors.primary,
-                fontFamily: "AvenirNext-Bold"
+                fontFamily: Platform.OS==='ios'?"AvenirNext-Bold":"Roboto"
               }}
             >
               {this.props.header}

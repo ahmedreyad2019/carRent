@@ -24,9 +24,14 @@ const DrivingLicenseRequestSchema = new Schema({
   }
 });
 const CarRenterSchema = new Schema({
+<<<<<<< HEAD
   FirstName: { type: String, required: true },
   LastName: { type: String, required: true },
   email: { type: String, required: true },
+=======
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
+>>>>>>> 6aa4b54d3daad69a32ea1429957a3b20918a884a
   mobileNumber: { type: String, required: true },
   personalID: { type: String },
   personalIDPhoto:{type:String},

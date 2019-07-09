@@ -1,10 +1,10 @@
-import {Platform} from 'react-native';
-export const colors={
-  backgroundMain:"#FFF",
-  primary:"#161D37",
-  backgroundCard:"#FFF",
-  error:"#293749"
-}
+import { Platform } from "react-native";
+export const colors = {
+  backgroundMain: "#FFF",
+  primary: "#161D37",
+  backgroundCard: "#FFF",
+  error: "#293749"
+};
 export const styles = {
   CompanyDetails: {
     padding: 40,
@@ -17,13 +17,12 @@ export const styles = {
     shadowRadius: 2,
     shadoOffset: {
       width: 0,
-      height: 1,
+      height: 1
     },
-   
-    justifyContent:'space-between',
-    paddingBottom:200,
-    flex: 1,
-    
+
+    justifyContent: "space-between",
+    paddingBottom: 200,
+    flex: 1
   },
   carCard: {
     padding: 20,
@@ -32,9 +31,9 @@ export const styles = {
     width: "100%",
     height: 240,
     alignSelf: "center",
-    flexDirection:'column',
-    
-    alignItems:'center',
+    flexDirection: "column",
+
+    alignItems: "center",
     flex: 1
   },
   circle: { width: 25, height: 25, borderRadius: 15, borderWidth: 5 },
@@ -49,7 +48,7 @@ export const styles = {
     marginBottom: 20,
     fontSize: 18,
     color: "#000",
-    fontFamily:Platform.OS === 'ios'?'Avenir':'Roboto',
+    fontFamily: Platform.OS === "ios" ? "Avenir" : "Roboto"
   },
   button: {
     alignItems: "center",
@@ -58,17 +57,17 @@ export const styles = {
     borderStyle: "solid",
     borderRadius: 40,
     borderWidth: 0,
-    marginBottom: 10,
+    marginBottom: 10
   },
   buttonSignOut: {
     alignItems: "center",
     height: 52,
-    backgroundColor:colors.error,
+    backgroundColor: colors.error,
     borderStyle: "solid",
     borderColor: "#F08080",
     borderWidth: 1,
     padding: 15,
-    borderRadius:100,
+    borderRadius: 100,
     marginBottom: 10,
     marginHorizontal: 40,
     position: "absolute",
@@ -89,26 +88,28 @@ export const styles = {
     borderWidth: 1,
     padding: 15,
     marginBottom: 10,
-    marginHorizontal: 40,
+    marginHorizontal: 40
   },
   avatar: {
-    borderColor: "#90F6DE",
+    borderColor: "#C0C5D8",
     borderRadius: 50,
-    borderWidth: 1,
+    borderWidth: 3,
     width: 70,
     height: 70,
-    backgroundColor: "#3D4858",
+    margin: 20,
+    marginBottom:5,
+    backgroundColor: colors.primary,
     padding: 5,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    alignSelf: "center"
   },
   container: {
     padding: 20,
-    flex:1,
+    flex: 1,
     flexDirection: "row",
     justifyContent: "center",
-    alignItems: "flex-start",
-    backgroundColor: "#1C2632"
+    alignItems: "flex-start"
   },
   container2: {
     flexDirection: "column",

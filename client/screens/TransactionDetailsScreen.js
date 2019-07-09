@@ -17,6 +17,7 @@ import Detail from "../components/Detail";
 import AppText from "../components/AppText";
 import { Header, ButtonGroup } from "react-native-elements";
 import ImageCarousel from "../components/ImageCarousel";
+import Rating from "../components/Rating";
 
 class TransactionDetailsScreen extends React.Component {
   constructor(props) {
@@ -90,11 +91,7 @@ class TransactionDetailsScreen extends React.Component {
           barStyle={"light-content"}
           backgroundColor={colors.primary}
           centerComponent={
-            <AppText
-              size={24}
-              style={{ color: "white" }}
-              text={"Details"}
-            />
+            <AppText size={24} style={{ color: "white" }} text={"Details"} />
           }
           leftComponent={
             <TouchableOpacity
@@ -104,36 +101,26 @@ class TransactionDetailsScreen extends React.Component {
             </TouchableOpacity>
           }
         />
-        <View style={{ backgroundColor: colors.primary, top: -5 }}>
-          <ButtonGroup
-            selectedButtonStyle={{
-              borderBottomLeftRadius: 0,
-              borderBottomRightRadius: 0,
-              borderBottomWidth: 5,
-              backgroundColor: colors.primary,
-              borderBottomColor: "white"
-            }}
-            buttonStyle={{ borderWidth: 0 }}
-            innerBorderStyle={{ width: 0 }}
-            selectedTextStyle={{ color: "white", fontWeight: "bold" }}
-            containerStyle={{
-              left: 0,
-              margin: 0,
-              top: 5,
-              backgroundColor: colors.primary,
-              borderWidth: 0
-            }}
-            buttons={["Past", "Upcoming", "Current"]}
-            selectedIndex={this.state.selectedIndex}
-            onPress={event => {
-              this.setState({
-                selectedIndex: event
-              });
-            }}
-          />
+        <View
+          style={{
+            borderBottomWidth: 1,
+            borderBottomColor: "#ddd",
+            paddingHorizontal: 40,paddingVertical:10
+          }}
+        >
+          <View style={{ flexDirection: "row",justifyContent:'space-between',alignItems:'center' }}>
+            <AppText text={"Paid"} />
+            <AppText text={"EGP " + transaction.price.toLocaleString()} />
+          </View>
+        </View>
+        <View style={{ borderBottomWidth: 1, borderBottomColor: "#ddd" }}>
+          <AppText text={cars.make} />
+          <AppText text={cars.model + " " + cars.year} />
+          <AppText text={cars.plateNumber} />
+          <Rating rating={cars.rating} />
+          <Rating rating={cars.rating} />
         </View>
         <View>
-          <AppText text={cars.make} />
           <AppText text={carOwners.firstName} />
         </View>
       </View>

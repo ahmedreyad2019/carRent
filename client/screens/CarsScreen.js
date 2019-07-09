@@ -90,20 +90,18 @@ class CarsScreen extends React.Component {
     const images = [
       require("../images/bmw-3-series-render.jpg"),
       require("../images/bmw-4-series-render.jpg"),
-      require("../images/bmw-5-series-render.jpg"),
-   
+      require("../images/bmw-5-series-render.jpg")
     ];
     return (
       <View style={{ flex: 1, backgroundColor: colors.backgroundMain }}>
         <Header
           backgroundColor={colors.primary}
           rightComponent={
-            <Ionicons
-              name={"ios-funnel"}
+            <TouchableOpacity
               onPress={() => this.props.doOpenFilterModal()}
-              size={20}
-              color={"#74808E"}
-            />
+            >
+              <Ionicons name={"ios-funnel"} size={20} color={"#74808E"} />
+            </TouchableOpacity>
           }
           centerComponent={
             <View
@@ -135,7 +133,6 @@ class CarsScreen extends React.Component {
           animationType="fade"
           transparent={true}
           visible={this.props.filterModalVisible}
-         
         >
           <Filter />
         </Modal>
@@ -223,7 +220,8 @@ class CarsScreen extends React.Component {
                     >
                       <TouchableOpacity
                         style={{
-                          backgroundColor:item.status!=="Done"? colors.primary:"green",
+                          backgroundColor:
+                            item.status !== "Done" ? colors.primary : "green",
                           zIndex: 9090909090,
                           width: 60,
                           height: 30,
@@ -246,7 +244,7 @@ class CarsScreen extends React.Component {
                           style={{
                             color: "white"
                           }}
-                          text={item.status!=='Done'?"Book":"Booked"}
+                          text={item.status !== "Done" ? "Book" : "Booked"}
                         />
                       </TouchableOpacity>
                       <View

@@ -53,19 +53,20 @@ class PickerLocation extends Component {
         inputRange: [0, 1],
         outputRange: [0, 200]
       }),
-      width: "150%",
+      width: "100%",
       zIndex: 5000000000000,
-      borderWidth: 1,
       borderColor: "#eee",
       flexDirection: "column",
       alignItems: "flex-start",
       justifyContent: "flex-start",
-      backgroundColor: "white"
+      backgroundColor: colors.primary,
+      borderBottomLeftRadius: 20,
+      borderBottomRightRadius: 20
     };
     return (
       <View
         style={{
-          width: 150,
+          width: 200,
           justifyContent: "flex-start",
           alignItems: "center"
         }}
@@ -73,7 +74,7 @@ class PickerLocation extends Component {
         <TouchableOpacity
           style={{
             backgroundColor: colors.primary,
-            width: 150,
+            width: 200,
             flexDirection: "row",
             borderTopLeftRadius: 50,
             borderTopRightRadius: 50,
@@ -104,7 +105,10 @@ class PickerLocation extends Component {
           <ScrollView
             style={{
               flexDirection: "column",
-              width: "100%",paddingTop:15
+              width: "100%",
+              paddingTop: 15,
+              borderBottomLeftRadius: 20,
+              borderBottomRightRadius: 20
             }}
             contentContainerStyle={{ alignItems: "flex-start" }}
           >
@@ -118,17 +122,17 @@ class PickerLocation extends Component {
                 }}
                 key={i}
                 style={{
-                  borderBottomWidth: 0.4,
+                
                   width: "100%",
                   marginBottom: 15,
-                  borderBottomColor: "#eee"
+                  borderBottomColor: "#000"
                 }}
               >
                 <Text
                   style={{
                     fontFamily: "AvenirNext-DemiBold",
-                    fontSize: 18,
-                    color: "black"
+                    fontSize: 16,
+                    color: "white"
                   }}
                 >
                   {item}

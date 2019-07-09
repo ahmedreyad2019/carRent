@@ -101,6 +101,44 @@ class OwnedCarsScreen extends React.Component {
     return today.getDate() + "/" + (today.getMonth() + 1);
   };
 
+
+  handleDelete =async (id,make) =>{
+
+
+    Alert.alert(
+        'Are You Sure?',
+        'Do you want to delete your '+make+" Car?",
+        [
+          {
+            text: 'No',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+          {text: 'Yes', onPress: () => {
+              
+            AsyncStorage.getItem("jwt").then(token =>
+                fetch("https://carrentalserver.herokuapp.com/carOwner/MyCar/"+id, {
+                  method: "DELETE",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "x-access-token":token
+                  }
+                }).then(response => {
+                  response.json().then(data => {
+                      this._onRefresh()
+                  });
+                })
+              );
+
+            
+          }},
+        ],
+        {cancelable: false},
+      );
+
+
+  }
+
   _onRefresh = () => {
     AsyncStorage.getItem("jwt").then(token =>
         fetch(`https://carrentalserver.herokuapp.com/carOwner/myCars`, {
@@ -149,6 +187,13 @@ class OwnedCarsScreen extends React.Component {
                 }
               />
             </View>
+          }
+          rightComponent={
+            <TouchableOpacity
+            onPress={() => this.props.navigation.navigate("AddCar")}
+          >
+            <Ionicons name={"md-add"} size={30} color={"#74808E"} />
+          </TouchableOpacity>
           }
           
         />
@@ -228,7 +273,7 @@ class OwnedCarsScreen extends React.Component {
                           text={item.status=="PendingApproval"?"Pending Approval":item.status=="UpForRent"?"Up For Rent":item.status}
                         />
                       </TouchableOpacity>
-                      <View
+                      <TouchableOpacity
                         style={{
                           backgroundColor: "white",
                           zIndex: 9090909090,
@@ -242,7 +287,11 @@ class OwnedCarsScreen extends React.Component {
                           flexDirection: "column",
                           justifyContent: "center",
                           alignItems: "center"
+                          
                         }}
+                        onPress={() => {
+                          this.handleDelete(item._id,item.make)
+                            }}
                       >
                         <View
                           style={{
@@ -258,8 +307,8 @@ class OwnedCarsScreen extends React.Component {
                           text={"Remove Car"}
                         />
                         </View>
-                      </View>
-                      <ImageCarousel images={[item.photosLink]} />
+                      </TouchableOpacity>
+                      <ImageCarousel images={item.photosLink} />
 
                       <View
                         style={{

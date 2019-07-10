@@ -24,6 +24,11 @@ import DatePicker from "react-native-datepicker";
 import { Header } from "react-native-elements";
 import AppText from "../components/AppText";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { Base64 } from 'js-base64';
+import firebase from "../store/firebase";
+
+
+const storage = firebase.storage();
 
 class AddCarScreen extends React.Component {
   constructor(props) {
@@ -33,14 +38,15 @@ class AddCarScreen extends React.Component {
         make: null,
         model: null,
         year: null,
-        licenseLink: "",
+        licenseLink: null,
         plateNumber: null,
         licenseExpiryDate: null,
         location: null,
         photosLink: null
       },
       errorMessage1: null,
-      image: null
+      image: null,
+      licenseImage:null
     };
     this.RotateValueHolder = new Animated.Value(0);
   }
@@ -48,6 +54,7 @@ class AddCarScreen extends React.Component {
   componentDidMount() {
     this.getPermissionAsync();
   }
+
 
   getPermissionAsync = async () => {
     if (Constants.platform.ios) {
@@ -57,15 +64,172 @@ class AddCarScreen extends React.Component {
       }
     }
   }
-  _pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({});
 
-    console.log(result);
+
+    uploadImageAsync= async (uri)=> {
+    // Why are we using XMLHttpRequest? See:
+    // https://github.com/expo/expo/issues/2402#issuecomment-443726662
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function() {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function(e) {
+        console.log(e);
+        reject(new TypeError('Network request failed'));
+      };
+      xhr.responseType = 'blob';
+      xhr.open('GET', uri, true);
+      xhr.send(null);
+    });
+  
+    const ref = storage
+      .ref()
+      .child(Math.random()*1000000000+"");
+    const snapshot = await ref.put(blob);
+  
+    // We're done with the blob, close and release it
+    blob.close();
+  
+    return await snapshot.ref.getDownloadURL();
+  }
+
+
+
+  _pickImage2=async()=>{
+    let result = await ImagePicker.launchImageLibraryAsync({base64:true});
+    try {
+      this.setState({ uploading: true });
+
+      if (!result.cancelled) {
+        uploadUrl = await this.uploadImageAsync(result.uri);
+        // prevState => ({
+        //   ...prevState,
+        //   user: { ...prevState.user, plateNumber: text }
+        // })
+        this.setState(prevState => ({  ...prevState,image:result.uri,
+          user: { ...prevState.user, photosLink: uploadUrl }}));
+      }
+    } catch (e) {
+      console.log(e);
+      alert('Upload failed, sorry :(');
+    } finally {
+      this.setState({ uploading: false });
+    }
+  }
+  _pickImageLicense2=async()=>{
+    let result = await ImagePicker.launchImageLibraryAsync({base64:true});
+    try {
+      this.setState({ uploading: true });
+
+      if (!result.cancelled) {
+        uploadUrl = await this.uploadImageAsync(result.uri);
+        this.setState(prevState => ({  ...prevState,licenseImage:result.uri,
+          user: { ...prevState.user, licenseLink: uploadUrl }}));
+      }
+    } catch (e) {
+      console.log(e);
+      alert('Upload failed, sorry :(');
+    } finally {
+      this.setState({ uploading: false });
+    }
+  }
+
+  _pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({base64:true});
+    var blob=null;
+    try{
+    const response = await fetch(result.uri);
+     blob = await response.blob();
+     console.log(blob)
+  }catch(error){
+      console.log(error)
+    }
+    console.log("in")
+console.log(result.base64.substring(0,20))
+    if (!result.cancelled) {
+      var k=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
+      var k2=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
+      var k3=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
+      var k4=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
+      var k5=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
+      var k6=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
+      var k7=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
+      var id=k+k2+k3+k4+k5+k6+k7;
+      console.log("in")
+      try{
+        var inputImage=Base64.encode(result.base64)
+      storage.ref('/images/').child(id)
+.put(blob, {contentType:"image/jpg"});
+} catch(error){
+  console.log(error)
+}
+console.log("in")
+      this.setState({ image: result.uri });
+      uploadTask.on(
+        "state_changed",
+        snapshot => {
+          // progrss function ....
+        },
+        error => {
+          // error function ....
+          console.log(error);
+        },
+        () => {
+          // complete function ....
+          console.log("in")
+          storage
+            .ref(id)
+            .child("pdf")
+            .getDownloadURL()
+            .then(url => {
+              
+    console.log(url);
+              this.setState({ photosLink:[url] });
+            });
+          }
+        );
+      }
+    };
+
+  _pickImageLicense = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({base64:true});
 
     if (!result.cancelled) {
-      this.setState({ image: result.uri });
-    }
-  };
+      var k=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
+      var k2=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
+      var k3=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
+      var k4=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
+      var k5=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
+      var k6=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
+      var k7=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
+      var id=k+k2+k3+k4+k5+k6+k7;
+      storage.ref('/images/').child(id)
+.putString(result.base64.substring(23), "base64", {contentType:"image/jpg"});
+      this.setState({ licenseImage: result.uri });
+      uploadTask.on(
+        "state_changed",
+        snapshot => {
+          // progrss function ....
+        },
+        error => {
+          // error function ....
+          console.log(error);
+        },
+        () => {
+          // complete function ....
+          storage
+            .ref(id)
+            .child("pdf")
+            .getDownloadURL()
+            .then(url => {
+              console.log(url)
+              this.setState({ licenseLink:url });
+            });
+          }
+        );
+      }
+    };
 
   StartImageRotateFunction() {
     this.RotateValueHolder.setValue(0);
@@ -125,7 +289,9 @@ class AddCarScreen extends React.Component {
     }
   };
 
-  AddCar = async () => {};
+  AddCar = async () => {
+    console.log(this.state.user)
+  };
   handleLoading = () => {
     const RotateData = this.RotateValueHolder.interpolate({
       inputRange: [0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2],
@@ -157,7 +323,7 @@ class AddCarScreen extends React.Component {
               >
                 {!this.props.loading ? (
                   <>
-                    <Text  style={{ color: "#FFF",paddingTop:10 }}>
+                    <Text  style={{ color: "#FFF" }}>
                       Add Car
                     </Text>
                   </>
@@ -215,7 +381,7 @@ class AddCarScreen extends React.Component {
             flexDirection: "column",
             justifyContent: "space-evenly",
             alignItems: "stretch",
-            paddingTop: 10,
+            
 
           }}
           behavior="padding"
@@ -285,6 +451,7 @@ class AddCarScreen extends React.Component {
               value={this.state.user.plateNumber}
             />
 
+
             <DatePicker
               placeholder="License Expiry Date"
               confirmBtnText="Confirm"
@@ -319,25 +486,33 @@ class AddCarScreen extends React.Component {
               }}
             />
 
-            <View
-              style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center"
-              }}
-            >
+            <View alignItems="center">
+                <Image
+                  source={{ uri: this.state.licenseImage }}
+                  style={{ width: 100, height: 60 }}
+                  
+                />
+            
               <Button
-                title="Pick an image from camera roll"
-                onPress={this._pickImage}
+                title="Upload License Image"
+                onPress={this._pickImageLicense2}
+                styles={{paddingTop:10}}
               />
-              {this.state.image && (
+       </View>
+       
+       <View alignItems="center">
                 <Image
                   source={{ uri: this.state.image }}
-                  style={{ width: 200, height: 200 }}
+                  style={{ width: 100, height: 60 }}
+                  
                 />
-              )}
-            </View>
-          </ScrollView>
+            
+              <Button
+                title="Upload Car Image"
+                onPress={this._pickImage2}
+                styles={{paddingTop:10}}
+              />
+       </View>
 
           <StatusBar barStyle={"light-content"} />
 
@@ -350,6 +525,7 @@ class AddCarScreen extends React.Component {
           >
             {this.handleLoading()}
           </View>
+          </ScrollView>
         </KeyboardAvoidingView>
       </>
     );

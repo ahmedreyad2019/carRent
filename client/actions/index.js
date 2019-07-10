@@ -143,8 +143,6 @@ export const clear = () => {
 };
 export const logout = () => {
   return dispatch => {
-    dispatch(setCars(""));
-    dispatch(setRequests(""));
     AsyncStorage.getAllKeys().then(AsyncStorage.multiRemove);
     dispatch({ type: types.LOGOUT });
   };

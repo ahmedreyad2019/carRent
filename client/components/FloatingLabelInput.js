@@ -24,9 +24,9 @@ class FloatingLabelInput extends Component {
   componentDidUpdate = () => {
     Animated.timing(this._animatedIsFocused, {
       toValue: this.state.isFocused || (this.props.value !== ""&&this.props.value) ? 1 : 0,
-      duration: 250,
+      duration: 200,
       delay:0,
-      easing: Easing.linear
+      easing: Easing.quad
     }).start();
   };
   handleFocus = () => {

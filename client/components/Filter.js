@@ -94,14 +94,14 @@ class Filter extends React.Component {
       transform: [{ rotate: RotateData }]
     };
     return (
-      <View style={{ flex: 1, backgroundColor: "rgba(0,0,0,0.7)" }}>
+      <View style={{ flex: 1, }}>
         <View
           style={{
             ...styles.CompanyDetails,
             margin: 0,
             padding: 0,
             width: "100%",
-            height: "80%",
+            height: "81%",
             alignContent: "flex-end",
             position: "absolute",
             bottom: 0

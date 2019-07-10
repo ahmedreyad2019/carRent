@@ -3,6 +3,7 @@ import {
   View,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   ScrollView,
   Animated,
   Easing,
@@ -22,7 +23,11 @@ class PickerLocation extends Component {
       listItems: [
         "Nasr City",
         "5th Settlement",
+        "3rd Settlement",
         "1st Settlement",
+        "6th October",
+        "Maadi",
+        "Ramsis",
         "Sheikh Zayed",
         "Zamalek",
         "Mohandeseen",
@@ -52,7 +57,7 @@ class PickerLocation extends Component {
     const labelStyle = {
       height: this._animatedIsFocused.interpolate({
         inputRange: [0, 1],
-        outputRange: [0, 200]
+        outputRange: [0, 300]
       }),
       width: "100%",
       zIndex: 5000000000000,
@@ -72,55 +77,58 @@ class PickerLocation extends Component {
           alignItems: "center"
         }}
       >
-        <TouchableOpacity
-          style={{
-            backgroundColor: colors.primary,
-            width: 200,
-            flexDirection: "row",
-            borderTopLeftRadius: 50,
-            borderTopRightRadius: 50,
-            justifyContent: "space-evenly"
+        <TouchableWithoutFeedback
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          onPress={() => {
+            this.setState(prevState => ({
+              listOpen: !prevState.listOpen
+            }));
           }}
-          onPress={() =>
-            this.setState(prevState => ({ listOpen: !prevState.listOpen }))
-          }
         >
-          <Text
+          <View
             style={{
-              fontFamily:
-                Platform.OS === "ios" ? "AvenirNext-DemiBold" : "Roboto",
-              color: "white",
-              fontSize:16
+              backgroundColor: colors.primary,
+              width: 200,
+              flexDirection: "row",
+              borderTopLeftRadius: 50,
+              borderTopRightRadius: 50,
+              justifyContent: "space-evenly"
             }}
           >
-            {this.props.search.location}
-          </Text>
-          <Ionicons
-            name={"ios-arrow-down"}
-            size={20}
-            color={"white"}
-            style={{
-              position: "absolute",
+            <Text
+              style={{
+                fontFamily:
+                  Platform.OS === "ios" ? "AvenirNext-DemiBold" : "Roboto",
+                color: "white",
+                fontSize: 16
+              }}
+            >
+              {this.props.search.location}
+            </Text>
+            <Ionicons
+              name={"ios-arrow-down"}
+              size={20}
+              color={"white"}
+              style={{
+                position: "absolute",
 
-              right: 10
-            }}
-            onPress={() =>
-              this.setState(prevState => ({ listOpen: !prevState.listOpen }))
-            }
-          />
-        </TouchableOpacity>
+                right: 10
+              }}
+            />
+          </View>
+        </TouchableWithoutFeedback>
         <Animated.View style={labelStyle}>
           <ScrollView
             style={{
               flexDirection: "column",
               width: "100%",
-              paddingHorizontal: 10,
-            
+              paddingHorizontal: 10
             }}
             contentContainerStyle={{ alignItems: "flex-start" }}
           >
             {this.state.listItems.map((item, i) => (
               <TouchableOpacity
+                hitSlop={{ top: 10 }}
                 onPress={() => {
                   this.setState(prevState => ({
                     listOpen: !prevState.listOpen
@@ -132,7 +140,7 @@ class PickerLocation extends Component {
                   width: "100%",
                   marginVertical: 8,
                   borderBottomColor: "#223344",
-                  borderBottomWidth:1
+                  borderBottomWidth: 1
                 }}
               >
                 <Text

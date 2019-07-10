@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import React, { Component } from "react";
 import { colors } from "../styles";
+import AppText from "./AppText";
 class ImageCarousel extends Component {
   constructor(props) {
     super(props);
@@ -47,11 +48,13 @@ class ImageCarousel extends Component {
                 height: this.props.full ? 300 : 140,
                 width: this.props.full ? screenWidth : (screenWidth - 40)
               }}
+              loadingIndicatorSource={<AppText style={{color:'white'}} text={'loading...'}/>}
               source={{ uri: item }}
               onLoadStart={e => this.setState({ loading: true })}
             />
           )}
           keyExtractor={(item, index) => index.toString()}
+        
           ListEmptyComponent={
             <View>
               <Text>no images</Text>

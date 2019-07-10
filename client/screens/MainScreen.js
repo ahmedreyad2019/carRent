@@ -78,7 +78,7 @@ class MainScreen extends React.Component {
         <Modal
           style={{ alignItems: "flex-end" }}
           transparent={true}
-          animationType={"slide"}
+          animationType={"fade"}
           visible={this.props.dateModalVisible}
         >
           <DatePicker

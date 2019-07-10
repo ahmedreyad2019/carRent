@@ -88,7 +88,6 @@ class CarsScreen extends React.Component {
     return today.getDate() + "/" + (today.getMonth() + 1);
   };
   render() {
-   
     return (
       <View style={{ flex: 1, backgroundColor: colors.backgroundMain }}>
         <Header
@@ -125,7 +124,7 @@ class CarsScreen extends React.Component {
         />
 
         <Modal
-          animationType="fade"
+          animationType="slide"
           transparent={true}
           visible={this.props.filterModalVisible}
         >
@@ -289,7 +288,9 @@ class CarsScreen extends React.Component {
                           height: 60,
                           width: "100%",
                           paddingLeft: 5,
-                          alignItems: "flex-start"
+                          alignItems: "flex-start",
+                          borderBottomWidth: 1.5,
+                          borderBottomColor:'#eee'
                         }}
                       >
                         <View

@@ -82,7 +82,7 @@ class RegisterScreen extends React.Component {
         errorMessage2: ""
       }));
       await this.props.doLogin(this.state.user)
-      this.props.navigation.navigate("Home")
+      this.props.navigation.navigate("Login")
     }
    
   };

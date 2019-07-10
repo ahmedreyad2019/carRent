@@ -52,7 +52,7 @@ class LinksScreen extends React.Component {
     this.makeRemoteRequest();
   };
   componentDidUpdate = () => {
-    if (!this.props.token) this.props.navigation.navigate("Home");
+    if (!this.props.token) this.props.navigation.navigate("Login");
   };
   openModalDate = () => {
     this.setState({ dateModalOpen: true });

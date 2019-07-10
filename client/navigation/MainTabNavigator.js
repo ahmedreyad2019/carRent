@@ -157,6 +157,7 @@ const ProfileStack = createAppContainer(
 const tabNav = createAppContainer(
   createBottomTabNavigator(
     {
+      
       Home: { screen: RentScreen },
       MyCars:{screen:CarOwnerScreen},
       Profile: { screen: ProfileStack }
@@ -180,7 +181,7 @@ const tabNav = createAppContainer(
 const MainNavigator = createAppContainer(
   createSwitchNavigator(
     {
-      Home: { screen: LoginScreen },
+      Login: { screen: LoginScreen },
       Register: { screen: RegisterScreen },
       Dashboard: { screen: tabNav }
     },

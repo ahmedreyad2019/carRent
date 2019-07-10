@@ -95,7 +95,7 @@ class TransactionsScreen extends React.Component {
           }
           leftComponent={
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate("Main")}
+              onPress={() => this.props.navigation.navigate("Profile")}
             >
               <Ionicons name={"ios-arrow-back"} size={25} color={"#74808E"} />
             </TouchableOpacity>

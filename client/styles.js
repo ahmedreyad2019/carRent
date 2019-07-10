@@ -25,7 +25,6 @@ export const styles = {
     height: 240,
     alignSelf: "center",
     flexDirection: "column",
-
     alignItems: "center",
     flex: 1
   },
@@ -86,7 +85,7 @@ export const styles = {
   avatar: {
     borderColor: "#C0C5D8",
     borderRadius: 50,
-    borderWidth: 3,
+    borderWidth: 1,
     width: 70,
     height: 70,
     margin: 20,

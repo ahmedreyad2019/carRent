@@ -5,7 +5,8 @@ const intialState = {
   token: null,
   loading: false,
   userId: null,
-  user: null
+  user: null,
+  
 };
 export default (loginReducer = (state = intialState, action) => {
   switch (action.type) {

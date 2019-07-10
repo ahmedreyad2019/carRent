@@ -1,5 +1,5 @@
 import * as types from "../actionConstants/action-types";
-import { AsyncStorage ,Alert} from "react-native";
+import { AsyncStorage, Alert } from "react-native";
 const axios = require("axios");
 export const loading = loading => {
   return {
@@ -206,8 +206,7 @@ export const login = (mobileNumber, password) => {
             response.json().then(data => {
               if (data.auth) {
                 AsyncStorage.setItem("jwt", data.token);
-                AsyncStorage.getItem("jwt").then(res => {
-                });
+                AsyncStorage.getItem("jwt").then(res => {});
                 dispatch(setToken(data.token, data.id));
               } else dispatch(setError(true));
               dispatch(loading(false));
@@ -238,21 +237,17 @@ export const signUp = user => {
               //dispatch(setSignUp(data.token, data.id));
               //Mobile verification here
               Alert.alert(
-                'Success!',
-                'Your Account was Created succefully, Please check your Email to verify your account.',
-                [
-                  {text: 'OK'},
-                ],
-                {cancelable: false},
+                "Success!",
+                "Your Account was Created succefully, Please check your Email to verify your account.",
+                [{ text: "OK" }],
+                { cancelable: false }
               );
-            }else{
+            } else {
               Alert.alert(
-                'Sorry',
-                'An account is already Registered with this number.',
-                [
-                  {text: 'OK'},
-                ],
-                {cancelable: false},
+                "Sorry",
+                "An account is already Registered with this number.",
+                [{ text: "OK" }],
+                { cancelable: false }
               );
             }
             dispatch(loading(false));
@@ -266,18 +261,21 @@ export const fetchCars = search => {
   return dispatch => {
     dispatch(loading(true));
     AsyncStorage.getItem("jwt").then(token =>
-      fetch("https://carrentalserver.herokuapp.com/carRenter/view/availableCars", {
-        method: "POST",
-        body: JSON.stringify({
-          rentingDateStart: search.rentingDateStart,
-          rentingDateEnd: search.rentingDateEnd,
-          location: search.location
-        }),
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": token
+      fetch(
+        "https://carrentalserver.herokuapp.com/carRenter/view/availableCars",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            rentingDateStart: search.rentingDateStart,
+            rentingDateEnd: search.rentingDateEnd,
+            location: search.location
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            "x-access-token": token
+          }
         }
-      })
+      )
         .then(res => res.json())
         .then(res => {
           dispatch(setCars(res.data));
@@ -295,43 +293,72 @@ export const fetchPastTransactions = () => {
   return dispatch => {
     dispatch(loading(true));
     AsyncStorage.getItem("jwt").then(token =>
-    fetch(`https://carrentalserver.herokuapp.com/carRenter/view/pastRentals`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "x-access-token": token
-      }
-    })
-      .then(response => response.json())
-      .then(response => {
-        dispatch(setPastTransactions(response.data));
-        dispatch(loading(false));
-      })
-      .catch(error => {
-        console.log(error)
-        dispatch(setError(error));
-      }));
+      fetch(
+        `https://carrentalserver.herokuapp.com/carRenter/view/pastRentals`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-access-token": token
+          }
+        }
+      )
+        .then(response => response.json())
+        .then(response => {
+          dispatch(setPastTransactions(response.data));
+          dispatch(loading(false));
+        })
+        .catch(error => {
+          console.log(error);
+          dispatch(setError(error));
+        })
+    );
   };
 };
 export const fetchUpcomingTransactions = () => {
   return dispatch => {
     dispatch(loading(true));
     AsyncStorage.getItem("jwt").then(token =>
-    fetch(`https://carrentalserver.herokuapp.com/carRenter/view/upComingRentals`, {
-      method: "GET",
+      fetch(
+        `https://carrentalserver.herokuapp.com/carRenter/view/upComingRentals`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-access-token": token
+          }
+        }
+      )
+        .then(response => response.json())
+        .then(response => {
+          dispatch(setUpcomingTransactions(response.data));
+          dispatch(loading(false));
+        })
+        .catch(error => {
+          dispatch(setError(error));
+        })
+    );
+  };
+};
+export const editProfile = (userId, token, body) => {
+  return dispatch => {
+ console.log(body)
+    fetch(`https://carrentalserver.herokuapp.com/carRenter/${userId}`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         "x-access-token": token
-      }
+      },
+      body: JSON.stringify(body)
     })
       .then(response => response.json())
       .then(response => {
-        dispatch(setUpcomingTransactions(response.data));
-        dispatch(loading(false));
+        console.log(response);
+        dispatch(setUser(response.data));
       })
       .catch(error => {
         dispatch(setError(error));
-      }));
+      });
   };
 };
 export const fetchProfile = (userId, token) => {

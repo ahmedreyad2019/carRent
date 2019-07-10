@@ -1,6 +1,6 @@
 import { Platform } from "react-native";
 export const colors = {
-  backgroundMain: "#FFF",
+  backgroundMain: "#fafaff",
   primary: "#161D37",
   backgroundCard: "#FFF",
   error: "#293749"
@@ -13,15 +13,8 @@ export const styles = {
     width: "100%",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    shadoOffset: {
-      width: 0,
-      height: 1
-    },
 
     justifyContent: "space-between",
-    paddingBottom: 200,
     flex: 1
   },
   carCard: {
@@ -97,7 +90,7 @@ export const styles = {
     width: 70,
     height: 70,
     margin: 20,
-    marginBottom:5,
+    marginBottom: 5,
     backgroundColor: colors.primary,
     padding: 5,
     justifyContent: "center",

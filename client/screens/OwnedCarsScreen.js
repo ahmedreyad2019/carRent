@@ -273,7 +273,7 @@ class OwnedCarsScreen extends React.Component {
                         style={{
                           backgroundColor: "white",
                           zIndex: 9090909090,
-                          width: 150,
+                          width: 100,
                           height: 65,
                           position: "absolute",
                           top: 150,

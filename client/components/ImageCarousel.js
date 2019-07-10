@@ -1,4 +1,12 @@
-import { View, Text, FlatList, Image, TouchableOpacity,ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+  Dimensions
+} from "react-native";
 import React, { Component } from "react";
 import { colors } from "../styles";
 class ImageCarousel extends Component {
@@ -14,8 +22,14 @@ class ImageCarousel extends Component {
   };
 
   render() {
+    const screenWidth = Math.round(Dimensions.get("window").width);
     return (
-      <View style={{ height: 140 }}>
+      <View
+        style={{
+          height: this.props.full ? 300 : 140,
+          backgroundColor: "black"
+        }}
+      >
         <FlatList
           onViewableItemsChanged={this.onViewableItemsChanged}
           ref={ref => {
@@ -23,14 +37,18 @@ class ImageCarousel extends Component {
           }}
           data={this.props.images}
           horizontal
-          snapToAlignment={'center'}
+          snapToAlignment={"center"}
           decelerationRate={"fast"}
-          snapToInterval={!this.props.full ? 350 : this.props.full}
+          snapToInterval={this.props.full ? screenWidth : (screenWidth - 40)}
           renderItem={({ item }) => (
             <Image
-              style={{ height: 140, width: this.props.full ? 400 : 350 }}
-              source={{uri:item}}
-              loadingIndicatorSource={<ActivityIndicator animating={true}/>}
+              resizeMode={this.props.full ? "contain" : "cover"}
+              style={{
+                height: this.props.full ? 300 : 140,
+                width: this.props.full ? screenWidth : (screenWidth - 40)
+              }}
+              source={{ uri: item }}
+              onLoadStart={e => this.setState({ loading: true })}
             />
           )}
           keyExtractor={(item, index) => index.toString()}
@@ -50,23 +68,29 @@ class ImageCarousel extends Component {
             alignSelf: "center"
           }}
         >
-          {this.props.images?this.props.images.map((item, i) => (
-            <TouchableOpacity
-              onPress={() => {
-                this.scrollToIndex(i), console.log(i + "  " + this.state.index);
-              }}
-              key={i}
-              style={{
-                marginHorizontal: 5,
-                width: 12,
-                height: 12,
+          {this.props.images
+            ? this.props.images.map((item, i) => (
+                <TouchableOpacity
+                  hitSlop={{ top: 10, bottom: 10, left: 5, right: 5 }}
+                  onPress={() => {
+                    this.scrollToIndex(i),
+                      console.log(i + "  " + this.state.index);
+                  }}
+                  key={i}
+                  style={{
+                    marginHorizontal: 5,
+                    width: 12,
+                    height: 12,
 
-                backgroundColor:
-                  this.state.index === i ? "white" : "rgba(255,255,255,0.5)",
-                borderRadius: 12
-              }}
-            />
-          )):console.log()}
+                    backgroundColor:
+                      this.state.index === i
+                        ? "white"
+                        : "rgba(255,255,255,0.5)",
+                    borderRadius: 12
+                  }}
+                />
+              ))
+            : console.log()}
         </View>
       </View>
     );

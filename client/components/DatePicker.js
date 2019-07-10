@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, DatePickerIOS, Text,Platform } from "react-native";
+import { View, DatePickerIOS, Text, Platform } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import * as actions from "../actions/index";
 import { connect } from "react-redux";
@@ -17,7 +17,11 @@ class DatePicker extends Component {
         <View
           style={{
             ...styles.CompanyDetails,
+            borderTopLeftRadius: 0,
+            borderTopRightRadius: 0,
             padding: 0,
+            borderTopWidth: 1,
+            borderTopColor: "#dddddd",
             height: 250,
             position: "absolute",
             bottom: 0
@@ -30,14 +34,14 @@ class DatePicker extends Component {
               borderBottomColor: "#eeeeee",
               flexDirection: "row",
               alignItems: "center",
-              justifyContent: "center",
+              justifyContent: "center"
             }}
           >
             <Text
               style={{
                 fontSize: 25,
                 color: colors.primary,
-                fontFamily: Platform.OS==='ios'?"AvenirNext-Bold":"Roboto"
+                fontFamily: Platform.OS === "ios" ? "AvenirNext-Bold" : "Roboto"
               }}
             >
               {this.props.header}

@@ -159,7 +159,7 @@ const tabNav = createAppContainer(
     {
       Home: { screen: RentScreen },
       MyCars:{screen:CarOwnerScreen},
-      Profile: { screen: ProfileScreen }
+      Profile: { screen: ProfileStack }
     },
     {
       defaultNavigationOptions: ({ navigation }) => ({

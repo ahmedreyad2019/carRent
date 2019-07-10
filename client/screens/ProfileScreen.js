@@ -43,6 +43,7 @@ class LinksScreen extends React.Component {
       loading: true,
       refresh: false,
       data: [],
+      user: "",
       editable: false,
       dateModalOpen: false
     };
@@ -59,7 +60,7 @@ class LinksScreen extends React.Component {
   render() {
     const { user } = this.props;
     return (
-      <View style={{ flex: 1, backgroundColor: "#fafaff" }}>
+      <View style={{ flex: 1, backgroundColor: "#fafaff", }}>
         <Header
           barStyle={"light-content"}
           backgroundColor={colors.primary}
@@ -102,7 +103,7 @@ class LinksScreen extends React.Component {
               onRefresh={this._onRefresh}
             />
           }
-          contentContainerStyle={{ flexDirection: "column" }}
+          contentContainerStyle={{ flexDirection: "column",paddingBottom:200 }}
         >
           <View style={styles.avatar}>
             <AppText
@@ -135,15 +136,25 @@ class LinksScreen extends React.Component {
                   text={user.firstName + " " + user.lastName}
                 />
               </View>
-              <View >
+              <View>
+                <AppText
+                  text={"Personal Details"}
+                  size={17}
+                  style={{ color: "#888", margin: 7 }}
+                />
                 <ProfileDetail
-                  text={user.mobileNumber}
+                  keyboardType={"phone-pad"}
+                  top={true}
+                  title={"Phone Number"}
+                  value={user.mobileNumber}
                   icon={"call"}
                   editable={this.state.editable}
                 />
-              
+
                 <ProfileDetail
-                  text={user.personalID}
+                  keyboardType={"numeric"}
+                  title={"Personal ID"}
+                  value={user.personalID}
                   icon={"card"}
                   editable={this.state.editable}
                 />
@@ -157,7 +168,7 @@ class LinksScreen extends React.Component {
             <AppText
               text={"Payment Methods"}
               size={17}
-              style={{ color: "#888", margin: 7 }}
+              style={{ color: "#888", margin: 7, marginTop: 20 }}
             />
             <View
               style={{
@@ -168,8 +179,10 @@ class LinksScreen extends React.Component {
                 alignItems: "center",
                 paddingHorizontal: 20,
                 paddingVertical: 10,
+                borderTopWidth: 0.5,
+                borderTopColor: "#dedede",
                 borderBottomWidth: 0.5,
-                borderBottomColor: "#ccc"
+                borderBottomColor: "#dedede"
               }}
             >
               <View
@@ -188,16 +201,18 @@ class LinksScreen extends React.Component {
                 <AppText text={"Cash"} size={15} />
               </View>
               <Switch
-                value={this.state.paymentMethod === "cash"}
+                value={user ? user.paymentMethod === "Cash" : false}
                 onValueChange={() => {
                   this.setState(prevState => ({
-                    paymentMethod:
-                      prevState.paymentMethod !== "cash" ? "cash" : ""
+                    user:
+                      user.paymentMethod !== "cash"
+                        ? { ...user, paymentMethod: "cash" }
+                        : user
                   }));
                 }}
               />
             </View>
-            <View
+            <TouchableOpacity
               style={{
                 width: "100%",
                 backgroundColor: "white",
@@ -205,9 +220,9 @@ class LinksScreen extends React.Component {
                 justifyContent: "space-between",
                 alignItems: "center",
                 paddingHorizontal: 20,
-                paddingVertical: 10,
+                paddingVertical: 20,
                 borderBottomWidth: 0.5,
-                borderBottomColor: "#ccc"
+                borderBottomColor: "#dedede"
               }}
             >
               <View
@@ -220,7 +235,36 @@ class LinksScreen extends React.Component {
                 <AppText text={"Add Card"} size={15} />
               </View>
               <Ionicons name={Platform.OS + "-arrow-forward"} size={20} />
-            </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+            onPress={()=>this.props.navigation.navigate("Transaction")}
+              style={{
+                width: "100%",
+                backgroundColor: "white",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                paddingHorizontal: 20,
+                paddingVertical: 20,
+                borderTopWidth: 0.5,
+                borderTopColor: "#dedede",
+                borderBottomWidth: 0.5,
+                borderBottomColor: "#dedede",
+                marginVertical: 30
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-around",
+                  alignItems: "center"
+                }}
+              >
+                <AppText text={"Transactions"} size={15} />
+              </View>
+              <Ionicons name={Platform.OS + "-arrow-forward"} size={20} />
+            </TouchableOpacity>
           </View>
         </ScrollView>
         <Modal

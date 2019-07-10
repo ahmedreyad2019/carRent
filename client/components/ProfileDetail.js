@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { TextInput, View, Platform } from "react-native";
 import { styles, colors } from "../styles";
+import AppText from "./AppText";
 class ProfileDetail extends Component {
   constructor(props) {
     super(props);
@@ -11,34 +12,38 @@ class ProfileDetail extends Component {
     return (
       <View
         style={{
-          flexDirection: "row",
-          alignItems: "center",
           width: "100%",
           backgroundColor: "white",
+          flexDirection: "row",
           justifyContent: "space-between",
-          borderBottomColor: "#cccccc",
+          alignItems: "center",
+          paddingHorizontal: 20,
+          paddingVertical: 20,
+          borderTopWidth: this.props.top ? 0.5 : 0,
+          borderTopColor: "#dedede",
           borderBottomWidth: 0.5,
-          padding: 20
+          borderBottomColor: "#dedede"
         }}
       >
-        <Ionicons
-          name={
-            (Platform.OS === "ios" ? "ios" : "android") + "-" + this.props.icon
-          }
-          style={{ flex: 0.1 }}
-          size={20}
-          color={colors.primary}
-        />
-        <TextInput
+        <View
           style={{
-            fontSize: 16,
-            color: "#888888",
-            borderBottomColor: "#cccccc",
-            fontFamily: Platform.OS === "ios" ? "Avenir-Light" : "Roboto",
-            flex: 0.9,
+            flexDirection: "row",
+            justifyContent: "space-around",
+            alignItems: "center"
           }}
-          value={this.props.text}
+        >
+          <Ionicons
+            name={Platform.OS + "-" + this.props.icon}
+            size={20}
+            style={{ marginRight: 15 }}
+          />
+
+          <AppText text={this.props.title} size={15} />
+        </View>
+        <TextInput
           editable={this.props.editable}
+          keyboardType={this.props.keyboardType}
+          value={this.props.value}
         />
       </View>
     );

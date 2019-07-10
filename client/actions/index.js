@@ -306,7 +306,6 @@ export const fetchPastTransactions = () => {
     })
       .then(response => response.json())
       .then(response => {
-        console.log(response.data)
         dispatch(setPastTransactions(response.data));
         dispatch(loading(false));
       })

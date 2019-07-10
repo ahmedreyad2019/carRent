@@ -22,19 +22,26 @@ import * as actions from "../actions/index";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import DatePicker from "../components/DatePicker";
 import AppText from "../components/AppText";
-import ProfileDetail from "../components/ProfileDetail";
 
 class LinksScreen extends React.Component {
   componentDidMount() {
     this.makeRemoteRequest();
   }
+  componentWillReceiveProps = () => {
+    if (this.props.user) {
+      this.setState({ user: this.props.user });
+    }
+  };
   makeRemoteRequest = () => {
     const { userId } = this.props;
-    AsyncStorage.getItem("jwt").then(res => {
-      this.props.doFetch(userId, res);
-    });
+    try {
+      AsyncStorage.getItem("jwt").then(res => {
+        this.props.doFetch(userId, res);
+      });
+    } finally {
+      this.setState({ user: this.props.user });
+    }
   };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -54,13 +61,20 @@ class LinksScreen extends React.Component {
   componentDidUpdate = () => {
     if (!this.props.token) this.props.navigation.navigate("Login");
   };
+  handleEditProfile = () => {
+    const { userId } = this.props;
+
+    AsyncStorage.getItem("jwt").then(res => {
+      this.props.doSubmitEdit(userId, res, this.state.user);
+    });
+  };
   openModalDate = () => {
     this.setState({ dateModalOpen: true });
   };
   render() {
     const { user } = this.props;
     return (
-      <View style={{ flex: 1, backgroundColor: "#fafaff", }}>
+      <View style={{ flex: 1, backgroundColor: "#fafaff" }}>
         <Header
           barStyle={"light-content"}
           backgroundColor={colors.primary}
@@ -73,7 +87,8 @@ class LinksScreen extends React.Component {
                 title={"Cancel"}
                 onPress={() =>
                   this.setState(prevState => ({
-                    editable: !prevState.editable
+                    editable: !prevState.editable,
+                    user: this.props.user
                   }))
                 }
               />
@@ -83,7 +98,14 @@ class LinksScreen extends React.Component {
           }
           rightComponent={
             this.state.editable ? (
-              <></>
+              !this.props.loading ? (
+                <Button
+                  title={"Save"}
+                  onPress={() => this.handleEditProfile()}
+                />
+              ) : (
+                <></>
+              )
             ) : (
               <Button
                 title={"Edit"}
@@ -103,7 +125,10 @@ class LinksScreen extends React.Component {
               onRefresh={this._onRefresh}
             />
           }
-          contentContainerStyle={{ flexDirection: "column",paddingBottom:200 }}
+          contentContainerStyle={{
+            flexDirection: "column",
+            paddingBottom: 200
+          }}
         >
           <View style={styles.avatar}>
             <AppText
@@ -142,22 +167,87 @@ class LinksScreen extends React.Component {
                   size={17}
                   style={{ color: "#888", margin: 7 }}
                 />
-                <ProfileDetail
-                  keyboardType={"phone-pad"}
-                  top={true}
-                  title={"Phone Number"}
-                  value={user.mobileNumber}
-                  icon={"call"}
-                  editable={this.state.editable}
-                />
 
-                <ProfileDetail
-                  keyboardType={"numeric"}
-                  title={"Personal ID"}
-                  value={user.personalID}
-                  icon={"card"}
-                  editable={this.state.editable}
-                />
+                <View
+                  style={{
+                    width: "100%",
+                    backgroundColor: "white",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    paddingHorizontal: 20,
+                    paddingVertical: 20,
+                    borderTopColor: "#dedede",
+                    borderBottomWidth: 0.5,
+                    borderBottomColor: "#dedede"
+                  }}
+                >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-around",
+                      alignItems: "center"
+                    }}
+                  >
+                    <Ionicons
+                      name={Platform.OS + "-call"}
+                      size={20}
+                      style={{ marginRight: 15 }}
+                    />
+
+                    <AppText text={"Phone Number"} size={15} />
+                  </View>
+                  <TextInput
+                    onChangeText={text =>
+                      this.setState(prevState => ({
+                        user: { ...prevState.user, mobileNumber: text }
+                      }))
+                    }
+                    editable={this.state.editable}
+                    keyboardType={"phone-pad"}
+                    value={this.state.user ? this.state.user.mobileNumber : ""}
+                  />
+                </View>
+                <View
+                  style={{
+                    width: "100%",
+                    backgroundColor: "white",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    paddingHorizontal: 20,
+                    paddingVertical: 20,
+                    borderTopColor: "#dedede",
+                    borderBottomWidth: 0.5,
+                    borderBottomColor: "#dedede"
+                  }}
+                >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-around",
+                      alignItems: "center"
+                    }}
+                  >
+                    <Ionicons
+                      name={Platform.OS + "-card"}
+                      size={20}
+                      style={{ marginRight: 15 }}
+                    />
+
+                    <AppText text={"Personal ID"} size={15} />
+                  </View>
+                  <TextInput
+                    editable={this.state.editable}
+                    keyboardType={"numeric"}
+                    value={this.state.user ? this.state.user.personalID : ""}
+                    onChangeText={text =>
+                      this.setState(prevState => ({
+                        user: { ...prevState.user, personalID: text }
+                      }))
+                    }
+                  />
+                </View>
               </View>
             </>
           ) : (
@@ -201,13 +291,17 @@ class LinksScreen extends React.Component {
                 <AppText text={"Cash"} size={15} />
               </View>
               <Switch
-                value={user ? user.paymentMethod === "Cash" : false}
+                value={
+                  this.state.user
+                    ? this.state.user.paymentMethod === "Cash"
+                    : false
+                }
                 onValueChange={() => {
                   this.setState(prevState => ({
                     user:
-                      user.paymentMethod !== "cash"
-                        ? { ...user, paymentMethod: "cash" }
-                        : user
+                      prevState.user.paymentMethod !== "Cash"
+                        ? { ...prevState.user, paymentMethod: "Cash" }
+                        : { ...prevState.user, paymentMethod: "Card" }
                   }));
                 }}
               />
@@ -224,6 +318,7 @@ class LinksScreen extends React.Component {
                 borderBottomWidth: 0.5,
                 borderBottomColor: "#dedede"
               }}
+              onPress={() => console.log(this.state.user)}
             >
               <View
                 style={{
@@ -238,7 +333,7 @@ class LinksScreen extends React.Component {
             </TouchableOpacity>
 
             <TouchableOpacity
-            onPress={()=>this.props.navigation.navigate("Transaction")}
+              onPress={() => this.props.navigation.navigate("Transaction")}
               style={{
                 width: "100%",
                 backgroundColor: "white",
@@ -306,6 +401,9 @@ const mapDispatchToProps = dispatch => ({
 
   openDateModal: () => {
     dispatch(actions.openDateModal());
+  },
+  doSubmitEdit: (userId, token, body) => {
+    dispatch(actions.editProfile(userId, token, body));
   }
 });
 export default connect(

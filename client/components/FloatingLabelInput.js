@@ -26,7 +26,7 @@ class FloatingLabelInput extends Component {
       toValue: this.state.isFocused || (this.props.value !== ""&&this.props.value) ? 1 : 0,
       duration: 200,
       delay:0,
-      easing: Easing.quad
+      easing: Easing.cubic
     }).start();
   };
   handleFocus = () => {
@@ -51,7 +51,7 @@ class FloatingLabelInput extends Component {
       left: 0,
       top: this._animatedIsFocused.interpolate({
         inputRange: [0, 1],
-        outputRange: [25, 0]
+        outputRange: [30, 0]
       }),
       fontSize: this._animatedIsFocused.interpolate({
         inputRange: [0, 1],

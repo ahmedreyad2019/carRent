@@ -91,6 +91,13 @@ export const setRentingLocation = location => {
     location
   };
 };
+export const setMakeModel = (make, model) => {
+  return {
+    type: types.SET_MAKE_MODEL,
+    make,
+    model
+  };
+};
 export const openCarModal = () => {
   return {
     type: types.OPEN_CAR_MODAL
@@ -262,13 +269,15 @@ export const fetchCars = search => {
     dispatch(loading(true));
     AsyncStorage.getItem("jwt").then(token =>
       fetch(
-        "https://carrentalserver.herokuapp.com/carRenter/view/availableCars",
+        "http://192.168.0.107:3000/carRenter/view/availableCars",
         {
           method: "POST",
           body: JSON.stringify({
             rentingDateStart: search.rentingDateStart,
             rentingDateEnd: search.rentingDateEnd,
-            location: search.location
+            location: search.location,
+            make: search.make,
+            model: search.model
           }),
           headers: {
             "Content-Type": "application/json",
@@ -356,7 +365,6 @@ export const editProfile = (userId, token, body) => {
       .then(response => {
         dispatch(setUser(response.data));
         dispatch(loading(false));
-
       })
       .catch(error => {
         dispatch(setError(error));

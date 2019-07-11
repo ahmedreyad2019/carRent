@@ -85,7 +85,7 @@ class MainScreen extends React.Component {
       hi: false,
       refresh: false,
       data: [],
-     make:"Acura",
+      make: "Acura",
       pan: new Animated.ValueXY(),
       s: false
     };
@@ -122,12 +122,14 @@ class MainScreen extends React.Component {
   };
   render() {
     var carMakes = Object.values(CarList).map(car => car.title);
-    var carModels=
-      Object.values(CarList)
-        .filter(car => car.title ===this.state.make)
-        .map(model => model.models)[0].map(model=>model.title)
-        
-    
+    var carModels =
+      this.props.search.make !== "Any"
+        ? Object.values(CarList)
+            .filter(car => car.title === this.props.search.make)
+            .map(model => model.models)[0]
+            .map(model => model.title)
+        : [];
+
     return (
       <View style={{ flex: 1, backgroundColor: colors.backgroundMain }}>
         <Header
@@ -343,8 +345,8 @@ class MainScreen extends React.Component {
                   style={{
                     flexDirection: "row",
                     justifyContent: "center",
-                    width: "100%",marginTop:30
-                 
+                    width: "100%",
+                    marginTop: 30
                   }}
                 >
                   <View
@@ -357,10 +359,13 @@ class MainScreen extends React.Component {
                     <AppText text={"Car Make"} />
                     <View style={{ height: 50 }}>
                       <Picker
-                        selectedValue={this.state.make}
-                        style={{  width: 170 }}
+                        selectedValue={this.props.search.make}
+                        style={{ width: 170 }}
                         onValueChange={(itemValue, itemIndex) =>
-                          this.setState({ make: itemValue })
+                          this.props.doSetMakeModel(
+                            itemValue,
+                            this.props.search.model
+                          )
                         }
                       >
                         {carMakes.map((item, i) => (
@@ -373,16 +378,19 @@ class MainScreen extends React.Component {
                     style={{
                       flexDirection: "center",
                       justifyContent: "space-between",
-                      alignItems: "center",
+                      alignItems: "center"
                     }}
                   >
-                    <AppText text={"Car Make"} />
+                    <AppText text={"Car Model"} />
                     <View style={{ height: 50 }}>
                       <Picker
-                        selectedValue={this.state.model}
-                        style={{  width: 170 }}
+                        selectedValue={this.props.search.model}
+                        style={{ width: 170 }}
                         onValueChange={(itemValue, itemIndex) =>
-                          this.setState({ model: itemValue })
+                          this.props.doSetMakeModel(
+                            this.props.search.make,
+                            itemValue
+                          )
                         }
                       >
                         {carModels.map((item, i) => (
@@ -483,6 +491,9 @@ const mapDispatchToProps = dispatch => ({
   },
   doSetRentingDate: (dateStart, dateEnd) => {
     dispatch(actions.setRentingDate(dateStart, dateEnd));
+  },
+  doSetMakeModel: (make, model) => {
+    dispatch(actions.setMakeModel(make, model));
   }
 });
 export default connect(

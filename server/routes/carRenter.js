@@ -106,8 +106,8 @@ router.put("/:id", async (req, res) => {
     //     .status(400)
     //     .send({ error: isValidated.error.details[0].message });
     await CarRenter.findByIdAndUpdate(req.params.id, req.body);
-    updatedRenter=await CarRenter.findById(req.params.id);
-    res.json({data:updatedRenter, msg: "Renter updated successfully" });
+    updatedRenter = await CarRenter.findById(req.params.id);
+    res.json({ data: updatedRenter, msg: "Renter updated successfully" });
   } catch (error) {
     // We will be handling the error later
     console.log(error);
@@ -172,6 +172,13 @@ router.post("/view/availableCars", async (req, res) => {
                     },
                     { $eq: ["$_id", "$$car"] },
                     { $eq: ["$location", req.body.location] },
+
+                    req.body.make !== "Any"
+                      ? ({
+                          $eq: ["$make", req.body.make]
+                        },
+                        { $eq: ["$model", req.body.model] })
+                      : {},
                     {
                       $lte: ["$$rentStart", new Date(req.body.rentingDateStart)]
                     },

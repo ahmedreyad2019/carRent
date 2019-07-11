@@ -5,11 +5,13 @@ const initialState = {
   search: {
     rentingDateStart: Date.now(),
     rentingDateEnd: Date.now(),
-    location: "1st Settlement"
+    location: "1st Settlement",
+    make: "Any",
+    model: ""
   },
-  currentTransactions:"",
-  pastTransactions:"",
-  upcomingTransactions:"",
+  currentTransactions: "",
+  pastTransactions: "",
+  upcomingTransactions: "",
   selectedCar: "",
   selectedTransaction: "",
   companyModalVisible: false,
@@ -66,7 +68,17 @@ export default (carReducer = (state = initialState, action) => {
         }
       };
     }
-   
+    case actionTypes.SET_MAKE_MODEL: {
+      return {
+        ...state,
+        search: {
+          ...state.search,
+          make: action.make,
+          model: action.model
+        }
+      };
+    }
+
     case actionTypes.CLEAR:
       return {
         state

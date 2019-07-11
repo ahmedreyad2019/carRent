@@ -3,12 +3,16 @@ import {
   Alert,
   TouchableOpacity,
   Text,
+  ScrollView,
   Platform,
   Modal,
-  View
+  Picker,
+  View,
+  PanResponder,
+  TouchableWithoutFeedback,
+  Animated
 } from "react-native";
 import { Header } from "react-native-elements";
-
 import Filter from "../components/Filter";
 import { styles, colors } from "../styles";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -17,10 +21,62 @@ import * as actions from "../actions/index";
 import DatePicker from "../components/DatePicker";
 import PickerLocation from "../components/PickerLocation";
 import AppText from "../components/AppText";
+import Detail from "../components/Detail";
+import FloatingLabelInput from "../components/FloatingLabelInput";
+import CarList from "../components/CarList.json";
 
 class MainScreen extends React.Component {
-  componentDidMount() {}
+  componentWillMount = () => {
+    this._animatedValueX = 0;
+    this._animatedValueY = 0;
+    this.state.pan.x.addListener(value => (this._animatedValueX = value.value));
+    this.state.pan.y.addListener(value => (this._animatedValueY = value.value));
 
+    this._panResponder = PanResponder.create({
+      onMoveShouldSetResponderCapture: () => true,
+      onMoveShouldSetPanResponderCapture: () => true,
+      onPanResponderGrant: (e, gestureState) => {
+        this.state.pan.setOffset({
+          x: this._animatedValueX,
+          y: this._animatedValueY
+        });
+        this.state.pan.setValue({ x: 0, y: 0 });
+      },
+      onPanResponderMove: (e, gestureState) => {
+        Animated.event([null, { dx: this.state.pan.x, dy: this.state.pan.y }])(
+          e,
+          gestureState
+        );
+      },
+      onPanResponderRelease: () => {
+        let ys = this._animatedValueY;
+        this.state.pan.flattenOffset();
+
+        Animated.spring(this.state.pan.y, {
+          toValue: this.state.s ? 350 : 0,
+          friction: 25
+        }).start();
+        this.setState(prevState => ({
+          s: !prevState.s
+        }));
+      }
+    });
+  };
+  componentWillUnmount = () => {
+    this.state.pan.x.removeAllListeners();
+    this.state.pan.y.removeAllListeners();
+  };
+  getStyle = () => {
+    return [
+      {
+        transform: [
+          {
+            translateY: this.state.pan.y
+          }
+        ]
+      }
+    ];
+  };
   constructor(props) {
     super(props);
     this.state = {
@@ -28,9 +84,13 @@ class MainScreen extends React.Component {
       loading: true,
       hi: false,
       refresh: false,
-      data: []
+      data: [],
+     make:"Acura",
+      pan: new Animated.ValueXY(),
+      s: false
     };
   }
+
   openModalDate = () => {
     this.setState({ dateModalOpen: true });
   };
@@ -61,6 +121,13 @@ class MainScreen extends React.Component {
     return strTime;
   };
   render() {
+    var carMakes = Object.values(CarList).map(car => car.title);
+    var carModels=
+      Object.values(CarList)
+        .filter(car => car.title ===this.state.make)
+        .map(model => model.models)[0].map(model=>model.title)
+        
+    
     return (
       <View style={{ flex: 1, backgroundColor: colors.backgroundMain }}>
         <Header
@@ -240,45 +307,140 @@ class MainScreen extends React.Component {
                 </Text>
               </TouchableOpacity>
             </View>
-          </View>
-          <TouchableOpacity
-            onPress={() => (
-              this.props.navigation.navigate("Cars"),
-              this.props.doFetchCars(this.props.search)
-            )}
-            style={{
-              height: 40,
-              flexDirection: "column",
-              marginHorizontal: 100,
-              alignItems: "center",
-              justifyContent: "space-evenly",
-              backgroundColor: colors.primary,
-              borderBottomLeftRadius: 50,
-              borderBottomRightRadius: 50,
-
-              zIndex: -1
-            }}
-          >
-            <Text
+            <Animated.View
               style={{
-                fontSize: 18,
-                fontFamily:
-                  Platform.OS === "ios" ? "AvenirNext-DemiBold" : "Roboto",
-                color: "white"
+                height: this.state.pan.y.interpolate({
+                  inputRange: [0, 350],
+                  outputRange: [0, 350]
+                }),
+                paddingTop: 40,
+                paddingBottom: 0,
+                top: -40,
+                zIndex: -1,
+                backgroundColor: "white",
+                borderBottomLeftRadius: 35,
+                borderBottomRightRadius: 35
               }}
             >
-              Search
-            </Text>
-            <View
-              style={{
-                width: "50%",
-                height: 5,
-                backgroundColor: "white",
-                opacity: 0.4,
-                borderRadius: 50
-              }}
-            />
-          </TouchableOpacity>
+              <ScrollView
+                style={{
+                  width: "100%",
+                  height: this.state.pan.y.interpolate({
+                    inputRange: [0, 350],
+                    outputRange: [0, 350]
+                  }),
+                  borderBottomLeftRadius: 35,
+                  borderBottomRightRadius: 35,
+                  flexDirection: "column"
+                }}
+              >
+                <View
+                  style={{ flexDirection: "row", justifyContent: "center" }}
+                >
+                  <AppText text={"Filter"} size={20} />
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    width: "100%",marginTop:30
+                 
+                  }}
+                >
+                  <View
+                    style={{
+                      flexDirection: "center",
+                      justifyContent: "space-between",
+                      alignItems: "center"
+                    }}
+                  >
+                    <AppText text={"Car Make"} />
+                    <View style={{ height: 50 }}>
+                      <Picker
+                        selectedValue={this.state.make}
+                        style={{  width: 170 }}
+                        onValueChange={(itemValue, itemIndex) =>
+                          this.setState({ make: itemValue })
+                        }
+                      >
+                        {carMakes.map((item, i) => (
+                          <Picker.Item label={item} key={i} value={item} />
+                        ))}
+                      </Picker>
+                    </View>
+                  </View>
+                  <View
+                    style={{
+                      flexDirection: "center",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <AppText text={"Car Make"} />
+                    <View style={{ height: 50 }}>
+                      <Picker
+                        selectedValue={this.state.model}
+                        style={{  width: 170 }}
+                        onValueChange={(itemValue, itemIndex) =>
+                          this.setState({ model: itemValue })
+                        }
+                      >
+                        {carModels.map((item, i) => (
+                          <Picker.Item label={item} key={i} value={item} />
+                        ))}
+                      </Picker>
+                    </View>
+                  </View>
+                </View>
+              </ScrollView>
+            </Animated.View>
+            <Animated.View
+              {...this._panResponder.panHandlers}
+              style={{ top: -40 }}
+            >
+              <TouchableWithoutFeedback
+                onPress={() => (
+                  this.props.navigation.navigate("Cars"),
+                  this.props.doFetchCars(this.props.search)
+                )}
+              >
+                <View
+                  style={{
+                    height: 40,
+                    flexDirection: "column",
+                    marginHorizontal: 100,
+                    alignItems: "center",
+                    justifyContent: "space-evenly",
+                    backgroundColor: colors.primary,
+                    borderBottomLeftRadius: 50,
+                    borderBottomRightRadius: 50
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      fontFamily:
+                        Platform.OS === "ios"
+                          ? "AvenirNext-DemiBold"
+                          : "Roboto",
+                      color: "white"
+                    }}
+                  >
+                    Search
+                  </Text>
+                  <TouchableOpacity
+                    style={{
+                      width: "50%",
+                      height: 5,
+                      backgroundColor: "white",
+                      opacity: 0.4,
+                      borderRadius: 50
+                    }}
+                  />
+                </View>
+              </TouchableWithoutFeedback>
+            </Animated.View>
+          </View>
         </View>
       </View>
     );

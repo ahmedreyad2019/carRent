@@ -106,7 +106,8 @@ router.put("/:id", async (req, res) => {
     //     .status(400)
     //     .send({ error: isValidated.error.details[0].message });
     await CarRenter.findByIdAndUpdate(req.params.id, req.body);
-    res.json({ msg: "Renter updated successfully" });
+    updatedRenter=await CarRenter.findById(req.params.id);
+    res.json({data:updatedRenter, msg: "Renter updated successfully" });
   } catch (error) {
     // We will be handling the error later
     console.log(error);

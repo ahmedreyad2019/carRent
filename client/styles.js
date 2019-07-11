@@ -1,11 +1,11 @@
-import { Platform } from "react-native";
+import { Platform ,StyleSheet} from "react-native";
 export const colors = {
   backgroundMain: "#fafaff",
   primary: "#161D37",
   backgroundCard: "#FFF",
   error: "#293749"
 };
-export const styles = {
+export const styles =StyleSheet.create( {
   CompanyDetails: {
     padding: 40,
     backgroundColor: colors.backgroundCard,
@@ -108,5 +108,21 @@ export const styles = {
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 20
+  },
+  containerss: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  box: {
+    width: 150,
+    height: 150,
+    backgroundColor: "#333",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  text2: {
+    color: "#FFF",
+    fontSize: 20,
   }
-};
+});

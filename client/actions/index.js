@@ -342,8 +342,9 @@ export const fetchUpcomingTransactions = () => {
 };
 export const editProfile = (userId, token, body) => {
   return dispatch => {
- console.log(body)
-    fetch(`https://carrentalserver.herokuapp.com/carRenter/${userId}`, {
+    dispatch(loading(true));
+
+    fetch(`http://192.168.0.107:3000/carRenter/${userId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -353,8 +354,9 @@ export const editProfile = (userId, token, body) => {
     })
       .then(response => response.json())
       .then(response => {
-        console.log(response);
         dispatch(setUser(response.data));
+        dispatch(loading(false));
+
       })
       .catch(error => {
         dispatch(setError(error));

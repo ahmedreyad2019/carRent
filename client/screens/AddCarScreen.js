@@ -12,7 +12,9 @@ import {
   Easing,
   Keyboard,
   Button,
-  Image
+  Image,
+  Alert,
+  AsyncStorage
 } from "react-native";
 import { LinearGradient, ImagePicker ,Permissions,Constants} from "expo";
 import { connect } from "react-redux";
@@ -24,7 +26,6 @@ import DatePicker from "react-native-datepicker";
 import { Header } from "react-native-elements";
 import AppText from "../components/AppText";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { Base64 } from 'js-base64';
 import firebase from "../store/firebase";
 
 
@@ -42,11 +43,13 @@ class AddCarScreen extends React.Component {
         plateNumber: null,
         licenseExpiryDate: null,
         location: null,
-        photosLink: null
+        photosLink: []
       },
       errorMessage1: null,
-      image: null,
-      licenseImage:null
+      image: [],
+      licenseImage:null,
+      loadingCar:false,
+      loadingLicense:false
     };
     this.RotateValueHolder = new Animated.Value(0);
   }
@@ -96,31 +99,34 @@ class AddCarScreen extends React.Component {
 
 
 
-  _pickImage2=async()=>{
-    let result = await ImagePicker.launchImageLibraryAsync({base64:true});
+  _pickImage=async()=>{
+    let result = await ImagePicker.launchImageLibraryAsync();
+    this.setState({ uploading: true ,loadingCar:true});
     try {
-      this.setState({ uploading: true });
+      
 
       if (!result.cancelled) {
         uploadUrl = await this.uploadImageAsync(result.uri);
-        // prevState => ({
-        //   ...prevState,
-        //   user: { ...prevState.user, plateNumber: text }
-        // })
-        this.setState(prevState => ({  ...prevState,image:result.uri,
-          user: { ...prevState.user, photosLink: uploadUrl }}));
+  
+        this.state.user.photosLink.push(uploadUrl)
+        this.state.image.push(result.uri)
+        var newUris=this.state.image.slice();
+        var newPhotos=this.state.user.photosLink.slice();
+        this.setState(prevState => ({  ...prevState,image:newUris,
+          user: { ...prevState.user, photosLink: newPhotos }}));
       }
     } catch (e) {
       console.log(e);
       alert('Upload failed, sorry :(');
     } finally {
-      this.setState({ uploading: false });
+      this.setState({ uploading: false ,loadingCar:false});
     }
   }
-  _pickImageLicense2=async()=>{
-    let result = await ImagePicker.launchImageLibraryAsync({base64:true});
+  _pickImageLicense=async()=>{
+    let result = await ImagePicker.launchImageLibraryAsync();
+    this.setState({ uploading: true ,loadingLicense:true});
     try {
-      this.setState({ uploading: true });
+      
 
       if (!result.cancelled) {
         uploadUrl = await this.uploadImageAsync(result.uri);
@@ -131,105 +137,9 @@ class AddCarScreen extends React.Component {
       console.log(e);
       alert('Upload failed, sorry :(');
     } finally {
-      this.setState({ uploading: false });
+      this.setState({ uploading: false,loadingLicense:false });
     }
   }
-
-  _pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({base64:true});
-    var blob=null;
-    try{
-    const response = await fetch(result.uri);
-     blob = await response.blob();
-     console.log(blob)
-  }catch(error){
-      console.log(error)
-    }
-    console.log("in")
-console.log(result.base64.substring(0,20))
-    if (!result.cancelled) {
-      var k=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
-      var k2=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
-      var k3=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
-      var k4=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
-      var k5=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
-      var k6=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
-      var k7=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
-      var id=k+k2+k3+k4+k5+k6+k7;
-      console.log("in")
-      try{
-        var inputImage=Base64.encode(result.base64)
-      storage.ref('/images/').child(id)
-.put(blob, {contentType:"image/jpg"});
-} catch(error){
-  console.log(error)
-}
-console.log("in")
-      this.setState({ image: result.uri });
-      uploadTask.on(
-        "state_changed",
-        snapshot => {
-          // progrss function ....
-        },
-        error => {
-          // error function ....
-          console.log(error);
-        },
-        () => {
-          // complete function ....
-          console.log("in")
-          storage
-            .ref(id)
-            .child("pdf")
-            .getDownloadURL()
-            .then(url => {
-              
-    console.log(url);
-              this.setState({ photosLink:[url] });
-            });
-          }
-        );
-      }
-    };
-
-  _pickImageLicense = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({base64:true});
-
-    if (!result.cancelled) {
-      var k=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
-      var k2=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
-      var k3=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
-      var k4=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
-      var k5=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
-      var k6=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
-      var k7=(((1+Math.random())*0x10000)|0).toString(16).substring(1)
-      var id=k+k2+k3+k4+k5+k6+k7;
-      storage.ref('/images/').child(id)
-.putString(result.base64.substring(23), "base64", {contentType:"image/jpg"});
-      this.setState({ licenseImage: result.uri });
-      uploadTask.on(
-        "state_changed",
-        snapshot => {
-          // progrss function ....
-        },
-        error => {
-          // error function ....
-          console.log(error);
-        },
-        () => {
-          // complete function ....
-          storage
-            .ref(id)
-            .child("pdf")
-            .getDownloadURL()
-            .then(url => {
-              console.log(url)
-              this.setState({ licenseLink:url });
-            });
-          }
-        );
-      }
-    };
 
   StartImageRotateFunction() {
     this.RotateValueHolder.setValue(0);
@@ -291,6 +201,42 @@ console.log("in")
 
   AddCar = async () => {
     console.log(this.state.user)
+    try{
+    AsyncStorage.getItem("jwt").then(token =>
+      fetch(
+        `https://carrentalserver.herokuapp.com/car`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-access-token": token
+          },
+          body: JSON.stringify(this.state.user)
+
+        }
+      )
+        .then(res => res.json())
+        .then(res => {
+          console.log(res)
+          if(res.data){
+            Alert.alert(
+              'Car Added',
+              'Your Car has been addded successfully, you will recieve a response within 48 hours.',
+              [
+                {text: 'OK', onPress: () => this.props.navigation.navigate("Main")},
+              ],
+              {cancelable: false},
+              
+            );
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        })
+      );
+  }catch(error){
+    console.log(error)
+  }
   };
   handleLoading = () => {
     const RotateData = this.RotateValueHolder.interpolate({
@@ -445,10 +391,10 @@ console.log("in")
               onChangeText={text => {
                 this.setState(prevState => ({
                   ...prevState,
-                  user: { ...prevState.user, plateNumber: text }
+                  user: { ...prevState.user, location: text }
                 }));
               }}
-              value={this.state.user.plateNumber}
+              value={this.state.user.location}
             />
 
 
@@ -461,7 +407,7 @@ console.log("in")
                 width: "100%",
                 alignItems: "baseline"
               }}
-              date={this.state.licenseExpiryDate}
+              date={this.state.user.licenseExpiryDate}
               mode="date"
               format="YYYY-MM-DD"
               minDate="2016-05-01"
@@ -482,34 +428,47 @@ console.log("in")
                 }
               }}
               onDateChange={date_in => {
-                this.setState({ licenseExpiryDate: date_in });
+                this.setState(prevState => ({  ...prevState,
+                  user: { ...prevState.user, licenseExpiryDate: date_in }}));
               }}
             />
 
             <View alignItems="center">
-                <Image
+            {this.state.loadingLicense?<ActivityIndicator
+                    animating={true}
+                    size="large"
+                    color={"#000"}
+                    style={{ paddingTop: 7 }}
+                  />:<Image
                   source={{ uri: this.state.licenseImage }}
                   style={{ width: 100, height: 60 }}
                   
-                />
+                />}  
+
             
               <Button
-                title="Upload License Image"
-                onPress={this._pickImageLicense2}
+                title="Add License Image"
+                onPress={this._pickImageLicense}
                 styles={{paddingTop:10}}
               />
        </View>
        
        <View alignItems="center">
-                <Image
-                  source={{ uri: this.state.image }}
+              {this.state.loadingCar?<ActivityIndicator
+                    animating={true}
+                    size="large"
+                    color={"#000"}
+                    style={{ paddingTop: 7 }}
+                  />:<Image
+                  source={{ uri: this.state.image[this.state.image.length-1] }}
                   style={{ width: 100, height: 60 }}
                   
-                />
+                />}  
+                 
             
               <Button
-                title="Upload Car Image"
-                onPress={this._pickImage2}
+                title={this.state.image.length==0?"Add Car Image":"Add Another Car Image"}
+                onPress={this._pickImage}
                 styles={{paddingTop:10}}
               />
        </View>

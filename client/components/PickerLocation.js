@@ -141,7 +141,8 @@ class PickerLocation extends Component {
                   width: "100%",
                   marginVertical: 8,
                   borderBottomColor: "#223344",
-                  borderBottomWidth: 1
+                  borderBottomWidth: 1,
+                  zIndex:28713868126386816238681623
                 }}
               >
                 <Text

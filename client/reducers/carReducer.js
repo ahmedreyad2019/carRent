@@ -5,7 +5,7 @@ const initialState = {
   search: {
     rentingDateStart: Date.now(),
     rentingDateEnd: Date.now(),
-    location: "1st Settlement",
+    location: "Zamalek",
     make: "Any",
     model: ""
   },

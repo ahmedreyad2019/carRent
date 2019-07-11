@@ -54,10 +54,11 @@ class PickerLocation extends Component {
     }).start();
   };
   render() {
+
     const labelStyle = {
       height: this._animatedIsFocused.interpolate({
         inputRange: [0, 1],
-        outputRange: [0, 300]
+        outputRange: [0, this.props.height?this.props.height:300]
       }),
       width: "100%",
       zIndex: 5000000000000,

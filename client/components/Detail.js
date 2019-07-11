@@ -19,7 +19,7 @@ class Detail extends Component {
         }}
       >
         <AppText fontStyle={"bold"} text={this.props.field} />
-        <AppText text={this.props.field} text={this.props.data} />
+        <AppText  text={this.props.data} />
       </View>
     );
   }

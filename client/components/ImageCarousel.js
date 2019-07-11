@@ -40,7 +40,7 @@ class ImageCarousel extends Component {
           horizontal
           snapToAlignment={"center"}
           decelerationRate={"fast"}
-         
+         bouncesZoom={true}
           snapToInterval={this.props.full ? screenWidth : (screenWidth - 40)}
           renderItem={({ item }) => (
             <Image

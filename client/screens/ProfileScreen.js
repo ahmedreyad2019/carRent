@@ -28,7 +28,7 @@ class LinksScreen extends React.Component {
     this.makeRemoteRequest();
   }
   componentWillReceiveProps = () => {
-    if (this.props.user) {
+    if (this.props.user && !this.state.user) {
       this.setState({ user: this.props.user });
     }
   };
@@ -47,7 +47,6 @@ class LinksScreen extends React.Component {
     this.state = {
       date: null,
       investor: null,
-      loading: true,
       refresh: false,
       data: [],
       user: "",
@@ -63,10 +62,11 @@ class LinksScreen extends React.Component {
   };
   handleEditProfile = () => {
     const { userId } = this.props;
-
-    AsyncStorage.getItem("jwt").then(res => {
-      this.props.doSubmitEdit(userId, res, this.state.user);
-    });
+    AsyncStorage.getItem("jwt")
+      .then(res => {
+        this.props.doSubmitEdit(userId, res, this.state.user);
+      })
+     
   };
   openModalDate = () => {
     this.setState({ dateModalOpen: true });
@@ -98,14 +98,15 @@ class LinksScreen extends React.Component {
           }
           rightComponent={
             this.state.editable ? (
-              !this.props.loading ? (
-                <Button
-                  title={"Save"}
-                  onPress={() => this.handleEditProfile()}
-                />
-              ) : (
-                <></>
-              )
+              <Button
+                title={"Save"}
+                onPress={() => {
+                  this.handleEditProfile();
+                  this.setState(prevState => ({
+                    editable: !prevState.editable
+                  }));
+                }}
+              />
             ) : (
               <Button
                 title={"Edit"}
@@ -122,7 +123,7 @@ class LinksScreen extends React.Component {
           refreshControl={
             <RefreshControl
               refreshing={this.props.loading}
-              onRefresh={this._onRefresh}
+              
             />
           }
           contentContainerStyle={{
@@ -318,7 +319,6 @@ class LinksScreen extends React.Component {
                 borderBottomWidth: 0.5,
                 borderBottomColor: "#dedede"
               }}
-              onPress={() => console.log(this.state.user)}
             >
               <View
                 style={{

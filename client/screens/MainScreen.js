@@ -175,8 +175,8 @@ class MainScreen extends React.Component {
           mode="date"
           date={
             this.state.source === "From"
-              ? this.props.search.rentingDateStart
-              : this.props.search.rentingDateEnd
+              ? new Date(this.props.search.rentingDateStart)
+              : new Date(this.props.search.rentingDateEnd)
           }
           onDateChange={date =>
             this.state.source === "From"

@@ -12,6 +12,10 @@ class DatePicker extends Component {
   }
 
   render() {
+    date1 = new Date(this.props.search.rentingDateStart);
+    date2 = new Date(this.props.search.rentingDateEnd);
+    const diffTime = Math.abs(date2.getTime() - date1.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return (
       <View style={{ flex: 1, flexDirection: "column-reverse" }}>
         <View
@@ -48,7 +52,7 @@ class DatePicker extends Component {
             </Text>
           </View>
           <DatePickerIOS
-            mode={"datetime"}
+            mode={diffDays>=2?"date":"datetime"}
             date={new Date(this.props.date)}
             style={{ color: "white" }}
             onDateChange={this.props.onDateChange}
@@ -77,7 +81,8 @@ const mapStateToProps = state => {
     token: state.loginReducer.token,
     companies: state.carReducer.companies,
     loading: state.loginReducer.loading,
-    selectedCompany: state.carReducer.selectedCompany
+    selectedCompany: state.carReducer.selectedCompany,
+    search: state.carReducer.search
   };
 };
 

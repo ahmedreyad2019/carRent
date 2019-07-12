@@ -212,7 +212,12 @@ class CarsScreen extends React.Component {
                   decelerationRate="fast"
                   data={this.props.cars}
                   renderItem={({ item }) => (
-                    <View
+                    <TouchableOpacity
+                    onPress={() => {
+                      this.props.doSetCar(item),
+                        this.props.navigation.navigate("Rent");
+                    }}
+                    activeOpacity={1}
                       colors={["transparent", "rgba(0,0,0,0.2)"]}
                       style={{
                         ...styles.carCard
@@ -233,10 +238,7 @@ class CarsScreen extends React.Component {
                           justifyContent: "center",
                           alignItems: "center"
                         }}
-                        onPress={() => {
-                          this.props.doSetCar(item),
-                            this.props.navigation.navigate("Rent");
-                        }}
+                      
                       >
                         <AppText
                           fontStyle={"bold"}
@@ -328,7 +330,7 @@ class CarsScreen extends React.Component {
                         </View>
                         <Rating rating={item.cars[0].rating} />
                       </View>
-                    </View>
+                    </TouchableOpacity>
                   )}
                   keyExtractor={item => {
                     return item._id;

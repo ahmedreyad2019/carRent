@@ -26,6 +26,18 @@ import FloatingLabelInput from "../components/FloatingLabelInput";
 import CarList from "../components/CarList.json";
 
 class MainScreen extends React.Component {
+  componentDidMount = () => {
+    this.setState({
+      carMakes: Object.values(CarList).map(car => car.title),
+      carModels:
+        this.props.search.make !== "Any"
+          ? Object.values(CarList)
+              .filter(car => car.title === this.props.search.make)
+              .map(model => model.models)[0]
+              .map(model => model.title)
+          : []
+    });
+  };
   componentWillMount = () => {
     this._animatedValueX = 0;
     this._animatedValueY = 0;
@@ -85,6 +97,8 @@ class MainScreen extends React.Component {
       hi: false,
       refresh: false,
       data: [],
+      carMakes: [],
+      carModels: [],
       make: "Acura",
       pan: new Animated.ValueXY(),
       s: false
@@ -120,19 +134,15 @@ class MainScreen extends React.Component {
     var strTime = hours + ":" + minutes + " " + ampm;
     return strTime;
   };
-  componentDidUpdate=()=>{
-    
-  }
-  render() {
-    var carMakes = Object.values(CarList).map(car => car.title);
-    var carModels =
-      this.props.search.make !== "Any"
-        ? Object.values(CarList)
-            .filter(car => car.title === this.props.search.make)
-            .map(model => model.models)[0]
-            .map(model => model.title)
-        : [];
 
+  render() {
+      carModels=
+        this.props.search.make !== "Any"
+          ? Object.values(CarList)
+              .filter(car => car.title === this.props.search.make)
+              .map(model => model.models)[0]
+              .map(model => model.title)
+          : []
     return (
       <View style={{ flex: 1, backgroundColor: colors.backgroundMain }}>
         <Header
@@ -367,11 +377,16 @@ class MainScreen extends React.Component {
                         onValueChange={(itemValue, itemIndex) =>
                           this.props.doSetMakeModel(
                             itemValue,
-                            this.props.search.model
+                            itemValue !== "Any"
+                              ? Object.values(CarList)
+                                  .filter(car => car.title === itemValue)
+                                  .map(model => model.models)[0]
+                                  .map(model => model.title)[0]
+                              : []
                           )
                         }
                       >
-                        {carMakes.map((item, i) => (
+                        {this.state.carMakes.map((item, i) => (
                           <Picker.Item label={item} key={i} value={item} />
                         ))}
                       </Picker>

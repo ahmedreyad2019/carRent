@@ -269,7 +269,7 @@ export const fetchCars = search => {
     dispatch(loading(true));
     AsyncStorage.getItem("jwt").then(token =>
       fetch(
-        "http://192.168.0.107:3000/carRenter/view/availableCars",
+        "https://carrentalserver.herokuapp.com/carRenter/view/availableCars",
         {
           method: "POST",
           body: JSON.stringify({
@@ -353,7 +353,7 @@ export const editProfile = (userId, token, body) => {
   return dispatch => {
     dispatch(loading(true));
 
-    fetch(`http://192.168.0.107:3000/carRenter/${userId}`, {
+    fetch(`https://carrentalserver.herokuapp.com/carRenter/${userId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

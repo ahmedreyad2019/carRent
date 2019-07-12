@@ -191,7 +191,7 @@ class LinksScreen extends React.Component {
                     }}
                   >
                     <Ionicons
-                      name={Platform.OS + "-call"}
+                      name={'ios' + "-call"}
                       size={20}
                       style={{ marginRight: 15 }}
                     />
@@ -231,7 +231,7 @@ class LinksScreen extends React.Component {
                     }}
                   >
                     <Ionicons
-                      name={Platform.OS + "-card"}
+                      name={'ios' + "-card"}
                       size={20}
                       style={{ marginRight: 15 }}
                     />
@@ -284,7 +284,7 @@ class LinksScreen extends React.Component {
                 }}
               >
                 <Ionicons
-                  name={Platform.OS + "-cash"}
+                  name={'ios' + "-cash"}
                   size={35}
                   style={{ marginRight: 15 }}
                 />
@@ -329,7 +329,7 @@ class LinksScreen extends React.Component {
               >
                 <AppText text={"Add Card"} size={15} />
               </View>
-              <Ionicons name={Platform.OS + "-arrow-forward"} size={20} />
+              <Ionicons name={'ios' + "-arrow-forward"} size={20} />
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -358,7 +358,7 @@ class LinksScreen extends React.Component {
               >
                 <AppText text={"Transactions"} size={15} />
               </View>
-              <Ionicons name={Platform.OS + "-arrow-forward"} size={20} />
+              <Ionicons name={'ios' + "-arrow-forward"} size={20} />
             </TouchableOpacity>
           </View>
         </ScrollView>

@@ -1,16 +1,54 @@
 import React, { Component } from "react";
-import { View, DatePickerIOS, Text, Platform } from "react-native";
+import {
+  View,
+  DatePickerIOS,
+  DatePickerAndroid,
+  Text,
+  Platform
+} from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import * as actions from "../actions/index";
 import { connect } from "react-redux";
 import { styles, colors } from "../styles";
+import DatePickerA from "react-native-datepicker";
 
 class DatePicker extends Component {
   constructor(props) {
     super(props);
     this.state = { chosenDate: new Date() };
   }
+  setDateAndroid = async () => {
+    try {
+      const { action, year, month, day } = await DatePickerAndroid.open({
+        date: new Date(),
+        minDate: new Date()
+      });
+      if (action !== DatePickerAndroid.dismissedAction) {
+        this.setState({ androidDate: `${day}/${month + 1}/${year}` });
+      }
+    } catch ({ code, message }) {
+      console.warn("Cannot open date picker", message);
+    }
+  };
 
+  setTimeAndroid = async () => {
+    try {
+      const { action, hour, minute } = await TimePickerAndroid.open({
+        hour: 14,
+        minute: 0,
+        is24Hour: false // Will display '2 PM'
+      });
+      if (action !== TimePickerAndroid.dismissedAction) {
+        // Selected hour (0-23), minute (0-59)
+        const m = minute < 10 ? `0${minute}` : minute;
+        const h = hour < 10 ? `0${hour}` : hour;
+        console.log(`time: ${hour}:${minute}`);
+        this.setState({ chosenAndroidTime: `${h}:${m}` });
+      }
+    } catch ({ code, message }) {
+      console.warn("Cannot open time picker", message);
+    }
+  };
   render() {
     date1 = new Date(this.props.search.rentingDateStart);
     date2 = new Date(this.props.search.rentingDateEnd);
@@ -51,12 +89,15 @@ class DatePicker extends Component {
               {this.props.header}
             </Text>
           </View>
+
           <DatePickerIOS
-            mode={diffDays>=2?"date":"datetime"}
+            mode={diffDays >= 2 ? "date" : "datetime"}
             date={new Date(this.props.date)}
             style={{ color: "white" }}
             onDateChange={this.props.onDateChange}
           />
+
+          
 
           <Ionicons
             name={"ios-close"}

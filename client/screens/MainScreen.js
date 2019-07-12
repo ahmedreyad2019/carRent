@@ -24,6 +24,7 @@ import AppText from "../components/AppText";
 import Detail from "../components/Detail";
 import FloatingLabelInput from "../components/FloatingLabelInput";
 import CarList from "../components/CarList.json";
+import DatePickerA from "react-native-datepicker";
 
 class MainScreen extends React.Component {
   componentDidMount = () => {
@@ -45,9 +46,14 @@ class MainScreen extends React.Component {
     this.state.pan.y.addListener(value => (this._animatedValueY = value.value));
 
     this._panResponder = PanResponder.create({
+      onStartShouldSetPanResponder: (evt, gestureState) => true,
+      onStartShouldSetPanResponderCapture: (evt, gestureState) => false,
       onMoveShouldSetResponderCapture: () => true,
-      onMoveShouldSetPanResponderCapture: () => true,
-      onPanResponderGrant: (e, gestureState) => {
+      onMoveShouldSetPanResponder: (evt, gestureState) => true,
+      onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
+
+    
+        onPanResponderGrant: (e, gestureState) => {
         this.state.pan.setOffset({
           x: this._animatedValueX,
           y: this._animatedValueY
@@ -136,13 +142,13 @@ class MainScreen extends React.Component {
   };
 
   render() {
-      carModels=
-        this.props.search.make !== "Any"
-          ? Object.values(CarList)
-              .filter(car => car.title === this.props.search.make)
-              .map(model => model.models)[0]
-              .map(model => model.title)
-          : []
+    carModels =
+      this.props.search.make !== "Any"
+        ? Object.values(CarList)
+            .filter(car => car.title === this.props.search.make)
+            .map(model => model.models)[0]
+            .map(model => model.title)
+        : [];
     return (
       <View style={{ flex: 1, backgroundColor: colors.backgroundMain }}>
         <Header
@@ -155,6 +161,30 @@ class MainScreen extends React.Component {
               text={"Choose Date and Location"}
             />
           }
+        />
+        <DatePickerA
+          ref={component => (this._datepicker = component)}
+          mode="date"
+          date={
+            this.state.source === "From"
+              ? this.props.search.rentingDateStart
+              : this.props.search.rentingDateEnd
+          }
+          onDateChange={date =>
+            this.state.source === "From"
+              ? this.props.doSetRentingDate(
+                  date,
+                  this.props.search.rentingDateEnd
+                )
+              : this.props.doSetRentingDate(
+                  this.props.search.rentingDateStart,
+                  date
+                )
+          }
+          mode="date"
+          minDate="2016-05-01"
+          hideText={true}
+          showIcon={false}
         />
 
         <Modal
@@ -183,6 +213,7 @@ class MainScreen extends React.Component {
             }
           />
         </Modal>
+
         <View
           style={{
             shadowRadius: 10,
@@ -231,7 +262,10 @@ class MainScreen extends React.Component {
             >
               <TouchableOpacity
                 onPress={() => (
-                  this.props.openDateModal(), this.setState({ source: "From" })
+                  Platform.OS === "ios"
+                    ? this.props.openDateModal()
+                    : this._datepicker.onPressDate(),
+                  this.setState({ source: "From" })
                 )}
                 style={{
                   flexDirection: "column",
@@ -291,8 +325,10 @@ class MainScreen extends React.Component {
                 </View>
               </View>
               <TouchableOpacity
-                onPress={() => (
-                  this.props.openDateModal(), this.setState({ source: "To" })
+                 onPress={() => (
+                  Platform.OS === "ios"
+                    ? this.props.openDateModal()
+                    : this._datepicker.onPressDate(), this.setState({ source: "To" })
                 )}
                 style={{
                   flexDirection: "column",
@@ -364,7 +400,7 @@ class MainScreen extends React.Component {
                 >
                   <View
                     style={{
-                      flexDirection: "center",
+                      flexDirection: "column",
                       justifyContent: "space-between",
                       alignItems: "center"
                     }}
@@ -394,7 +430,7 @@ class MainScreen extends React.Component {
                   </View>
                   <View
                     style={{
-                      flexDirection: "center",
+                      flexDirection: "column",
                       justifyContent: "space-between",
                       alignItems: "center"
                     }}

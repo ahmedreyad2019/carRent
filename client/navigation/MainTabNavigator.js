@@ -22,6 +22,8 @@ import TransactionsScreen from "../screens/TransactionsScreen";
 import TransactionDetailsScreen from "../screens/TransactionDetailsScreen";
 import OwnedCarsScreen from "../screens/OwnedCarsScreen";
 import AddCarScreen from "../screens/AddCarScreen";
+import MyCarDetailsScreen from "../screens/MyCarDetailsScreen";
+import OfferCar from "../screens/OfferCar";
 
 const getTabBarIcon = (navigation, focused, tintColor) => {
   const { routeName } = navigation.state;
@@ -112,7 +114,9 @@ const CarOwnerScreen = createAppContainer(
   createStackNavigator(
     {
       Main: { screen: OwnedCarsScreen },
-      AddCar: { screen: AddCarScreen }
+      AddCar: { screen: AddCarScreen },
+      ViewCar:{screen:MyCarDetailsScreen},
+      RentCar:{screen:OfferCar}
     },
     {
       headerMode: "none"

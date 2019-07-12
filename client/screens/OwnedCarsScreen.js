@@ -257,7 +257,7 @@ class OwnedCarsScreen extends React.Component {
                         }}
                         onPress={() => {
                         //   this.props.doSetCar(item),
-                        //     this.props.navigation.navigate("Rent");
+                             this.props.navigation.navigate("ViewCar",{'car':item});
                         }}
                       >
                         <AppText

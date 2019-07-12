@@ -44,16 +44,21 @@ class MainScreen extends React.Component {
     this._animatedValueY = 0;
     this.state.pan.x.addListener(value => (this._animatedValueX = value.value));
     this.state.pan.y.addListener(value => (this._animatedValueY = value.value));
-
+    const touchThreshold = 20;
     this._panResponder = PanResponder.create({
-      onStartShouldSetPanResponder: (evt, gestureState) => true,
       onStartShouldSetPanResponderCapture: (evt, gestureState) => false,
-      onMoveShouldSetResponderCapture: () => true,
-      onMoveShouldSetPanResponder: (evt, gestureState) => true,
+      onMoveShouldSetPanResponder: (_, gestureState) => {
+        const { dx, dy } = gestureState
+        return (dx > 2 || dx < -2 || dy > 2 || dy < -2)
+      },
+      
+    onMoveShouldSetPanResponderCapture: (_, gestureState) => {
+        const { dx, dy } = gestureState
+        return (dx > 2 || dx < -2 || dy > 2 || dy < -2)
+      },
       onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
 
-    
-        onPanResponderGrant: (e, gestureState) => {
+      onPanResponderGrant: (e, gestureState) => {
         this.state.pan.setOffset({
           x: this._animatedValueX,
           y: this._animatedValueY
@@ -66,8 +71,10 @@ class MainScreen extends React.Component {
           gestureState
         );
       },
-      onPanResponderRelease: () => {
-        let ys = this._animatedValueY;
+      onPanResponderRelease: ( e, gestureState) => {
+        const {  dy } = gestureState;
+
+      
         this.state.pan.flattenOffset();
 
         Animated.spring(this.state.pan.y, {
@@ -75,7 +82,8 @@ class MainScreen extends React.Component {
           friction: 25
         }).start();
         this.setState(prevState => ({
-          s: !prevState.s
+          
+          s: Math.abs(dy)>30?!prevState.s:prevState.s
         }));
       }
     });
@@ -325,10 +333,11 @@ class MainScreen extends React.Component {
                 </View>
               </View>
               <TouchableOpacity
-                 onPress={() => (
+                onPress={() => (
                   Platform.OS === "ios"
                     ? this.props.openDateModal()
-                    : this._datepicker.onPressDate(), this.setState({ source: "To" })
+                    : this._datepicker.onPressDate(),
+                  this.setState({ source: "To" })
                 )}
                 style={{
                   flexDirection: "column",
@@ -376,10 +385,7 @@ class MainScreen extends React.Component {
               <ScrollView
                 style={{
                   width: "100%",
-                  height: this.state.pan.y.interpolate({
-                    inputRange: [0, 350],
-                    outputRange: [0, 350]
-                  }),
+                  
                   borderBottomLeftRadius: 35,
                   borderBottomRightRadius: 35,
                   flexDirection: "column"
@@ -460,7 +466,7 @@ class MainScreen extends React.Component {
               {...this._panResponder.panHandlers}
               style={{ top: -40 }}
             >
-              <TouchableWithoutFeedback
+              <TouchableOpacity activeOpacity={1}
                 onPress={() => (
                   this.props.navigation.navigate("Cars"),
                   this.props.doFetchCars(this.props.search)
@@ -500,7 +506,7 @@ class MainScreen extends React.Component {
                     }}
                   />
                 </View>
-              </TouchableWithoutFeedback>
+              </TouchableOpacity>
             </Animated.View>
           </View>
         </View>

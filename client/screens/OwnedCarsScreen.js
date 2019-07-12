@@ -13,7 +13,6 @@ import {
 } from "react-native";
 import { Header, Image } from "react-native-elements";
 import Filter from "../components/Filter";
-import RentModal from "../components/RentModal";
 import { styles, colors } from "../styles";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { connect } from "react-redux";

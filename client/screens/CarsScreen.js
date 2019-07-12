@@ -13,13 +13,11 @@ import {
 } from "react-native";
 import { Header, Image } from "react-native-elements";
 import Filter from "../components/Filter";
-import RentModal from "../components/RentModal";
+import RentScreen from "../screens/RentScreen";
 import { styles, colors } from "../styles";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { connect } from "react-redux";
 import * as actions from "../actions/index";
-import CompanyDetials from "../components/CompanyDetails";
-import SearchModal from "../components/SearchModal";
 
 import Rating from "../components/Rating";
 import AppText from "../components/AppText";

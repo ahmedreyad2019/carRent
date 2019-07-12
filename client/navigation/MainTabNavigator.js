@@ -17,7 +17,7 @@ import ProfileScreen from "../screens/ProfileScreen";
 import CarsScreen from "../screens/CarsScreen";
 import FilterScreen from "../screens/FilterScreen";
 import MainScreen from "../screens/MainScreen";
-import RentModal from "../components/RentModal";
+import RentModal from "../screens/RentScreen";
 import TransactionsScreen from "../screens/TransactionsScreen";
 import TransactionDetailsScreen from "../screens/TransactionDetailsScreen";
 import OwnedCarsScreen from "../screens/OwnedCarsScreen";

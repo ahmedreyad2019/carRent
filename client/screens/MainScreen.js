@@ -120,6 +120,9 @@ class MainScreen extends React.Component {
     var strTime = hours + ":" + minutes + " " + ampm;
     return strTime;
   };
+  componentDidUpdate=()=>{
+    
+  }
   render() {
     var carMakes = Object.values(CarList).map(car => car.title);
     var carModels =
@@ -360,7 +363,7 @@ class MainScreen extends React.Component {
                     <View style={{ height: 50 }}>
                       <Picker
                         selectedValue={this.props.search.make}
-                        style={{ width: 170 }}
+                        style={{ width: 160 }}
                         onValueChange={(itemValue, itemIndex) =>
                           this.props.doSetMakeModel(
                             itemValue,
@@ -385,7 +388,7 @@ class MainScreen extends React.Component {
                     <View style={{ height: 50 }}>
                       <Picker
                         selectedValue={this.props.search.model}
-                        style={{ width: 170 }}
+                        style={{ width: 180 }}
                         onValueChange={(itemValue, itemIndex) =>
                           this.props.doSetMakeModel(
                             this.props.search.make,

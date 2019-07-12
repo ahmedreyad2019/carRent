@@ -110,7 +110,13 @@ class CarsScreen extends React.Component {
             >
               <AppText
                 style={{ color: "white" }}
-                text={this.props.search.location}
+                text={
+                  (this.props.search.make !== "Any"
+                    ? this.props.search.make + " " + this.props.search.model
+                    : "Any cars") +
+                  " in " +
+                  this.props.search.location
+                }
               />
             </View>
           }
@@ -290,7 +296,7 @@ class CarsScreen extends React.Component {
                           paddingLeft: 5,
                           alignItems: "flex-start",
                           borderBottomWidth: 1.5,
-                          borderBottomColor:'#eee'
+                          borderBottomColor: "#eee"
                         }}
                       >
                         <View

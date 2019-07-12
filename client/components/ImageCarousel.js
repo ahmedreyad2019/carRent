@@ -27,7 +27,7 @@ class ImageCarousel extends Component {
     return (
       <View
         style={{
-          height: this.props.full ? 300 : 140,
+          height: this.props.full ? 300 : 160,
           backgroundColor: "black"
         }}
       >
@@ -46,7 +46,7 @@ class ImageCarousel extends Component {
             <Image
               resizeMode={this.props.full ? "contain" : "cover"}
               style={{
-                height: this.props.full ? 300 : 140,
+                height: this.props.full ? 300 : 160,
                 width: this.props.full ? screenWidth : (screenWidth - 40)
               }}
               loadingIndicatorSource={<AppText style={{color:'white'}} text={'loading...'}/>}

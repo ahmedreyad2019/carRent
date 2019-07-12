@@ -10,8 +10,8 @@ const TransactionSchema = new Schema({
   offeredDate: { type: Date },
   status: {
     type: String,
-    enum: ["Done","Booked", "In process", "Upcoming"],
-    default: "Upcoming"
+    enum: ["UpForRent","Booked", "In process", "Completed"],
+    default: "UpForRent"
   },
   carRating: { type: Number },
   renterRating: { type: Number },

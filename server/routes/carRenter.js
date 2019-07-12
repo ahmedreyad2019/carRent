@@ -166,7 +166,7 @@ router.post("/view/availableCars", async (req, res) => {
                   $and: [
                     {
                       $or: [
-                        { $eq: ["$$stats", "Upcoming"] },
+                        { $eq: ["$$stats", "UpForRent"] },
                         { $eq: ["$$renterID", renter._id] }
                       ]
                     },
@@ -191,6 +191,7 @@ router.post("/view/availableCars", async (req, res) => {
           as: "cars"
         }
       },
+      { $unwind: "$cars" },
       {
         $match: { cars: { $ne: [] } }
       }

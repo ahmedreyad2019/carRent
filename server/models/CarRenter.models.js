@@ -32,7 +32,7 @@ const CarRenterSchema = new Schema({
   personalIDPhoto: { type: String },
   balance: { type: Number, required: true, default: 0.0 },
   password: { type: String, required: true },
-  statusID: { type: String, enum: ["Pending", "Rejected", "Accepted"] },
+  
   paymentMethod: {
     type: String,
     enum: ["Card", "Cash"],

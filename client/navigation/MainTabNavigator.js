@@ -22,6 +22,7 @@ import TransactionsScreen from "../screens/TransactionsScreen";
 import TransactionDetailsScreen from "../screens/TransactionDetailsScreen";
 import OwnedCarsScreen from "../screens/OwnedCarsScreen";
 import AddCarScreen from "../screens/AddCarScreen";
+import AddDrivingLicenseScreen from "../screens/AddDrivingLicenseScreen";
 import MyCarDetailsScreen from "../screens/MyCarDetailsScreen";
 import OfferCar from "../screens/OfferCar";
 
@@ -102,7 +103,8 @@ const RentScreen = createAppContainer(
     {
       Main: { screen: MainScreen },
       Cars: { screen: CarsScreen },
-      Rent: { screen: RentModal }
+      Rent: { screen: RentModal },
+      AddDrivingLicense:{screen:AddDrivingLicenseScreen}
     },
     {
       headerMode: "none"

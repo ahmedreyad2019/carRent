@@ -287,7 +287,7 @@ class CarsScreen extends React.Component {
                           }
                         />
                       </View>
-                      <ImageCarousel images={item.cars[0].photosLink} />
+                      <ImageCarousel images={item.cars.photosLink} />
 
                       <View
                         style={{
@@ -311,7 +311,7 @@ class CarsScreen extends React.Component {
                             style={{
                               color: colors.primary
                             }}
-                            text={item.cars[0].make + " " + item.cars[0].model}
+                            text={item.cars.make + " " + item.cars.model}
                           />
                           <AppText
                             size={12}
@@ -323,10 +323,10 @@ class CarsScreen extends React.Component {
                                   : "Roboto",
                               opacity: 0.7
                             }}
-                            text={" " + item.cars[0].year}
+                            text={" " + item.cars.year}
                           />
                         </View>
-                        <Rating rating={item.cars[0].rating} />
+                        <Rating rating={item.cars.rating} />
                       </View>
                     </TouchableOpacity>
                   )}

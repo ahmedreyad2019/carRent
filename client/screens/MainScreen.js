@@ -48,15 +48,15 @@ class MainScreen extends React.Component {
     this._panResponder = PanResponder.create({
       onStartShouldSetPanResponderCapture: (evt, gestureState) => false,
       onMoveShouldSetPanResponder: (_, gestureState) => {
-        const { dx, dy } = gestureState
-        return (dx > 2 || dx < -2 || dy > 2 || dy < -2)
+        const {  dy } = gestureState;
+        
+        return dy > 2 || dy < -2;
       },
       
-    onMoveShouldSetPanResponderCapture: (_, gestureState) => {
-        const { dx, dy } = gestureState
-        return (dx > 2 || dx < -2 || dy > 2 || dy < -2)
+      onMoveShouldSetPanResponderCapture: (_, gestureState) => {
+        const {  dy } = gestureState;
+        return  dy > 2 || dy < -2;
       },
-      onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
 
       onPanResponderGrant: (e, gestureState) => {
         this.state.pan.setOffset({
@@ -70,21 +70,18 @@ class MainScreen extends React.Component {
           e,
           gestureState
         );
+       
       },
-      onPanResponderRelease: ( e, gestureState) => {
-        const {  dy } = gestureState;
-
-      
+      onPanResponderRelease: (e, gestureState) => {
+        this.setState(prevState => ({
+          s:  !prevState.s
+        }));
         this.state.pan.flattenOffset();
 
         Animated.spring(this.state.pan.y, {
-          toValue: this.state.s ? 350 : 0,
+          toValue: this.state.s ? 0 : 350,
           friction: 25
         }).start();
-        this.setState(prevState => ({
-          
-          s: Math.abs(dy)>30?!prevState.s:prevState.s
-        }));
       }
     });
   };
@@ -385,7 +382,7 @@ class MainScreen extends React.Component {
               <ScrollView
                 style={{
                   width: "100%",
-                  
+
                   borderBottomLeftRadius: 35,
                   borderBottomRightRadius: 35,
                   flexDirection: "column"
@@ -466,7 +463,8 @@ class MainScreen extends React.Component {
               {...this._panResponder.panHandlers}
               style={{ top: -40 }}
             >
-              <TouchableOpacity activeOpacity={1}
+              <TouchableOpacity
+                activeOpacity={1}
                 onPress={() => (
                   this.props.navigation.navigate("Cars"),
                   this.props.doFetchCars(this.props.search)

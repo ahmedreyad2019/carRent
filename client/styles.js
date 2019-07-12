@@ -1,11 +1,11 @@
-import { Platform } from "react-native";
+import { Platform,StyleSheet } from "react-native";
 export const colors = {
   backgroundMain: "#fafaff",
   primary: "#161D37",
   backgroundCard: "#FFF",
   error: "#293749"
 };
-export const styles = {
+export const styles =StyleSheet.create( {
   CompanyDetails: {
     padding: 40,
     backgroundColor: colors.backgroundCard,
@@ -109,4 +109,4 @@ export const styles = {
     alignItems: "center",
     marginBottom: 20
   }
-};
+})

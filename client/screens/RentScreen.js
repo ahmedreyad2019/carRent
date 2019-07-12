@@ -56,7 +56,7 @@ class RentModal extends React.Component {
   render() {
     const { selectedCar } = this.props;
     const transaction = selectedCar;
-    const car = selectedCar.cars[0];
+    const car = selectedCar.cars;
     date1 = new Date(transaction.rentingDateStart);
     date2 = new Date(transaction.rentingDateEnd);
     const diffTime = Math.abs(date2.getTime() - date1.getTime());
@@ -138,9 +138,9 @@ class RentModal extends React.Component {
           />
           <TouchableOpacity
             disabled={transaction.status === "Done"}
-            onPress={() => (
-              this.props.doRent(car._id),
-              this.props.doFetchCars(this.props.search)
+            onPress={() => (this.props.user.drivingLicenseRequest.status==='Accepted'?
+              (this.props.doRent(car._id),
+              this.props.doFetchCars(this.props.search)):this.props.navigation.navigate("AddDrivingLicense")
             )}
             style={{
               backgroundColor:
@@ -180,7 +180,8 @@ const mapStateToProps = state => {
     loading: state.loginReducer.loading,
     selectedCar: state.carReducer.selectedCar,
     order: state.carReducer.order,
-    search: state.carReducer.search
+    search: state.carReducer.search,
+    user:state.loginReducer.user
   };
 };
 

@@ -14,7 +14,7 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo";
 import { connect } from "react-redux";
-import { styles,colors } from "../styles";
+import { styles, colors } from "../styles";
 import * as actions from "../actions/index";
 import FloatingLabelInput from "../components/FloatingLabelInput";
 import { ScrollView } from "react-native-gesture-handler";
@@ -27,11 +27,11 @@ class RegisterScreen extends React.Component {
         LastName: null,
         mobileNumber: null,
         password: "",
-        email:null
+        email: null
       },
       RepeatPassword: "",
-      errorMessage1:null,
-      errorMessage2:null,
+      errorMessage1: null,
+      errorMessage2: null,
       passwordMatch: true
     };
     this.RotateValueHolder = new Animated.Value(0);
@@ -46,8 +46,8 @@ class RegisterScreen extends React.Component {
       easing: Easing.quad
     }).start();
   }
-  handleVerification =async () => {
-    Keyboard.dismiss()
+  handleVerification = async () => {
+    Keyboard.dismiss();
     const { password } = this.state.user;
     const { RepeatPassword } = this.state;
     if (password.length < 8) {
@@ -62,7 +62,7 @@ class RegisterScreen extends React.Component {
         errorMessage1: ""
       }));
     }
-    if (password !== RepeatPassword&&password.length > 8) {
+    if (password !== RepeatPassword && password.length > 8) {
       this.setState(prevState => ({
         ...prevState,
         errorMessage2: "*passwords do not match"
@@ -81,10 +81,9 @@ class RegisterScreen extends React.Component {
         errorMessage1: "",
         errorMessage2: ""
       }));
-      await this.props.doLogin(this.state.user)
-      this.props.navigation.navigate("Login")
+      await this.props.doLogin(this.state.user);
+      this.props.navigation.navigate("Login");
     }
-   
   };
 
   componentDidUpdate = () => {
@@ -111,7 +110,7 @@ class RegisterScreen extends React.Component {
               this.handleVerification();
             }}
           >
-           <View
+            <View
               style={styles.button}
               colors={["transparent", "rgba(0,0,0,0.3)"]}
             >
@@ -123,20 +122,21 @@ class RegisterScreen extends React.Component {
                   alignItems: "center"
                 }}
               >
-              {!this.props.loading ? (
-                <>
-                
-                <Text paddingTop="10" style={{ color: "#FFF" }}>Sign Up</Text>
-                </>
-              ) : (
-                <ActivityIndicator
-                  animating={this.props.loading}
-                  size="large"
-                  color={"#FFF"}
-                  style={{paddingTop:7}}
-                />
-              )}
-            </View>
+                {!this.props.loading ? (
+                  <>
+                    <Text paddingTop="10" style={{ color: "#FFF" }}>
+                      Sign Up
+                    </Text>
+                  </>
+                ) : (
+                  <ActivityIndicator
+                    animating={this.props.loading}
+                    size="large"
+                    color={"#FFF"}
+                    style={{ paddingTop: 7 }}
+                  />
+                )}
+              </View>
             </View>
           </TouchableOpacity>
         </Animated.View>
@@ -151,120 +151,109 @@ class RegisterScreen extends React.Component {
 
   render() {
     return (
-      <>
-        <KeyboardAvoidingView
-          style={{
-            backgroundColor: colors.backgroundMain,
-            flex: 1,
-            flexDirection: "column",
-            justifyContent: "space-evenly",
-            alignItems: "stretch",
-            paddingTop:10
+      <View
+        style={{
+          flex: 1,
+          flexDirection: "column"
+        }}
+      >
+        <ScrollView
+          contentContainerStyle={{
+            backgroundColor:colors.backgroundMain,
+            padding: 30,
+            paddingBottom: 300
           }}
-          behavior="padding"
-          enabled
         >
-          <ScrollView
-            style={{
-              backgroundColor: colors.backgroundMain,
-              padding: 30
+          <FloatingLabelInput
+            style={styles.text}
+            label={"First Name"}
+            onChangeText={text => {
+              this.setState(prevState => ({
+                ...prevState,
+                user: { ...prevState.user, firstName: text }
+              }));
             }}
-          >
-            
-            <FloatingLabelInput
-                style={styles.text}
-                label={"First Name"}
-                onChangeText={text => {
-                  this.setState(prevState => ({
-                    ...prevState,
-                    user: { ...prevState.user, firstName: text }
-                  }));
-                }}
-                value={this.state.user.firstName}
-              />
-              <FloatingLabelInput
-                style={styles.text}
-                label={"Last Name"}
-                onChangeText={text => {
-                  this.setState(prevState => ({
-                    ...prevState,
-                    user: { ...prevState.user, LastName: text }
-                  }));
-                }}
-                value={this.state.user.LastName}
-              />
-<FloatingLabelInput
-                style={styles.text}
-                label={"Email"}
-                onChangeText={text => {
-                  this.setState(prevState => ({
-                    ...prevState,
-                    user: { ...prevState.user, email: text }
-                  }));
-                }}
-                value={this.state.user.email}
-                keyboardType="email-address"
-              />
-            <FloatingLabelInput
-              style={styles.text}
-              label="Mobile Number"
-              autoCapitalize={"none"}
-              onChangeText={text => {
-                this.setState(prevState => ({
-                  ...prevState,
-                  user: { ...prevState.user, mobileNumber: text }
-                }));
-              }}
-              keyboardType="phone-pad"
-              value={this.state.user.mobileNumber}
-            />
+            value={this.state.user.firstName}
+          />
+          <FloatingLabelInput
+            style={styles.text}
+            label={"Last Name"}
+            onChangeText={text => {
+              this.setState(prevState => ({
+                ...prevState,
+                user: { ...prevState.user, LastName: text }
+              }));
+            }}
+            value={this.state.user.LastName}
+          />
+          <FloatingLabelInput
+            style={styles.text}
+            label={"Email"}
+            onChangeText={text => {
+              this.setState(prevState => ({
+                ...prevState,
+                user: { ...prevState.user, email: text }
+              }));
+            }}
+            value={this.state.user.email}
+            keyboardType="email-address"
+          />
+          <FloatingLabelInput
+            style={styles.text}
+            label="Mobile Number"
+            autoCapitalize={"none"}
+            onChangeText={text => {
+              this.setState(prevState => ({
+                ...prevState,
+                user: { ...prevState.user, mobileNumber: text }
+              }));
+            }}
+            keyboardType="phone-pad"
+            value={this.state.user.mobileNumber}
+          />
 
+          <>
             <>
-              <>
-                <Text
-                  style={{ color: "#FF8080", position: "absolute", bottom: 0 }}
-                >
-                  {this.state.errorMessage1}
-                </Text>
-                <Text
-                  style={{
-                    color: "#FF8080",
-                    position: "absolute",
-                    bottom: 0
-                  }}
-                >
-                  {this.state.errorMessage2}
-                </Text>
-              </>
-              <FloatingLabelInput
-                style={styles.text}
-                label={"Password"}
-                onChangeText={text => {
-                  this.setState(prevState => ({
-                    ...prevState,
-                    user: { ...prevState.user, password: text }
-                  }));
+              <Text
+                style={{ color: "#FF8080", position: "absolute", bottom: 0 }}
+              >
+                {this.state.errorMessage1}
+              </Text>
+              <Text
+                style={{
+                  color: "#FF8080",
+                  position: "absolute",
+                  bottom: 0
                 }}
-                textContentType="password"
-                value={this.state.user.password}
-              />
+              >
+                {this.state.errorMessage2}
+              </Text>
             </>
             <FloatingLabelInput
               style={styles.text}
-              label={"Repeat password"}
+              label={"Password"}
               onChangeText={text => {
                 this.setState(prevState => ({
                   ...prevState,
-                  RepeatPassword: text
+                  user: { ...prevState.user, password: text }
                 }));
               }}
               textContentType="password"
-              value={this.state.RepeatPassword}
+              value={this.state.user.password}
             />
-          </ScrollView>
-
-          <StatusBar barStyle={"light-content"} />
-
+          </>
+          <FloatingLabelInput
+            style={styles.text}
+            label={"Repeat password"}
+            onChangeText={text => {
+              this.setState(prevState => ({
+                ...prevState,
+                RepeatPassword: text
+              }));
+            }}
+            textContentType="password"
+            value={this.state.RepeatPassword}
+          />
           <View
             style={{
               padding: 30,
@@ -279,8 +268,9 @@ class RegisterScreen extends React.Component {
               <Text style={{ color: "#74808E" }}>Already Have an account?</Text>
             </TouchableOpacity>
           </View>
-        </KeyboardAvoidingView>
-      </>
+          <StatusBar barStyle={"dark-content"} />
+        </ScrollView>
+      </View>
     );
   }
 }

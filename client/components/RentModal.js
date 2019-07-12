@@ -155,7 +155,7 @@ class RentModal extends React.Component {
             <Text
               style={{
                 fontSize: 20,
-                fontFamily: "AvenirNext-DemiBold",
+                fontFamily:   Platform.OS === "ios" ? "AvenirNext-DemiBold":"Roboto",
                 color: "white"
               }}
             >

@@ -16,6 +16,8 @@ const TransactionSchema = new Schema({
   carRating: { type: Number },
   renterRating: { type: Number },
   ownerRating: { type: Number },
-  price: { type: Number, required: true }
+  price: { type: Number, required: true },
+  minimumPeriod:{ type: Number, required: true },
+  location:{type:String,required:true},
 });
 module.exports = mongoose.model("transaction", TransactionSchema);

@@ -6,8 +6,11 @@ import {
   ScrollView,
   ActivityIndicator,
   Text,
+  Alert,
+  Linking,
   RefreshControl,
   StatusBar,
+  Clipboard,
   FlatList
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -18,6 +21,7 @@ import AppText from "../components/AppText";
 import { Header, ButtonGroup } from "react-native-elements";
 import ImageCarousel from "../components/ImageCarousel";
 import Rating from "../components/Rating";
+import { LinearGradient } from "expo";
 
 class TransactionDetailsScreen extends React.Component {
   constructor(props) {
@@ -67,6 +71,8 @@ class TransactionDetailsScreen extends React.Component {
     ];
     if (hi) {
       return (
+        days[today.getDay()] +
+        ", " +
         today.getDate() +
         " " +
         month[today.getMonth()] +
@@ -79,6 +85,7 @@ class TransactionDetailsScreen extends React.Component {
   };
   render() {
     const transaction = this.props.selectedTransaction;
+    console.log(transaction);
     const { carOwners, cars } = transaction;
     return (
       <View style={{ flex: 1 }}>
@@ -96,85 +103,234 @@ class TransactionDetailsScreen extends React.Component {
             </TouchableOpacity>
           }
         />
-        <View
-          style={{
-            borderBottomWidth: 0.3,
-            borderBottomColor: "#ddd",
-            paddingHorizontal: 40,
-            paddingVertical: 20,
-            justifyContent: "center",
-            alignItems: "stretch",
-            flexDirection: "column"
-          }}
-        >
+        <ScrollView style={{ flex: 1 }}>
+          <ImageCarousel images={cars.photosLink} full={true} />
           <View
             style={{
+              borderBottomWidth: 0.3,
+              borderBottomColor: "#ddd",
+              paddingHorizontal: 30,
+              paddingVertical: 20,
+              justifyContent: "space-between",
               flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between"
+              alignItems: "center"
             }}
           >
-            <AppText
-              fontStyle={"bold"}
-              size={20}
-              text={carOwners.firstName + " " + carOwners.lastName}
-            />
-            <View style={{ flexDirection: "row", alignItems: "baseline" }}>
-              <Rating size={25} rating={carOwners.rating} />
-              <AppText
-                text={"avg"}
-                fontStyle={"light"}
-                size={10}
-                style={{ color: "#888" }}
-              />
+            <View
+              style={{
+                flexDirection: "column",
+                alignItems: "baseline",
+                justifyContent: "flex-start",
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "baseline",
+                  justifyContent: "flex-start"
+                }}
+              >
+                <AppText
+                  fontStyle={"bold"}
+                  size={18}
+                  text={carOwners.firstName + " " + carOwners.lastName}
+                />
+                <View style={{ flexDirection: "row", alignItems: "baseline" }}>
+                  <Ionicons
+                    name={"md" + "-star-outline"}
+                    size={15}
+                    style={{ marginLeft: 5, marginRight: 3 }}
+                  />
+
+                  <AppText
+                    text={(carOwners.rating ? carOwners.rating : 5).toFixed(1)}
+                    fontStyle={"light"}
+                    size={10}
+                    style={{ color: "#888" }}
+                  />
+                </View>
+              </View>
+              <TouchableOpacity
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "flex-start"
+                }}
+                hitSlop={{ top: 10, left: 10, bottom: 10, right: 10 }}
+                onPress={() => Linking.openURL(`tel:${carOwners.mobileNumber}`)}
+                onLongPress={async () =>
+                  await Clipboard.setString(
+                    carOwners.mobileNumber,
+                    Alert.alert("Number copied")
+                  )
+                }
+              >
+                <Ionicons name={"ios" + "-call"} size={15} />
+                <AppText
+                  text={carOwners.mobileNumber}
+                  style={{ color: "#888", marginHorizontal: 5 }}
+                  size={12}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "flex-start"
+                }}
+                hitSlop={{ top: 10, left: 10, bottom: 10, right: 10 }}
+                onPress={() => Linking.openURL(`mailto:${carOwners.email}`)}
+                onLongPress={async () =>
+                  await Clipboard.setString(
+                    carOwners.email,
+                    Alert.alert("Email copied")
+                  )
+                }
+              >
+                <Ionicons name={"ios" + "-mail"} size={15} />
+                <AppText
+                  text={carOwners.email}
+                  style={{ color: "#888", marginHorizontal: 5 }}
+                  size={12}
+                />
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "flex-start"
+              }}
+            >
+              <View style={{ flexDirection: "column" }}>
+                <View style={{ flexDirection: "row", alignItems: "baseline" }}>
+                  <AppText text={cars.make + " " + cars.model} />
+                  <AppText
+                    fontStyle={"light"}
+                    size={12}
+                    text={" " + cars.year}
+                    style={{ color: "#888" }}
+                  />
+                </View>
+                <View style={{ flexDirection: "row", alignItems: "baseline" }}>
+                  <AppText
+                    size={12}
+                    text={cars.plateNumber}
+                    style={{ color: "#888" }}
+                  />
+                  <Ionicons
+                    name={"md" + "-star-outline"}
+                    size={15}
+                    style={{ marginLeft: 10, marginRight: 3 }}
+                  />
+
+                  <AppText
+                    text={cars.rating.toFixed(1)}
+                    fontStyle={"light"}
+                    size={10}
+                    style={{ color: "#888" }}
+                  />
+                </View>
+              </View>
             </View>
           </View>
           <View
             style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between"
+              borderBottomWidth: 0.3,
+              borderBottomColor: "#ddd",
+              paddingHorizontal: 40,
+              paddingVertical: 20,
+              justifyContent: "center",
+              flexDirection: "column",
+              alignItems: "stretch"
             }}
           >
-            <View style={{ flexDirection: "column" }}>
-              <View style={{ flexDirection: "row", alignItems: "baseline" }}>
-                <AppText text={cars.make + " " + cars.model} />
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between"
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "flex-start",
+                  alignItems: "center"
+                }}
+              >
+                <Ionicons
+                  name={"ios" + "-pin"}
+                  size={20}
+                  style={{ marginRight: 5 }}
+                />
+
+                <AppText text={transaction.location} size={18} />
+              </View>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <LinearGradient
+                  colors={["transparent", "#123"]}
+                  style={{
+                    width: 5,
+                    borderRadius: 2,
+                    backgroundColor: "#59b",
+                    height: 30,
+                    marginRight: 5
+                  }}
+                />
+
+                <View
+                  style={{
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "flex-start"
+                  }}
+                >
+                  <AppText
+                    text={this.getdateString(
+                      transaction.rentingDateStart,
+                      true
+                    )}
+                  />
+
+                  <AppText
+                    text={this.getdateString(transaction.rentingDateEnd, true)}
+                  />
+                </View>
+              </View>
+            </View>
+          </View>
+          <View
+            style={{
+              borderBottomWidth: 0.3,
+              borderBottomColor: "#ddd",
+              paddingHorizontal: 40,
+              paddingVertical: 20,
+              justifyContent: "center",
+              flexDirection: "column",
+              alignItems: "center"
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "baseline",
+                justifyContent: "space-between",
+                width: "100%"
+              }}
+            >
+              <AppText text={"Price per day"} />
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <AppText style={{ color: "#888" }} size={16} text={"EGP "} />
                 <AppText
-                  fontStyle={"light"}
-                  size={12}
-                  text={" " + cars.year}
-                  style={{ color: "#888" }}
+                  size={20}
+                  fontStyle={"bold"}
+                  text={transaction.price.toLocaleString()}
                 />
               </View>
-              <AppText
-                size={12}
-                text={cars.plateNumber}
-                style={{ color: "#888" }}
-              />
-            </View>
-            <View style={{ flexDirection: "row", alignItems: "baseline" }}>
-              <Rating size={25} rating={cars.rating} />
-              <AppText
-                text={"avg"}
-                fontStyle={"light"}
-                size={10}
-                style={{ color: "#888" }}
-              />
             </View>
           </View>
-        </View>
-        <View
-          style={{
-            borderBottomWidth: 0.3,
-            borderBottomColor: "#ddd",
-            paddingHorizontal: 40,
-            paddingVertical: 20,
-            justifyContent: "center",
-            flexDirection: "column",
-            alignItems: "center"
-          }}
-        />
-        <AppText text={"EGP " + transaction.price.toLocaleString()} />
+        </ScrollView>
       </View>
     );
   }

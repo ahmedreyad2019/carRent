@@ -67,7 +67,8 @@ class MainScreen extends React.Component {
       },
 
       onMoveShouldSetPanResponderCapture: (_, gestureState) => {
-        const { dy } = gestureState;
+        const { dy, y0 } = gestureState;
+
         return dy > 2 || dy < -2;
       },
 
@@ -91,7 +92,7 @@ class MainScreen extends React.Component {
         this.state.pan.flattenOffset();
 
         Animated.spring(this.state.pan.y, {
-          toValue: this.state.s ? 0 : 350,
+          toValue: this.state.s ? 0 : 300,
           friction: 25
         }).start();
       }
@@ -238,7 +239,7 @@ class MainScreen extends React.Component {
             shadowColor: "black",
             shadowOpacity: 0.2,
             elevation: 5,
-            backgroundColor: "rgba:(0,0,0,0)"
+            backgroundColor: "rgba:(0,0,0,1)"
           }}
         >
           <View
@@ -380,8 +381,8 @@ class MainScreen extends React.Component {
             <Animated.View
               style={{
                 height: this.state.pan.y.interpolate({
-                  inputRange: [0, 350],
-                  outputRange: [0, 350]
+                  inputRange: [0, 300],
+                  outputRange: [0, 300]
                 }),
                 paddingTop: 40,
                 paddingBottom: 0,
@@ -402,7 +403,12 @@ class MainScreen extends React.Component {
                 }}
               >
                 <View
-                  style={{ flexDirection: "row", justifyContent: "center" }}
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    borderBottomWidth: 1,
+                    borderBottomColor: "#ddd"
+                  }}
                 >
                   <AppText text={"Filter"} size={20} />
                 </View>
@@ -411,7 +417,7 @@ class MainScreen extends React.Component {
                     flexDirection: "row",
                     justifyContent: "center",
                     width: "100%",
-                    marginTop: 30
+                    marginTop: 20
                   }}
                 >
                   <View
@@ -485,7 +491,8 @@ class MainScreen extends React.Component {
               >
                 <View
                   style={{
-                    height: 40,
+                    height: 45,
+                    paddingBottom: 10,
                     flexDirection: "column",
                     marginHorizontal: 100,
                     alignItems: "center",
@@ -507,15 +514,57 @@ class MainScreen extends React.Component {
                   >
                     Search
                   </Text>
-                  <TouchableOpacity
-                    style={{
-                      width: "50%",
-                      height: 5,
-                      backgroundColor: "white",
-                      opacity: 0.4,
-                      borderRadius: 50
-                    }}
-                  />
+                  <View style={{ flexDirection: "row" }}>
+                    <Animated.View
+                      style={{
+                        width: this.state.pan.y.interpolate({
+                          inputRange: [0, 150, 300],
+                          outputRange: ["21%", "20%", "21%"]
+                        }),
+                        right: this.state.pan.y.interpolate({
+                          inputRange: [0, 150, 300],
+                          outputRange: [-1, 0, -1]
+                        }),
+                        height: 7,
+                        borderTopLeftRadius: 5,
+                        borderBottomLeftRadius: 5,
+                        backgroundColor: "grey",
+                        transform: [
+                          {
+                            rotateZ: this.state.pan.y.interpolate({
+                              inputRange: [0, 300],
+                              outputRange: [0.2, -0.2]
+                            })
+                          }
+                        ]
+                      }}
+                    />
+                    <Animated.View
+                      style={{
+                        width: this.state.pan.y.interpolate({
+                          inputRange: [0, 150, 300],
+                          outputRange: ["21%", "20%", "21%"]
+                        }),
+                        borderTopRightRadius: 5,
+                        borderBottomRightRadius: 5,
+                        left: this.state.pan.y.interpolate({
+                          inputRange: [0, 150, 300],
+                          outputRange: [-1, 0, -1]
+                        }),
+                        height: 7,
+                        backgroundColor: "grey",
+
+                        transform: [
+                          {
+                            rotateZ: this.state.pan.y.interpolate({
+                              inputRange: [0, 300],
+                              outputRange: [-0.2, 0.2]
+                            })
+                          }
+                        ]
+                      }}
+                    />
+                  </View>
                 </View>
               </TouchableOpacity>
             </Animated.View>

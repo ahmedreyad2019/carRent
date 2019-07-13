@@ -151,12 +151,12 @@ class TransactionsScreen extends React.Component {
               }}
               style={{
                 marginHorizontal: 10,
-                marginVertical: 15,
+                marginVertical: 10,
                 flexDirection: "column",
                 borderBottomColor: "#ddd",
                 height: 120,
                 backgroundColor: "white",
-                borderRadius: 15,
+                borderRadius: 10,
                 shadowOpacity: 0.2,
                 shadowRadius: 15,
                 elevation: 20

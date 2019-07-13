@@ -40,25 +40,34 @@ class ImageCarousel extends Component {
           horizontal
           snapToAlignment={"center"}
           decelerationRate={"fast"}
-         bouncesZoom={true}
-          snapToInterval={this.props.full ? screenWidth : (screenWidth - 40)}
+          bouncesZoom={true}
+          snapToInterval={this.props.full ? screenWidth : screenWidth - 40}
           renderItem={({ item }) => (
             <Image
               resizeMode={this.props.full ? "contain" : "cover"}
               style={{
                 height: this.props.full ? 300 : 160,
-                width: this.props.full ? screenWidth : (screenWidth - 40)
+                width: this.props.full ? screenWidth : screenWidth - 40
               }}
-              loadingIndicatorSource={<AppText style={{color:'white'}} text={'loading...'}/>}
+              loadingIndicatorSource={
+                <AppText style={{ color: "white" }} text={"loading..."} />
+              }
               source={{ uri: item }}
               onLoadStart={e => this.setState({ loading: true })}
             />
           )}
           keyExtractor={(item, index) => index.toString()}
-        
           ListEmptyComponent={
-            <View>
-              <Text>no images</Text>
+            <View
+              style={{
+                width: this.props.full ? screenWidth : screenWidth - 40,
+                flex: 1,
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <AppText text={"no images"} style={{ color: "white" }} />
             </View>
           }
         />

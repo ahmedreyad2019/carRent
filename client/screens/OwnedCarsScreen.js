@@ -242,7 +242,7 @@ class OwnedCarsScreen extends React.Component {
                       <TouchableOpacity
                         style={{
                           backgroundColor:
-                            item.status == "Idle" ? colors.primary : item.status=="UpForRent"? "green":item.status=="PendingApproval"?"#d3d3d3":item.status=="Rented"?"add8e6":"#FF0000",
+                            item.status == "Idle" ? colors.primary : item.status=="UpForRent"? "green":item.status=="PendingApproval"?"#d3d3d3":item.status=="Rented"?"#add8e6":"#FF0000",
                           zIndex: 9090909090,
                           width: 150,
                           height: 30,

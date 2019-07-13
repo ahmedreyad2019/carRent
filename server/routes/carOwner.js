@@ -442,11 +442,20 @@ router.get("/AllRents/:id",async(req,res)=>{
       .status(401)
       .send({ auth: false, message: "Not your Car" });
     }
+    var result=[];
     const transactions = await Transaction.find({carID:req.params.id});
+    for(var i=0;i<transactions.length;i++){
+      var theCarRenter=await CarRenter.findById(transactions[i].carRenterID)
+      var theTransaction={}
+      theTransaction.transaction= transactions[i]
+      theTransaction.carRenter=theCarRenter;
+      console.log(theTransaction)
+      result.push(theTransaction)
+    }
     if (transactions.length === 0) {
       return res.send({ msg: "This Car has not been Rented" });
     }
-    res.json({ msg: "The Upcoming rents of this Car:", data: transactions });
+    res.json({ msg: "The Upcoming rents of this Car:", data: result });
 
 
   }catch(error){
@@ -546,10 +555,7 @@ router.post("/UnPublishMyCar/:id", async (req, res) => {
   }
   if(UpForRent)
     state="UpForRent"
-
-
-    car.status=state
-    await Car.findByIdAndUpdate(req.params.id,car)
+    await Car.findByIdAndUpdate(transaction.carID,{status:state})
     res.json({ msg: "Your Car is unPublished", data: newTransaction });
   } catch (error) {
     res.status(400).send({ msg: error });

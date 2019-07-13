@@ -14,7 +14,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { styles, colors } from "../styles";
 import * as actions from "../actions/index";
 import Rating from "../components/Rating";
-
+import { LinearGradient } from "expo";
 import AppText from "../components/AppText";
 import { Header } from "react-native-elements";
 import ImageCarousel from "../components/ImageCarousel";
@@ -77,7 +77,7 @@ class MyCarDetailsScreen extends React.Component {
               console.log(this.state.car._id)
             console.log(response)
             this.setState({transactions:response.data})
-            console.log(this.state.transactions)
+            console.log(this.state.transactions[0].transaction)
           })
           .catch(error => {
             console.log(error);
@@ -157,60 +157,131 @@ class MyCarDetailsScreen extends React.Component {
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => {
-               // this.props.navigation.navigate("TransactionDetails")
+                this.props.navigation.navigate("Transaction",{car:this.state.car,transaction:item})
                console.log("k")
               }}
               style={{
-                borderBottomWidth: 0.5,
+                marginHorizontal: 10,
+                marginVertical: 15,
+                flexDirection: "column",
                 borderBottomColor: "#ddd",
-                height: 120
+                height: 120,
+                backgroundColor: "white",
+                borderRadius: 15,
+                shadowOpacity: 0.2,
+                shadowRadius: 15,
+                elevation: 20
               }}
             >
               <AppText
-                text={"EGP " + item.price}
-                style={{ position: "absolute", right: 15, top: 15 }}
+                size={13}
+                text={item.transaction.price.toLocaleString() + " EGP"}
+                style={{
+                  position: "absolute",
+                  alignSelf: "center",
+                  bottom: 10
+                }}
               />
-              
               <View
                 style={{
-                  backgroundColor: "white",
+                  position: "absolute",
+                  right: 15,
+                  top: 15,
                   flexDirection: "column",
-                  justifyContent: "center",
+                  alignItems: "flex-end"
+                }}
+              >
+                <AppText
+                  size={14}
+                  fontStyle={"bold"}
+                  text={this.state.car.make}
+                  style={{
+                    color: colors.primary
+                  }}
+                />
+                <AppText
+                  size={20}
+                  fontStyle={"bold"}
+                  text={this.state.car.model}
+                  style={{
+                    color: colors.primary
+                  }}
+                />
+                <AppText
+                  size={13}
+                  text={
+                 item.carRenter?   item.carRenter.firstName + " " + item.carRenter.lastName:""
+                  }
+                  style={{
+                    color: "#888"
+                  }}
+                />
+              </View>
+              <AppText
+                size={13}
+                text={item.transaction.status}
+                style={{ position: "absolute", right: 15, bottom: 10 }}
+              />
+
+              <View
+                style={{
+                  flexDirection: "row",
                   alignItems: "center",
+                  justifyContent: "center",
                   position: "absolute",
                   left: 15,
                   top: 15
                 }}
               >
-                <AppText
-                  text={this.getdateString(item.rentingDateStart, true)}
-                />
-                <View
+                <LinearGradient
+                  colors={["transparent", "#123"]}
                   style={{
-                    borderRightWidth: 2,
-                    borderRightColor: "#aaa",
-                    height: 15
+                    width: 5,
+                    borderRadius: 2,
+                    backgroundColor: "#59b",
+                    height: 30,
+                    marginRight: 5
                   }}
                 />
-                <AppText text={this.getdateString(item.rentingDateEnd, true)} />
-              </View >
-              <View 
-               style={{
-                backgroundColor: "white",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                position: "absolute",
-                left: 15,
-                top: 90
-              }}>
-              <AppText text={"Status:" +item.status}/>
+
+                <View
+                  style={{
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center"
+                  }}
+                >
+                  <AppText
+                    text={this.getdateString(item.transaction.rentingDateStart, true)}
+                  />
+
+                  <AppText
+                    text={this.getdateString(item.transaction.rentingDateEnd, true)}
+                  />
+                </View>
               </View>
-             
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                  position: "absolute",
+                  left: 15,
+                  bottom: 10
+                }}
+              >
+                <Ionicons
+                  name={"ios" + "-pin"}
+                  size={15}
+                  style={{ marginRight: 5 }}
+                />
+
+                <AppText text={item.transaction.location} size={15} />
+              </View>
             </TouchableOpacity>
           )}
           keyExtractor={item => {
-            return item._id;
+            return item.transaction._id;
           }}
         />
            <View

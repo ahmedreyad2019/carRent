@@ -120,7 +120,7 @@ class TransactionDetailsScreen extends React.Component {
               style={{
                 flexDirection: "column",
                 alignItems: "baseline",
-                justifyContent: "flex-start",
+                justifyContent: "flex-start"
               }}
             >
               <View
@@ -202,15 +202,32 @@ class TransactionDetailsScreen extends React.Component {
                 justifyContent: "flex-start"
               }}
             >
-              <View style={{ flexDirection: "column" }}>
-                <View style={{ flexDirection: "row", alignItems: "baseline" }}>
-                  <AppText text={cars.make + " " + cars.model} />
-                  <AppText
-                    fontStyle={"light"}
-                    size={12}
-                    text={" " + cars.year}
-                    style={{ color: "#888" }}
-                  />
+              <View
+                style={{
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start"
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    alignItems: "flex-start"
+                  }}
+                >
+                  <AppText text={cars.make} />
+                  <View
+                    style={{ flexDirection: "row", alignItems: "baseline" }}
+                  >
+                    <AppText text={cars.model} />
+                    <AppText
+                      fontStyle={"light"}
+                      size={12}
+                      text={" " + cars.year}
+                      style={{ color: "#888" }}
+                    />
+                  </View>
                 </View>
                 <View style={{ flexDirection: "row", alignItems: "baseline" }}>
                   <AppText

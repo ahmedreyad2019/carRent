@@ -232,11 +232,11 @@ class MainScreen extends React.Component {
 
         <View
           style={{
-            shadowRadius: 10,
-            shadowOffset: { height: 2 },
+            shadowRadius: 15,
+            shadowOffset: { height: 5 },
             shadowColor: "black",
             shadowOpacity: 0.2,
-            elevation: 1
+          elevation:5,backgroundColor:'rgba:(0,0,0,0)'
           }}
         >
           <View
@@ -259,8 +259,7 @@ class MainScreen extends React.Component {
                 backgroundColor: colors.backgroundCard,
                 borderTopLeftRadius: 50,
                 borderTopRightRadius: 50,
-                zIndex: 5000000000000
-              }}
+                zIndex: 50}}
             >
               <PickerLocation />
             </View>

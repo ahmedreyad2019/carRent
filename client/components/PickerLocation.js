@@ -54,13 +54,13 @@ class PickerLocation extends Component {
     }).start();
   };
   render() {
-
     const labelStyle = {
       height: this._animatedIsFocused.interpolate({
         inputRange: [0, 1],
-        outputRange: [0, this.props.height?this.props.height:300]
+        outputRange: [0, this.props.height ? this.props.height : 300]
       }),
       width: "100%",
+
       zIndex: 5000000000000,
       borderColor: "#eee",
       flexDirection: "column",
@@ -75,10 +75,11 @@ class PickerLocation extends Component {
         style={{
           width: 200,
           justifyContent: "flex-start",
-          alignItems: "center"
+          alignItems: "center",
+          zIndex: 1223423423424242424
         }}
       >
-        <TouchableWithoutFeedback
+        <TouchableOpacity activeOpacity={1}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           onPress={() => {
             this.setState(prevState => ({
@@ -93,7 +94,8 @@ class PickerLocation extends Component {
               flexDirection: "row",
               borderTopLeftRadius: 50,
               borderTopRightRadius: 50,
-              justifyContent: "space-evenly"
+              justifyContent: "space-evenly",
+              zIndex: 1223423423424242424
             }}
           >
             <Text
@@ -117,15 +119,17 @@ class PickerLocation extends Component {
               }}
             />
           </View>
-        </TouchableWithoutFeedback>
+        </TouchableOpacity>
         <Animated.View style={labelStyle}>
           <ScrollView
             style={{
+              flex: 1,
               flexDirection: "column",
               width: "100%",
-              paddingHorizontal: 10
+              paddingHorizontal: 10,
+              zIndex: 1223423423424242424
             }}
-            contentContainerStyle={{ alignItems: "flex-start" }}
+            contentContainerStyle={{ alignItems: "flex-start", flexGrow: 1 }}
           >
             {this.state.listItems.map((item, i) => (
               <TouchableOpacity
@@ -142,7 +146,7 @@ class PickerLocation extends Component {
                   marginVertical: 8,
                   borderBottomColor: "#223344",
                   borderBottomWidth: 1,
-                  zIndex:28713868126386816238681623
+                  zIndex: 28713868126386816238681623
                 }}
               >
                 <Text

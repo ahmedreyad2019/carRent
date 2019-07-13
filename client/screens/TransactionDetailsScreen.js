@@ -103,28 +103,45 @@ class TransactionDetailsScreen extends React.Component {
             paddingHorizontal: 40,
             paddingVertical: 20,
             justifyContent: "center",
-            alignItems: "center",
+            alignItems: "stretch",
             flexDirection: "column"
           }}
         >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between"
+            }}
+          >
             <AppText
               fontStyle={"bold"}
               size={20}
               text={carOwners.firstName + " " + carOwners.lastName}
             />
-            <Rating rating={carOwners.rating} />
+            <Rating size={25} rating={carOwners.rating} />
           </View>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between"
+            }}
+          >
             <View style={{ flexDirection: "column" }}>
-              <AppText text={cars.make + " " + cars.model} />
-              <AppText
-                text={cars.year + "-" + cars.plateNumber}
-                style={{ color: "#bbb" }}
-              />
+              <View style={{ flexDirection: "row",alignItems:'baseline' }}>
+                <AppText text={cars.make + " " + cars.model} />
+                <AppText
+                  fontStyle={"light"}
+                  size={12}
+                  text={" "+cars.year}
+                  style={{ color: "#888" }}
+                />
+              </View>
+              <AppText text={cars.plateNumber} style={{ color: "#888" }} />
             </View>
 
-            <Rating rating={cars.rating} />
+            <Rating size={25} rating={cars.rating} />
           </View>
         </View>
 
@@ -140,13 +157,6 @@ class TransactionDetailsScreen extends React.Component {
           }}
         />
         <AppText text={"EGP " + transaction.price.toLocaleString()} />
-        <View style={{ borderBottomWidth: 1, borderBottomColor: "#ddd" }}>
-          <Rating rating={cars.rating} />
-          <Rating rating={cars.rating} />
-        </View>
-        <View>
-          <AppText text={carOwners.firstName} />
-        </View>
       </View>
     );
   }

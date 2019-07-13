@@ -134,7 +134,7 @@ class RentModal extends React.Component {
           />
           <TouchableOpacity
             disabled={transaction.status === "Booked"}
-            onPress={() => (this.props.user.drivingLicenseRequest.status==='Accepted'?
+            onPress={() => (this.props.user.drivingLicenseRequest?
               (this.props.doRent(car._id),
               this.props.doFetchCars(this.props.search)):this.props.navigation.navigate("AddDrivingLicense")
             )}

@@ -119,7 +119,15 @@ class TransactionDetailsScreen extends React.Component {
               size={20}
               text={carOwners.firstName + " " + carOwners.lastName}
             />
-            <Rating size={25} rating={carOwners.rating} />
+            <View style={{ flexDirection: "row", alignItems: "baseline" }}>
+              <Rating size={25} rating={carOwners.rating} />
+              <AppText
+                text={"avg"}
+                fontStyle={"light"}
+                size={10}
+                style={{ color: "#888" }}
+              />
+            </View>
           </View>
           <View
             style={{
@@ -129,22 +137,32 @@ class TransactionDetailsScreen extends React.Component {
             }}
           >
             <View style={{ flexDirection: "column" }}>
-              <View style={{ flexDirection: "row",alignItems:'baseline' }}>
+              <View style={{ flexDirection: "row", alignItems: "baseline" }}>
                 <AppText text={cars.make + " " + cars.model} />
                 <AppText
                   fontStyle={"light"}
                   size={12}
-                  text={" "+cars.year}
+                  text={" " + cars.year}
                   style={{ color: "#888" }}
                 />
               </View>
-              <AppText text={cars.plateNumber} style={{ color: "#888" }} />
+              <AppText
+                size={12}
+                text={cars.plateNumber}
+                style={{ color: "#888" }}
+              />
             </View>
-
-            <Rating size={25} rating={cars.rating} />
+            <View style={{ flexDirection: "row", alignItems: "baseline" }}>
+              <Rating size={25} rating={cars.rating} />
+              <AppText
+                text={"avg"}
+                fontStyle={"light"}
+                size={10}
+                style={{ color: "#888" }}
+              />
+            </View>
           </View>
         </View>
-
         <View
           style={{
             borderBottomWidth: 0.3,

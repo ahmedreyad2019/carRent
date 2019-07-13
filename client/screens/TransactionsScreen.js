@@ -10,6 +10,7 @@ import {
   StatusBar,
   FlatList
 } from "react-native";
+import { LinearGradient } from "expo";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { styles, colors } from "../styles";
 import * as actions from "../actions/index";
@@ -86,7 +87,11 @@ class TransactionsScreen extends React.Component {
           barStyle={"light-content"}
           backgroundColor={colors.primary}
           centerComponent={
-            <AppText size={16} style={{ color: "white" }} text={"My Rentals"} />
+            <AppText
+              size={16}
+              style={{ color: "white" }}
+              text={"Your Bookings"}
+            />
           }
           leftComponent={
             <TouchableOpacity
@@ -151,42 +156,116 @@ class TransactionsScreen extends React.Component {
                 borderBottomColor: "#ddd",
                 height: 120,
                 backgroundColor: "white",
-                borderRadius: 15
+                borderRadius: 15,
+                shadowOpacity: 0.2,
+                shadowRadius: 15,
+                elevation: 20
               }}
             >
               <AppText
+                size={13}
                 text={item.price.toLocaleString() + " EGP"}
                 style={{
                   position: "absolute",
                   alignSelf: "center",
-                  bottom: 15
+                  bottom: 10
                 }}
-              />
-              <AppText
-                text={item.status}
-                style={{ position: "absolute", right: 15, bottom: 15 }}
               />
               <View
                 style={{
+                  position: "absolute",
+                  right: 15,
+                  top: 15,
                   flexDirection: "column",
-                  justifyContent: "center",
+                  alignItems: "flex-end"
+                }}
+              >
+                <AppText
+                  size={14}
+                  fontStyle={"bold"}
+                  text={item.cars.make}
+                  style={{
+                    color: colors.primary
+                  }}
+                />
+                <AppText
+                  size={20}
+                  fontStyle={"bold"}
+                  text={item.cars.model}
+                  style={{
+                    color: colors.primary
+                  }}
+                />
+                <AppText
+                  size={13}
+                  text={
+                    item.carOwners.firstName + " " + item.carOwners.lastName
+                  }
+                  style={{
+                    color: "#888"
+                  }}
+                />
+              </View>
+              <AppText
+                size={13}
+                text={item.status}
+                style={{ position: "absolute", right: 15, bottom: 10 }}
+              />
+
+              <View
+                style={{
+                  flexDirection: "row",
                   alignItems: "center",
+                  justifyContent: "center",
                   position: "absolute",
                   left: 15,
                   top: 15
                 }}
               >
-                <AppText
-                  text={this.getdateString(item.rentingDateStart, true)}
-                />
-                <View
+                <LinearGradient
+                  colors={["transparent", "#123"]}
                   style={{
-                    borderRightWidth: 2,
-                    borderRightColor: "#aaa",
-                    height: 10
+                    width: 5,
+                    borderRadius: 2,
+                    backgroundColor: "#59b",
+                    height: 30,
+                    marginRight: 5
                   }}
                 />
-                <AppText text={this.getdateString(item.rentingDateEnd, true)} />
+
+                <View
+                  style={{
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center"
+                  }}
+                >
+                  <AppText
+                    text={this.getdateString(item.rentingDateStart, true)}
+                  />
+
+                  <AppText
+                    text={this.getdateString(item.rentingDateEnd, true)}
+                  />
+                </View>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "flex-start",
+                  alignItems: "center",
+                  position: "absolute",
+                  left: 15,
+                  bottom: 10
+                }}
+              >
+                <Ionicons
+                  name={"ios" + "-pin"}
+                  size={15}
+                  style={{ marginRight: 5 }}
+                />
+
+                <AppText text={item.location} size={15} />
               </View>
             </TouchableOpacity>
           )}

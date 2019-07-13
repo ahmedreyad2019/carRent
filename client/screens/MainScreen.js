@@ -7,7 +7,8 @@ import {
   Platform,
   Modal,
   Picker,
-  View,AsyncStorage,
+  View,
+  AsyncStorage,
   PanResponder,
   TouchableWithoutFeedback,
   Animated
@@ -25,6 +26,7 @@ import Detail from "../components/Detail";
 import FloatingLabelInput from "../components/FloatingLabelInput";
 import CarList from "../components/CarList.json";
 import DatePickerA from "react-native-datepicker";
+import { StackGestureContext } from "react-navigation";
 
 class MainScreen extends React.Component {
   componentDidMount = () => {
@@ -38,7 +40,7 @@ class MainScreen extends React.Component {
               .map(model => model.title)
           : []
     });
-    this.makeRemoteRequest()
+    this.makeRemoteRequest();
   };
   makeRemoteRequest = () => {
     const { userId } = this.props;
@@ -59,14 +61,14 @@ class MainScreen extends React.Component {
     this._panResponder = PanResponder.create({
       onStartShouldSetPanResponderCapture: (evt, gestureState) => false,
       onMoveShouldSetPanResponder: (_, gestureState) => {
-        const {  dy } = gestureState;
-        
+        const { dy } = gestureState;
+
         return dy > 2 || dy < -2;
       },
-      
+
       onMoveShouldSetPanResponderCapture: (_, gestureState) => {
-        const {  dy } = gestureState;
-        return  dy > 2 || dy < -2;
+        const { dy } = gestureState;
+        return dy > 2 || dy < -2;
       },
 
       onPanResponderGrant: (e, gestureState) => {
@@ -81,11 +83,10 @@ class MainScreen extends React.Component {
           e,
           gestureState
         );
-       
       },
       onPanResponderRelease: (e, gestureState) => {
         this.setState(prevState => ({
-          s:  !prevState.s
+          s: !prevState.s
         }));
         this.state.pan.flattenOffset();
 
@@ -236,7 +237,8 @@ class MainScreen extends React.Component {
             shadowOffset: { height: 5 },
             shadowColor: "black",
             shadowOpacity: 0.2,
-          elevation:5,backgroundColor:'rgba:(0,0,0,0)'
+            elevation: 5,
+            backgroundColor: "rgba:(0,0,0,0)"
           }}
         >
           <View
@@ -259,7 +261,8 @@ class MainScreen extends React.Component {
                 backgroundColor: colors.backgroundCard,
                 borderTopLeftRadius: 50,
                 borderTopRightRadius: 50,
-                zIndex: 50}}
+                zIndex: 50
+              }}
             >
               <PickerLocation />
             </View>
@@ -531,6 +534,7 @@ const mapStateToProps = state => {
     source: state.carReducer.source,
     filterModalVisible: state.carReducer.filterModalVisible,
     dateModalVisible: state.carReducer.dateModalVisible,
+    userId: state.loginReducer.userId,
     search: state.carReducer.search
   };
 };

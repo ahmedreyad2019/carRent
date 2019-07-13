@@ -546,7 +546,7 @@ router.get("/view/upComingRentals", async (req, res) => {
       { $unwind: "$cars" },
       {
         $lookup: {
-          from: "carowners",
+          from: "carrenters",
           let: {
             carOwnerID: "$carOwnerID"
           },
@@ -623,7 +623,7 @@ router.get("/view/currentRentals", async (req, res) => {
       { $unwind: "$cars" },
       {
         $lookup: {
-          from: "carowners",
+          from: "carrenters",
           let: {
             carOwnerID: "$carOwnerID"
           },
@@ -701,7 +701,7 @@ router.get("/view/pastRentals", async (req, res) => {
       { $unwind: "$cars" },
       {
         $lookup: {
-          from: "carowners",
+          from: "carrenters",
           let: {
             carOwnerID: "$carOwnerID"
           },

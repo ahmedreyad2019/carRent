@@ -316,7 +316,7 @@ export const fetchPastTransactions = () => {
       )
         .then(response => response.json())
         .then(response => {
-          console.log(response)
+         
 
           dispatch(setPastTransactions(response.data));
           dispatch(loading(false));
@@ -344,7 +344,6 @@ export const fetchCurrentTransactions = () => {
       )
         .then(response => response.json())
         .then(response => {
-          console.log(response)
           dispatch(setCurrentTransactions(response.data));
           dispatch(loading(false));
         })
@@ -370,8 +369,6 @@ export const fetchUpcomingTransactions = () => {
       )
         .then(response => response.json())
         .then(response => {
-          console.log(response)
-
           dispatch(setUpcomingTransactions(response.data));
           dispatch(loading(false));
         })

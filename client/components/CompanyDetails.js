@@ -119,7 +119,7 @@ class CompanyDetails extends React.Component {
             shadowOpacity: 0.4,
             shadowRadius: 3,
             elevation:1,
-            shadoOffset: {
+            shadowOffset: {
               height: 3
             }
           }}

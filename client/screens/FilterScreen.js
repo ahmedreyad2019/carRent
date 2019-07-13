@@ -23,7 +23,7 @@ const styles = {
     height: 267,
     shadowOpacity: 0.4,
     shadowRadius: 3,
-    shadoOffset: {
+    shadowOffset: {
       height: 3
     },
     marginHorizontal: 20,

@@ -24,7 +24,11 @@ import firebase from "../store/firebase";
 class AddDrivingLicenseScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      loadingLicense:false,
+      licenseLink:null,
+      licenseImage:null
+    };
   }
   _pickImageLicense = async () => {
     let result = await ImagePicker.launchImageLibraryAsync();
@@ -32,11 +36,10 @@ class AddDrivingLicenseScreen extends Component {
     try {
       if (!result.cancelled) {
         uploadUrl = await this.uploadImageAsync(result.uri);
-        this.setState(prevState => ({
-          ...prevState,
+        this.setState({
           licenseImage: result.uri,
-          user: { ...prevState.user, licenseLink: uploadUrl }
-        }));
+          licenseLink: uploadUrl 
+        });
       }
     } catch (e) {
       console.log(e);

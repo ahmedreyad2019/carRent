@@ -74,6 +74,8 @@ class MyCarDetailsScreen extends React.Component {
         )
           .then(response => response.json())
           .then(response => {
+              console.log(this.state.car._id)
+            console.log(response)
             this.setState({transactions:response.data})
             console.log(this.state.transactions)
           })
@@ -143,32 +145,20 @@ class MyCarDetailsScreen extends React.Component {
               field={"Renting end date"}
             /> */}
           </View>
-        </ScrollView>
-        <View
-          style={{
-            borderTopWidth: 1,
-            borderTopColor: "#eeeeee",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "white",
-            padding: 20
-          }}
-        >
+       
+     {/* {this.state.transactions} */}
 <FlatList
-        //   refreshControl={
-        //     <RefreshControl
-        //       refreshing={this.props.loading}
-        //       onRefresh={this._onRefresh}
-        //     />
-        //   }
-          data={
-            this.state.transactions
-          }
+         snapToInterval={240}
+         bouncesZoom
+         indicatorStyle={"white"}
+         snapToAlignment={"start"}
+         decelerationRate="fast"
+         data={this.state.transactions}
           renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => {
                // this.props.navigation.navigate("TransactionDetails")
+               console.log("k")
               }}
               style={{
                 borderBottomWidth: 0.5,
@@ -199,17 +189,41 @@ class MyCarDetailsScreen extends React.Component {
                   style={{
                     borderRightWidth: 2,
                     borderRightColor: "#aaa",
-                    height: 10
+                    height: 15
                   }}
                 />
                 <AppText text={this.getdateString(item.rentingDateEnd, true)} />
+              </View >
+              <View 
+               style={{
+                backgroundColor: "white",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                position: "absolute",
+                left: 15,
+                top: 90
+              }}>
+              <AppText text={"Status:" +item.status}/>
               </View>
+             
             </TouchableOpacity>
           )}
           keyExtractor={item => {
             return item._id;
           }}
         />
+           <View
+          style={{
+            borderTopWidth: 1,
+            borderTopColor: "#eeeeee",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "white",
+            padding: 20
+          }}
+        >
           <TouchableOpacity
             onPress={() => {
                 if(this.state.car.status!="PendingApproval"&&this.state.car.status!="Rejected"){
@@ -243,6 +257,7 @@ class MyCarDetailsScreen extends React.Component {
             )}
           </TouchableOpacity>
         </View>
+         </ScrollView>
       </View>
     );
   }

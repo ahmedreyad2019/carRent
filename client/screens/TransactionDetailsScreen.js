@@ -78,11 +78,6 @@ class TransactionDetailsScreen extends React.Component {
     return today.getDate() + "/" + (today.getMonth() + 1);
   };
   render() {
-    const _data = [
-      this.props.pastTransactions,
-      this.props.upcomingTransactions,
-      []
-    ];
     const transaction = this.props.selectedTransaction;
     const { carOwners, cars } = transaction;
     return (
@@ -103,20 +98,49 @@ class TransactionDetailsScreen extends React.Component {
         />
         <View
           style={{
-            borderBottomWidth: 1,
+            borderBottomWidth: 0.3,
             borderBottomColor: "#ddd",
-            paddingHorizontal: 40,paddingVertical:10
+            paddingHorizontal: 40,
+            paddingVertical: 20,
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column"
           }}
         >
-          <View style={{ flexDirection: "row",justifyContent:'space-between',alignItems:'center' }}>
-            <AppText text={"Paid"} />
-            <AppText text={"EGP " + transaction.price.toLocaleString()} />
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <AppText
+              fontStyle={"bold"}
+              size={20}
+              text={carOwners.firstName + " " + carOwners.lastName}
+            />
+            <Rating rating={carOwners.rating} />
+          </View>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View style={{ flexDirection: "column" }}>
+              <AppText text={cars.make + " " + cars.model} />
+              <AppText
+                text={cars.year + "-" + cars.plateNumber}
+                style={{ color: "#bbb" }}
+              />
+            </View>
+
+            <Rating rating={cars.rating} />
           </View>
         </View>
+
+        <View
+          style={{
+            borderBottomWidth: 0.3,
+            borderBottomColor: "#ddd",
+            paddingHorizontal: 40,
+            paddingVertical: 20,
+            justifyContent: "center",
+            flexDirection: "column",
+            alignItems: "center"
+          }}
+        />
+        <AppText text={"EGP " + transaction.price.toLocaleString()} />
         <View style={{ borderBottomWidth: 1, borderBottomColor: "#ddd" }}>
-          <AppText text={cars.make} />
-          <AppText text={cars.model + " " + cars.year} />
-          <AppText text={cars.plateNumber} />
           <Rating rating={cars.rating} />
           <Rating rating={cars.rating} />
         </View>

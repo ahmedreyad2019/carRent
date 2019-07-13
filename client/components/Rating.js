@@ -2,6 +2,7 @@ import React from "react";
 import { View } from "react-native";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { colors } from "../styles";
 class Rating extends React.Component {
   constructor(props) {
     super(props);
@@ -21,16 +22,19 @@ class Rating extends React.Component {
       <View style={{ flexDirection: "row" }}>
         {rat.map((item, i) => (
           <Ionicons
+            style={{
+              marginHorizontal: this.props.size ? this.props.size / 8 : 1
+            }}
             key={i}
             name={
               rat[i] === 1
-                ? "ios-star"
+                ? "md-star"
                 : rat[i] === 0
-                ? "ios-star-outline"
-                : "ios-star-half"
+                ? "md-star-outline"
+                : "md-star-half"
             }
-            size={15}
-            color={"black"}
+            size={this.props.size ? this.props.size : 15}
+            color={colors.primary}
           />
         ))}
       </View>

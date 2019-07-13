@@ -386,8 +386,9 @@ router.post("/view/availableCars/:id/rent", async (req, res) => {
       console.log("no cars");
       return res.status(404).send({ msg: "no cars avaialble at the moment" });
     }
+    console.log(cars._id);
     var transaction = await Transaction.findOneAndUpdate(
-      { carID: cars._id, status: "Upcoming" },
+      { carID: cars._id, status: "UpForRent" },
       {
         carRenterID: stat,
         status: "Booked"
@@ -407,7 +408,7 @@ router.post("/view/availableCars/:id/rent", async (req, res) => {
     );
     transaction = await Transaction.findOne({ _id: transaction._id });
     car = await Car.findOne({ _id: cars._id });
-    if (car) {
+    if (car && transaction) {
       console.log("yesssss");
       return res
         .status(200)
@@ -520,13 +521,137 @@ router.get("/view/upComingRentals", async (req, res) => {
   if (!renter) {
     return res.status(404).send({ error: "Renter does not exist" });
   }
+
   try {
+    const transactions = await Transaction.aggregate([
+      {
+        $lookup: {
+          from: "cars",
+          let: {
+            car: "$carID",
+            stats: "$status"
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [{ $eq: ["$_id", "$$car"] }]
+                }
+              }
+            }
+          ],
+          as: "cars"
+        }
+      },
+      { $unwind: "$cars" },
+      {
+        $lookup: {
+          from: "carowners",
+          let: {
+            carOwnerID: "$carOwnerID"
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [{ $eq: ["$_id", "$$carOwnerID"] }]
+                }
+              }
+            }
+          ],
+          as: "carOwners"
+        }
+      },
+      { $unwind: "$carOwners" },
+
+      {
+        $match: { cars: { $ne: [] }, status: "Booked", carRenterID: renter._id }
+      }
+    ]);
     if (transactions.length === 0)
       return res.status(401).send({ msg: "no upcoming rentals" });
+
     return res
       .status(200)
       .send({ msg: "upcoming rentals:", data: transactions });
   } catch (error) {
+    console.log(error);
+    return res.status(400).send({ msg: "error", error: error });
+  }
+});
+router.get("/view/currentRentals", async (req, res) => {
+  var stat = 0;
+  var token = req.headers["x-access-token"];
+  if (!token) {
+    return res
+      .status(401)
+      .send({ auth: false, message: "Please login first." });
+  }
+  jwt.verify(token, config.secret, async function(err, decoded) {
+    if (err) {
+      return res
+        .status(500)
+        .send({ auth: false, message: "Failed to authenticate token." });
+    }
+    stat = decoded.id;
+  });
+  const renter = await CarRenter.findById(stat);
+  if (!renter) {
+    return res.status(404).send({ error: "Renter does not exist" });
+  }
+  try {
+    const transactions = await Transaction.aggregate([
+      {
+        $lookup: {
+          from: "cars",
+          let: {
+            car: "$carID",
+            stats: "$status"
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [{ $eq: ["$_id", "$$car"] }]
+                }
+              }
+            }
+          ],
+          as: "cars"
+        }
+      },
+      { $unwind: "$cars" },
+      {
+        $lookup: {
+          from: "carowners",
+          let: {
+            carOwnerID: "$carOwnerID"
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [{ $eq: ["$_id", "$$carOwnerID"] }]
+                }
+              }
+            }
+          ],
+          as: "carOwners"
+        }
+      },
+      { $unwind: "$carOwners" },
+
+      {
+        $match: { cars: { $ne: [] }, status: "In Process", carRenterID: renter._id }
+      }
+    ]);
+    if (transactions.length === 0)
+      return res.status(401).send({ msg: "no current rentals" });
+    return res
+      .status(200)
+      .send({ msg: "current rentals:", data: transactions });
+  } catch (error) {
+    console.log(error);
     return res.status(400).send({ msg: "error", error: error });
   }
 });
@@ -559,22 +684,13 @@ router.get("/view/pastRentals", async (req, res) => {
           from: "cars",
           let: {
             car: "$carID",
-            stats: "$status",
-            renterID: "$carRenterID"
+            stats: "$status"
           },
           pipeline: [
             {
               $match: {
                 $expr: {
-                  $and: [
-                    {
-                      $or: [
-                        { $eq: ["$$stats", "Upcoming"] },
-                        { $eq: ["$$renterID", renter._id] }
-                      ]
-                    },
-                    { $eq: ["$_id", "$$car"] }
-                  ]
+                  $and: [{ $eq: ["$_id", "$$car"] }]
                 }
               }
             }
@@ -587,8 +703,7 @@ router.get("/view/pastRentals", async (req, res) => {
         $lookup: {
           from: "carowners",
           let: {
-            carOwnerID: "$carOwnerID",
-            renterID: "$carRenterID"
+            carOwnerID: "$carOwnerID"
           },
           pipeline: [
             {
@@ -605,7 +720,7 @@ router.get("/view/pastRentals", async (req, res) => {
       { $unwind: "$carOwners" },
 
       {
-        $match: { cars: { $ne: [] } }
+        $match: { cars: { $ne: [] }, status: "Completed", carRenterID: renter._id }
       }
     ]);
     if (transactions.length === 0)

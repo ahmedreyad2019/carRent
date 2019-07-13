@@ -43,7 +43,9 @@ const CarRenterSchema = new Schema({
   drivingLicenseRequest: DrivingLicenseRequestSchema,
   banned: { required: true, default: false, type: Boolean },
   carsOwned: { type: Array, default: [] },
-  dateAdded: { type: Date }
+  dateAdded: { type: Date },
+  rating: { type: Number, required: true, default: 5.0 },
+
 });
 
 module.exports = mongoose.model("carRenter", CarRenterSchema);

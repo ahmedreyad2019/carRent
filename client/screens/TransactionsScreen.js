@@ -80,13 +80,8 @@ class TransactionsScreen extends React.Component {
     return today.getDate() + "/" + (today.getMonth() + 1);
   };
   render() {
-    const _data = [
-      this.props.pastTransactions,
-      this.props.upcomingTransactions,
-      []
-    ];
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: colors.backgroundMain }}>
         <Header
           barStyle={"light-content"}
           backgroundColor={colors.primary}
@@ -141,7 +136,7 @@ class TransactionsScreen extends React.Component {
               ? this.props.pastTransactions
               : this.state.selectedIndex === 1
               ? this.props.upcomingTransactions
-              : []
+              : this.props.currentTransactions
           }
           renderItem={({ item }) => (
             <TouchableOpacity
@@ -150,18 +145,29 @@ class TransactionsScreen extends React.Component {
                   this.props.doSelectTransaction(item);
               }}
               style={{
-                borderBottomWidth: 0.5,
+                marginHorizontal: 10,
+                marginVertical: 15,
+                flexDirection: "column",
                 borderBottomColor: "#ddd",
-                height: 120
+                height: 120,
+                backgroundColor: "white",
+                borderRadius: 15
               }}
             >
               <AppText
-                text={"EGP " + item.price.toLocaleString()}
-                style={{ position: "absolute", right: 15, top: 15 }}
+                text={item.price.toLocaleString() + " EGP"}
+                style={{
+                  position: "absolute",
+                  alignSelf: "center",
+                  bottom: 15
+                }}
+              />
+              <AppText
+                text={item.status}
+                style={{ position: "absolute", right: 15, bottom: 15 }}
               />
               <View
                 style={{
-                  backgroundColor: "white",
                   flexDirection: "column",
                   justifyContent: "center",
                   alignItems: "center",
@@ -202,7 +208,8 @@ const mapStateToProps = state => {
     order: state.carReducer.order,
     search: state.carReducer.search,
     upcomingTransactions: state.carReducer.upcomingTransactions,
-    pastTransactions: state.carReducer.pastTransactions
+    pastTransactions: state.carReducer.pastTransactions,
+    currentTransactions: state.carReducer.currentTransactions
   };
 };
 
@@ -210,6 +217,7 @@ const mapDispatchToProps = dispatch => ({
   doFetchTransactions: () => {
     dispatch(actions.fetchPastTransactions());
     dispatch(actions.fetchUpcomingTransactions());
+    dispatch(actions.fetchCurrentTransactions());
   },
   doCloseRentModal: () => {
     dispatch(actions.closeRentModal());

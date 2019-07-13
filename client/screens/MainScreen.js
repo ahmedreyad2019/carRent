@@ -7,7 +7,7 @@ import {
   Platform,
   Modal,
   Picker,
-  View,
+  View,AsyncStorage,
   PanResponder,
   TouchableWithoutFeedback,
   Animated
@@ -38,6 +38,17 @@ class MainScreen extends React.Component {
               .map(model => model.title)
           : []
     });
+    this.makeRemoteRequest()
+  };
+  makeRemoteRequest = () => {
+    const { userId } = this.props;
+    try {
+      AsyncStorage.getItem("jwt").then(res => {
+        this.props.doFetch(userId, res);
+      });
+    } finally {
+      this.setState({ user: this.props.user });
+    }
   };
   componentWillMount = () => {
     this._animatedValueX = 0;
@@ -526,6 +537,9 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
+  doFetch: (userId, token) => {
+    dispatch(actions.fetchProfile(userId, token));
+  },
   doFetchCars: search => {
     dispatch(actions.fetchCars(search));
   },

@@ -67,7 +67,7 @@ export const styles =StyleSheet.create( {
     alignSelf: "center",
     shadowOpacity: 0.1,
     shadowRadius: 3,
-    shadoOffset: {
+    shadowOffset: {
       height: 3
     }
   },

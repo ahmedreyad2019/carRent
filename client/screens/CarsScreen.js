@@ -224,7 +224,7 @@ class CarsScreen extends React.Component {
                       <TouchableOpacity
                         style={{
                           backgroundColor:
-                            item.status !== "Done" ? colors.primary : "green",
+                            item.status !== "Booked" ? colors.primary : "green",
                           zIndex: 9090909090,
                           width: 60,
                           height: 30,
@@ -244,7 +244,7 @@ class CarsScreen extends React.Component {
                           style={{
                             color: "white"
                           }}
-                          text={item.status !== "Done" ? "Book" : "Booked"}
+                          text={item.status !== "Booked" ? "Book" : "Booked"}
                         />
                       </TouchableOpacity>
                       <View

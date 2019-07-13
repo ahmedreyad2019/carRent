@@ -13,6 +13,7 @@ const TransactionSchema = new Schema({
     enum: ["UpForRent","Booked", "In process", "Completed"],
     default: "UpForRent"
   },
+  paymentMethod:{type:String,enum:['Cash','Card']},
   carRating: { type: Number },
   renterRating: { type: Number },
   ownerRating: { type: Number },

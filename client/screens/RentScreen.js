@@ -55,17 +55,13 @@ class RentModal extends React.Component {
 
   render() {
     const { selectedCar } = this.props;
-    const transaction = selectedCar;
-    const car = selectedCar.cars;
+   transaction = selectedCar;
+    car = selectedCar.cars;
     date1 = new Date(transaction.rentingDateStart);
     date2 = new Date(transaction.rentingDateEnd);
     const diffTime = Math.abs(date2.getTime() - date1.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    const images = [
-      "../images/bmw-3-series-render.jpg",
-      "../images/bmw-4-series-render.jpg",
-      "../images/bmw-5-series-render.jpg"
-    ];
+   
     return (
       <View
         style={{ flexDirection: "column", justifyContent: "center", flex: 1 }}
@@ -137,14 +133,14 @@ class RentModal extends React.Component {
             }
           />
           <TouchableOpacity
-            disabled={transaction.status === "Done"}
+            disabled={transaction.status === "Booked"}
             onPress={() => (this.props.user.drivingLicenseRequest.status==='Accepted'?
               (this.props.doRent(car._id),
               this.props.doFetchCars(this.props.search)):this.props.navigation.navigate("AddDrivingLicense")
             )}
             style={{
               backgroundColor:
-                transaction.status !== "Done" ? colors.primary : "green",
+                transaction.status !== "Booked" ? colors.primary : "green",
               flexDirection: "row",
               justifyContent: "center",
               height: 50,
@@ -159,7 +155,7 @@ class RentModal extends React.Component {
                 color: "white"
               }}
             >
-              {"Rent" + (transaction.status === "Done" ? "ed" : "")}
+              {"Rent" + (transaction.status === "Booked" ? "ed" : "")}
             </Text>
             {this.props.loading ? (
               <ActivityIndicator animating={true} />

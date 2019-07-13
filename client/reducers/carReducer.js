@@ -39,6 +39,11 @@ export default (carReducer = (state = initialState, action) => {
         ...state,
         pastTransactions: action.pastTransactions
       };
+    case actionTypes.SET_CURRENT_TRANSACTIONS:
+      return {
+        ...state,
+        currentTransactions: action.currentTransactions
+      };
     case actionTypes.SELECT_CAR:
       return {
         ...state,

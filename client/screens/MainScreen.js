@@ -515,7 +515,7 @@ class MainScreen extends React.Component {
                     Search
                   </Text>
                   <View style={{ flexDirection: "row" }}>
-                    <Animated.View
+                   {Platform.OS=="ios"&&  <Animated.View
                       style={{
                         width: this.state.pan.y.interpolate({
                           inputRange: [0, 150, 300],
@@ -529,17 +529,17 @@ class MainScreen extends React.Component {
                         borderTopLeftRadius: 5,
                         borderBottomLeftRadius: 5,
                         backgroundColor: "grey",
-                        transform: [
+                        transform: Platform.OS=="ios"?[
                           {
                             rotateZ: this.state.pan.y.interpolate({
                               inputRange: [0, 300],
                               outputRange: [0.2, -0.2]
                             })
                           }
-                        ]
+                        ]:null
                       }}
-                    />
-                    <Animated.View
+                    />}
+                    {Platform.OS=="ios"&&<Animated.View
                       style={{
                         width: this.state.pan.y.interpolate({
                           inputRange: [0, 150, 300],
@@ -554,16 +554,16 @@ class MainScreen extends React.Component {
                         height: 7,
                         backgroundColor: "grey",
 
-                        transform: [
+                        transform: Platform.OS=="ios"? [
                           {
                             rotateZ: this.state.pan.y.interpolate({
                               inputRange: [0, 300],
                               outputRange: [-0.2, 0.2]
                             })
                           }
-                        ]
+                        ]:null
                       }}
-                    />
+                    />}
                   </View>
                 </View>
               </TouchableOpacity>

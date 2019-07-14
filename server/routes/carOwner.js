@@ -533,7 +533,7 @@ router.post("/UnPublishMyCar/:id", async (req, res) => {
       .status(401)
       .send({ message: "You cannot remove a car that is already Rented" });
     }
-  await Transaction.findByIdAndDelete(req.params._id);
+  await Transaction.findByIdAndDelete(req.params.id);
   const otherTransaction=await Transaction.find({carID:transaction.carID})
   var upcoming=false;
   var rented=false;
@@ -547,7 +547,7 @@ router.post("/UnPublishMyCar/:id", async (req, res) => {
     if(otherTransaction[i].status=="In process")
       rented=true;
   } 
-  var state="idle"
+  var state="Idle"
   if(upcoming)
     state="Rented"
   if(rented){
@@ -556,7 +556,7 @@ router.post("/UnPublishMyCar/:id", async (req, res) => {
   if(UpForRent)
     state="UpForRent"
     await Car.findByIdAndUpdate(transaction.carID,{status:state})
-    res.json({ msg: "Your Car is unPublished", data: newTransaction });
+    res.json({ msg: "Your Car is unPublished" });
   } catch (error) {
     res.status(400).send({ msg: error });
     console.log(error);

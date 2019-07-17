@@ -34,13 +34,16 @@ class OfferCar extends React.Component {
     this.state = {
       user: {
         location: null,
-        minimumPeriod:null,
         rentingDateStart:null,
         rentingDateEnd:null,
         price:null,
-        pricePerHour:null
+        pricePerHour:null,
+        flexible:null
       },
-      errorMessage1: null,
+      errorMessageLocation: null,
+      errorMessageSt: null,
+      errorMessageEnd: null,
+      errorMessagePrice: null,
       per:"Price",
       car:navigation.getParam('car'),
     };
@@ -56,46 +59,7 @@ class OfferCar extends React.Component {
       easing: Easing.quad
     }).start();
   }
-  //   handleVerification =async () => {
-  //     Keyboard.dismiss()
-  //     const { password } = this.state.user;
-  //     const { RepeatPassword } = this.state;
-  //     if (password.length < 8) {
-  //       this.setState(prevState => ({
-  //         ...prevState,
-  //         errorMessage1: "*password must be 8 characters or more"
-  //       }));
-  //       this.props.doError(true);
-  //     } else {
-  //       this.setState(prevState => ({
-  //         ...prevState,
-  //         errorMessage1: ""
-  //       }));
-  //     }
-  //     if (password !== RepeatPassword&&password.length > 8) {
-  //       this.setState(prevState => ({
-  //         ...prevState,
-  //         errorMessage2: "*passwords do not match"
-  //       }));
-  //       this.props.doError(true);
-  //     } else {
-  //       this.setState(prevState => ({
-  //         ...prevState,
-  //         errorMessage2: ""
-  //       }));
-  //     }
-  //     if (password === RepeatPassword && password.length >= 8) {
-  //       this.setState(prevState => ({
-  //         ...prevState,
-  //         error: false,
-  //         errorMessage1: "",
-  //         errorMessage2: ""
-  //       }));
-  //       await this.props.doLogin(this.state.user)
-  //       this.props.navigation.navigate("Home")
-  //     }
 
-  //   };
 
   componentDidUpdate = () => {
     if (this.props.error) {
@@ -106,55 +70,104 @@ class OfferCar extends React.Component {
   };
 
   RentCar = async () => {
-    if(new Date(this.state.user.rentingDateEnd)-new Date(this.state.user.rentingDateStart)<=7200000){
-        Alert.alert("Sorry, You can't offer your Car for less than 2 hours")
-        return;
-    }
+    error=false;
+    var {location,rentingDateEnd,rentingDateStart,price,pricePerHour}=this.state.user
+    
     if(this.state.per=="Price Per Hour"){
         this.setState(prevState => ({
             ...prevState,
             user: { ...prevState.user,pricePerHour:this.state.user.price, price: null }
           }));
     }
+    if(!location){
+      this.setState({errorMessageLocation:"*Please Specify Pick up Location"})
+      error=true;
+    }else{
+      this.setState({errorMessageLocation:null})
+    }
+    if(!rentingDateStart||!rentingDateEnd){
+      this.setState({errorMessageSt:"*Please Specify Start and End Date of Rent"})
+      error=true;
+    }else{
+      this.setState({errorMessageSt:null})
+    }
+    if(!price&&!pricePerHour){
+      this.setState({errorMessagePrice:"*Please Specify Price"})
+      error=true;
+    }else{
+      this.setState({errorMessagePrice:null})
+    }
+    if((!error)&&new Date(this.state.user.rentingDateEnd)-new Date(this.state.user.rentingDateStart)<=7200000){
+      Alert.alert("Sorry, You can't offer your Car for less than 2 hours")
+      return;
+  }
     console.log(this.state.user)
-    try{
-    AsyncStorage.getItem("jwt").then(token =>
-      fetch(
-        `https://carrentalserver.herokuapp.com/carOwner/RentMyCar/`+this.state.car._id,
+if(!error){
+    await Alert.alert(
+      'Is this Offering Flexible?',
+      'Pressing No means that this car can be rented only as a bulk from the dates you entered and cannot be partioned.',
+      [
         {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-access-token": token
-          },
-          body: JSON.stringify(this.state.user)
-
-        }
-      )
-        .then(res => res.json())
-        .then(res => {
-          console.log(res)
-          if(res.data){
-              console.log(res)
-            Alert.alert(
-              'Success',
-              'Your Car is Now Up for Rent',
-              [
-                {text: 'OK', onPress: () => this.props.navigation.navigate("ViewCar",{car:this.state.car})},
-              ],
-              {cancelable: false},
-              
-            );
-          }
-        })
-        .catch(error => {
-          console.log(error);
-        })
-      );
-  }catch(error){
-    console.log(error)
+          text: 'Cancel',
+          style:"cancel"
+        },
+        {
+          text: 'No',
+          onPress: () => {  this.setState(prevState => ({
+            ...prevState,
+            user: { ...prevState.user, flexible: false }
+          })); this.sendRequest()},
+        },
+        {text: 'Yes', onPress: () => {  this.setState(prevState => ({
+          ...prevState,
+          user: { ...prevState.user, flexible: true }
+        }));this.sendRequest()}},
+      ],
+    );
   }
   };
+
+  sendRequest= ()=>{
+    try{
+      AsyncStorage.getItem("jwt").then(token =>
+        fetch(
+          `https://carrentalserver.herokuapp.com/carOwner/RentMyCar/`+this.state.car._id,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-access-token": token
+            },
+            body: JSON.stringify(this.state.user)
+  
+          }
+        )
+          .then(res => res.json())
+          .then(res => {
+            console.log(res)
+            if(res.data){
+                console.log(res)
+              Alert.alert(
+                'Success',
+                'Your Car is Now Up for Rent',
+                [
+                  {text: 'OK', onPress: () => this.props.navigation.navigate("ViewCar",{car:this.state.car})},
+                ],
+                {cancelable: false},
+                
+              );
+            }else{
+              alert(res.message)
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          })
+        );
+    }catch(error){
+      console.log(error)
+    }
+  }
   handleLoading = () => {
     const RotateData = this.RotateValueHolder.interpolate({
       inputRange: [0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2],
@@ -274,7 +287,16 @@ class OfferCar extends React.Component {
               }}
               value={this.state.user.location}
             />
-
+  <>
+              
+              <Text
+                style={{
+                  color: "#FF8080",
+                }}
+              >
+                {this.state.errorMessageLocation}
+              </Text>
+            </>
 <View style={{flexDirection:"row"}}>
             <DatePicker
               placeholder="Start Date"
@@ -361,19 +383,16 @@ class OfferCar extends React.Component {
 
    
 </View>
-
-<FloatingLabelInput
-              style={styles.text}
-              label={"Minimum Rent Period in Days"}
-              onChangeText={text => {
-                this.setState(prevState => ({
-                  ...prevState,
-                  user: { ...prevState.user, minimumPeriod: text }
-                }));
-              }}
-              value={this.state.user.minimumPeriod}
-              keyboardType="numeric"
-            />
+<>
+              
+              <Text
+                style={{
+                  color: "#FF8080",
+                }}
+              >
+                {this.state.errorMessageSt}
+              </Text>
+            </>
 
 <FloatingLabelInput
               style={styles.text}
@@ -388,7 +407,16 @@ class OfferCar extends React.Component {
               keyboardType="numeric"
             />
      
-     
+     <>
+              
+              <Text
+                style={{
+                  color: "#FF8080",
+                }}
+              >
+                {this.state.errorMessagePrice}
+              </Text>
+            </>
 
           <StatusBar barStyle={"light-content"} />
 

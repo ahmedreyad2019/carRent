@@ -18,7 +18,6 @@ const CarSchema = new Schema({
   plateNumber: { type: String, required: true },
   licenseExpiryDate: { type: Date, required: true },
   dateAdded: { type: Date },
-  location: { type: String, required: true },
   category: { type: String, enum: ["A", "B", "C"] },
   carOwnerID: { type: String, required: true },
   transmission: { type: String, enum: ["Automatic", "Manual"] },
@@ -26,6 +25,7 @@ const CarSchema = new Schema({
   seatingCapacity: { type: Number },
   photosLink: [{ type: String,required:true }],
   banned: { required: true, default: false, type: Boolean },
-  comment:{type:String}
+  comment:{type:String},
+  kilometers:{type:String,required:true,enum:["0-50","50-100","100-150","150-200","200+"]}
 });
 module.exports = mongoose.model("Car", CarSchema);

@@ -14,8 +14,7 @@ import {
   Button,
   Image,
   Alert,
-  AsyncStorage,
-  Picker
+  AsyncStorage
 } from "react-native";
 import { LinearGradient, ImagePicker ,Permissions,Constants} from "expo";
 import { connect } from "react-redux";
@@ -32,27 +31,27 @@ import firebase from "../store/firebase";
 
 const storage = firebase.storage();
 
-class AddCarScreen extends React.Component {
+class AddCarScreen2 extends React.Component {
   constructor(props) {
     super(props);
+    const { navigation } = this.props;
     this.state = {
       user: {
-        make: null,
-        model: null,
-        year: null,
-        location: null,
-        transmission:"Automatic",
-        kilometers:""
+        make: navigation.getParam('car').make,
+        model: navigation.getParam('car').model,
+        year: navigation.getParam('car').year,
+        licenseLink: null,
+        plateNumber: null,
+        licenseExpiryDate: null,
+        location: navigation.getParam('car').location,
+        photosLink: [],
+        transmission: navigation.getParam('car').transmission,
+        kilometers:navigation.getParam('car').kilometers
       },
-      errorMessageMake: null,
-      errorMessageModel:null,
-      errorMessageYear:null,
       errorMessageLink:null,
       errorMessagePlate:null,
       errorMessageExpiry:null,
-      errorMessageLocation:null,
       errorMessagePhotos:null,
-      errorMessageKilo:"",
       image: [],
       licenseImage:null,
       loadingCar:false,
@@ -159,6 +158,7 @@ class AddCarScreen extends React.Component {
     }).start();
   }
   
+
   componentDidUpdate = () => {
     if (this.props.error) {
       Vibration.vibrate([100]);
@@ -169,69 +169,47 @@ class AddCarScreen extends React.Component {
   AddCar = async () => {
 
     Keyboard.dismiss()
-        const { make,model,year,licenseLink,licenseExpiryDate,plateNumber,location,kilometers } = this.state.user;
+        const { make,model,year,licenseLink,licenseExpiryDate,plateNumber,location,photosLink } = this.state.user;
         const { RepeatPassword } = this.state;
         var error=false
-        if (!make) {
+      
+        if (!licenseLink) {
           this.setState(prevState => ({
             ...prevState,
-            errorMessageMake: "*Please Specify a Make"
-          }));
-          error=true;
-        } else {
-          this.setState(prevState => ({
-            ...prevState,
-            errorMessageMake: null
-          }));
-        }
-        if (!model) {
-          this.setState(prevState => ({
-            ...prevState,
-            errorMessageModel: "*Please specify a Model"
+            errorMessageLink: "*Please specify License"
           }));
           error=true;
           
         } else {
           this.setState(prevState => ({
             ...prevState,
-            errorMessageModel: null
+            errorMessageLink: null
           }));
         }
-        if (!year) {
+
+        if (!licenseExpiryDate) {
           this.setState(prevState => ({
             ...prevState,
-            errorMessageYear: "*Please Specify a Year"
+            errorMessageExpiry: "*Please Specify License expiry date"
           }));
           error=true;
         } else {
           this.setState(prevState => ({
             ...prevState,
-            errorMessageYear: null
+            errorMessageExpiry: null
           }));
         }
-      
-        if (!location) {
+        if (!plateNumber) {
           this.setState(prevState => ({
             ...prevState,
-            errorMessageLocation: "*Please Specify pick up location"
+            errorMessagePlate: "*Please specify Plate Number"
           }));
           error=true;
+          
         } else {
           this.setState(prevState => ({
             ...prevState,
-            errorMessageLocation: null
-          }));
-        }
-        if (kilometers.length==0) {
-          this.setState(prevState => ({
-            ...prevState,
-            errorMessageKilo: "*Please Specify Kilometers Range"
-          }));
-          error=true;
-        } else {
-          this.setState(prevState => ({
-            ...prevState,
-            errorMessageKilo: null
+            errorMessagePlate: null
           }));
         }
         if (!error) {
@@ -239,7 +217,8 @@ class AddCarScreen extends React.Component {
             ...prevState,
             error: false
           }));
-          this.props.navigation.navigate("AddCar2",{car:this.state.user})
+
+          this.props.navigation.navigate("AddCar3",{car:this.state.user})
   };}
   handleLoading = () => {
     const RotateData = this.RotateValueHolder.interpolate({
@@ -308,12 +287,12 @@ class AddCarScreen extends React.Component {
                 alignItems: "center"
               }}
             >
-              <AppText style={{ color: "white" }} text={"Add Car"} />
+              <AppText style={{ color: "white" }} text={"Add License "} />
             </View>
           }
           leftComponent={
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate("Main")}
+              onPress={() => this.props.navigation.navigate("AddCar")}
             >
               <Ionicons
                 name={"ios-arrow-back"}
@@ -343,16 +322,17 @@ class AddCarScreen extends React.Component {
               padding:20
             }}
           >
+        
             <FloatingLabelInput
               style={styles.text}
-              label={"Car Make"}
+              label="License Plate Number"
               onChangeText={text => {
                 this.setState(prevState => ({
                   ...prevState,
-                  user: { ...prevState.user, make: text }
+                  user: { ...prevState.user, plateNumber: text }
                 }));
               }}
-              value={this.state.user.make}
+              value={this.state.user.plateNumber}
             />
                <>
               
@@ -361,103 +341,43 @@ class AddCarScreen extends React.Component {
                   color: "#FF8080",
                 }}
               >
-                {this.state.errorMessageMake}
-              </Text>
-            </>
-            <FloatingLabelInput
-              style={styles.text}
-              label={"Car Model"}
-              onChangeText={text => {
-                this.setState(prevState => ({
-                  ...prevState,
-                  user: { ...prevState.user, model: text }
-                }));
-              }}
-              value={this.state.user.model}
-            />
-               <>
-              
-              <Text
-                style={{
-                  color: "#FF8080",
-                }}
-              >
-                {this.state.errorMessageModel}
-              </Text>
-            </>
-            <FloatingLabelInput
-              style={styles.text}
-              label={"Year of Production"}
-              onChangeText={text => {
-                this.setState(prevState => ({
-                  ...prevState,
-                  user: { ...prevState.user, year: text }
-                }));
-              }}
-              value={this.state.user.year}
-              keyboardType="numeric"
-            />
-               <>
-              
-              <Text
-                style={{
-                  color: "#FF8080",
-                }}
-              >
-                {this.state.errorMessageYear}
+                {this.state.errorMessagePlate}
               </Text>
             </>
 
-            <Picker
-  selectedValue={this.state.user.transmission}
-  style={{height: 50, width: "100%"}}
-  onValueChange={(itemValue, itemIndex) =>
-    this.setState(prevState => ({
-      ...prevState,
-      user: { ...prevState.user, transmission: itemValue }
-    }))
-  }>
-  <Picker.Item label="Automatic" value="Automatic" />
-  <Picker.Item label="Manual" value="Manual" />
-</Picker>
-
-
-<Picker
-  selectedValue={this.state.user.kilometers}
-  style={{height: 50, width: "100%"}}
-  onValueChange={(itemValue, itemIndex) =>
-    this.setState(prevState => ({
-      ...prevState,
-      user: { ...prevState.user, kilometers: itemValue }
-    }))
-  }>
-  <Picker.Item label="Kilometers" value="" />
-  <Picker.Item label="0 to 50K" value="0-50" />
-  <Picker.Item label="50k to 100K" value="50-100" />
-  <Picker.Item label="100k to 150K" value="100-150" />
-  <Picker.Item label="150k to 200K" value="150-200" />
-  <Picker.Item label="More Than 200K" value="200+" />
-</Picker>
-            <>
-                <Text
-                style={{
-                  color: "#FF8080",
-                }}
-               >
-                {this.state.errorMessageKilo}
-              </Text>
-            </>
-           
-            <FloatingLabelInput
-              style={styles.text}
-              label="Location"
-              onChangeText={text => {
-                this.setState(prevState => ({
-                  ...prevState,
-                  user: { ...prevState.user, location: text }
-                }));
+            <DatePicker
+              placeholder="License Expiry Date"
+              confirmBtnText="Confirm"
+              cancelBtnText="Cancel"
+              mode="date"
+              style={{
+                width: "100%",
+                alignItems: "baseline"
               }}
-              value={this.state.user.location}
+              date={this.state.user.licenseExpiryDate}
+              mode="date"
+              format="YYYY-MM-DD"
+              minDate="2016-05-01"
+              showIcon={false}
+              customStyles={{
+                dateInput: {
+                  height: 50,
+                  borderStyle: "solid",
+                  borderColor: "#0000",
+
+                  borderBottomColor: "#74808E",
+                  borderBottomWidth: 1,
+                  // borderRadius: 10,
+                  marginBottom: 20,
+                  fontSize: 18,
+                  color: "#000",
+                  fontFamily: Platform.OS === "ios" ? "Avenir" : "Roboto"
+                }
+              }}
+              onDateChange={date_in => {
+                this.setState(prevState => ({  ...prevState,
+                  user: { ...prevState.user, licenseExpiryDate: date_in }}));
+              }}
             />
    <>
               
@@ -466,11 +386,28 @@ class AddCarScreen extends React.Component {
                   color: "#FF8080",
                 }}
               >
-                {this.state.errorMessageLocation}
+                {this.state.errorMessageExpiry}
               </Text>
             </>
-       
-      
+            <View alignItems="center">
+            {this.state.loadingLicense?<ActivityIndicator
+                    animating={true}
+                    size="large"
+                    color={"#000"}
+                    style={{ paddingTop: 7 }}
+                  />:<Image
+                  source={{ uri: this.state.licenseImage }}
+                  style={{ width: 100, height: 60 }}
+                  
+                />}  
+
+            
+              <Button
+                title="Add License Image"
+                onPress={this._pickImageLicense}
+                styles={{paddingTop:10}}
+              />
+       </View>
        <>
               
               <Text
@@ -478,9 +415,10 @@ class AddCarScreen extends React.Component {
                   color: "#FF8080",
                 }}
               >
-                {this.state.errorMessagePhotos}
+                {this.state.errorMessageLink}
               </Text>
             </>
+  
           <StatusBar barStyle={"light-content"} />
 
           <View
@@ -499,4 +437,4 @@ class AddCarScreen extends React.Component {
   }
 }
 
-export default AddCarScreen;
+export default AddCarScreen2;

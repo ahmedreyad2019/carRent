@@ -14,9 +14,9 @@ import {
   Button,
   Image,
   Alert,
-  AsyncStorage,
-  Picker
+  AsyncStorage
 } from "react-native";
+import ImageCarousel from "../components/ImageCarousel";
 import { LinearGradient, ImagePicker ,Permissions,Constants} from "expo";
 import { connect } from "react-redux";
 import { styles, colors } from "../styles";
@@ -32,27 +32,24 @@ import firebase from "../store/firebase";
 
 const storage = firebase.storage();
 
-class AddCarScreen extends React.Component {
+class AddCarScreen3 extends React.Component {
   constructor(props) {
     super(props);
+    const { navigation } = this.props;
     this.state = {
       user: {
-        make: null,
-        model: null,
-        year: null,
-        location: null,
-        transmission:"Automatic",
-        kilometers:""
+        make: navigation.getParam('car').make,
+        model: navigation.getParam('car').model,
+        year: navigation.getParam('car').year,
+        licenseLink: navigation.getParam('car').licenseLink,
+        plateNumber: navigation.getParam('car').plateNumber,
+        licenseExpiryDate: navigation.getParam('car').licenseExpiryDate,
+        location: navigation.getParam('car').location,
+        photosLink: [],
+        transmission: navigation.getParam('car').transmission,
+        kilometers:navigation.getParam('car').kilometers
       },
-      errorMessageMake: null,
-      errorMessageModel:null,
-      errorMessageYear:null,
-      errorMessageLink:null,
-      errorMessagePlate:null,
-      errorMessageExpiry:null,
-      errorMessageLocation:null,
       errorMessagePhotos:null,
-      errorMessageKilo:"",
       image: [],
       licenseImage:null,
       loadingCar:false,
@@ -159,6 +156,7 @@ class AddCarScreen extends React.Component {
     }).start();
   }
   
+
   componentDidUpdate = () => {
     if (this.props.error) {
       Vibration.vibrate([100]);
@@ -169,77 +167,65 @@ class AddCarScreen extends React.Component {
   AddCar = async () => {
 
     Keyboard.dismiss()
-        const { make,model,year,licenseLink,licenseExpiryDate,plateNumber,location,kilometers } = this.state.user;
+        const { make,model,year,licenseLink,licenseExpiryDate,plateNumber,location,photosLink } = this.state.user;
         const { RepeatPassword } = this.state;
         var error=false
-        if (!make) {
+        if (photosLink.length==0) {
           this.setState(prevState => ({
             ...prevState,
-            errorMessageMake: "*Please Specify a Make"
-          }));
-          error=true;
-        } else {
-          this.setState(prevState => ({
-            ...prevState,
-            errorMessageMake: null
-          }));
-        }
-        if (!model) {
-          this.setState(prevState => ({
-            ...prevState,
-            errorMessageModel: "*Please specify a Model"
+            errorMessagePhotos: "*Please Add car images"
           }));
           error=true;
           
         } else {
           this.setState(prevState => ({
             ...prevState,
-            errorMessageModel: null
+            errorMessagePhotos: null
           }));
         }
-        if (!year) {
-          this.setState(prevState => ({
-            ...prevState,
-            errorMessageYear: "*Please Specify a Year"
-          }));
-          error=true;
-        } else {
-          this.setState(prevState => ({
-            ...prevState,
-            errorMessageYear: null
-          }));
-        }
-      
-        if (!location) {
-          this.setState(prevState => ({
-            ...prevState,
-            errorMessageLocation: "*Please Specify pick up location"
-          }));
-          error=true;
-        } else {
-          this.setState(prevState => ({
-            ...prevState,
-            errorMessageLocation: null
-          }));
-        }
-        if (kilometers.length==0) {
-          this.setState(prevState => ({
-            ...prevState,
-            errorMessageKilo: "*Please Specify Kilometers Range"
-          }));
-          error=true;
-        } else {
-          this.setState(prevState => ({
-            ...prevState,
-            errorMessageKilo: null
-          }));
-        }
+
         if (!error) {
           this.setState(prevState => ({
             ...prevState,
             error: false
           }));
-          this.props.navigation.navigate("AddCar2",{car:this.state.user})
+
+    try{
+    AsyncStorage.getItem("jwt").then(token =>
+      fetch(
+        `https://carrentalserver.herokuapp.com/car`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-access-token": token
+          },
+          body: JSON.stringify(this.state.user)
+
+        }
+      )
+        .then(res => res.json())
+        .then(res => {
+          console.log(res)
+          if(res.data){
+            Alert.alert(
+              'Car Added',
+              'Your Car has been addded successfully, you will recieve a response within 48 hours.',
+              [
+                {text: 'OK', onPress: () => this.props.navigation.navigate("Main")},
+              ],
+              {cancelable: false},
+              
+            );
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        })
+      );
+  }catch(error){
+    console.log(error)
+  }
   };}
   handleLoading = () => {
     const RotateData = this.RotateValueHolder.interpolate({
@@ -273,7 +259,7 @@ class AddCarScreen extends React.Component {
                 {!this.props.loading ? (
                   <>
                     <Text  style={{ color: "#FFF" }}>
-                      Next
+                      Add Car
                     </Text>
                   </>
                 ) : (
@@ -308,12 +294,12 @@ class AddCarScreen extends React.Component {
                 alignItems: "center"
               }}
             >
-              <AppText style={{ color: "white" }} text={"Add Car"} />
+              <AppText style={{ color: "white" }} text={"Add Car Photos"} />
             </View>
           }
           leftComponent={
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate("Main")}
+              onPress={() => this.props.navigation.navigate("AddCar2")}
             >
               <Ionicons
                 name={"ios-arrow-back"}
@@ -336,6 +322,7 @@ class AddCarScreen extends React.Component {
           behavior="padding"
           enabled
         >
+              <ImageCarousel images={this.state.image} full={400} />
           <ScrollView
             style={{
               backgroundColor: colors.backgroundMain,
@@ -343,134 +330,21 @@ class AddCarScreen extends React.Component {
               padding:20
             }}
           >
-            <FloatingLabelInput
-              style={styles.text}
-              label={"Car Make"}
-              onChangeText={text => {
-                this.setState(prevState => ({
-                  ...prevState,
-                  user: { ...prevState.user, make: text }
-                }));
-              }}
-              value={this.state.user.make}
-            />
-               <>
-              
-              <Text
-                style={{
-                  color: "#FF8080",
-                }}
-              >
-                {this.state.errorMessageMake}
-              </Text>
-            </>
-            <FloatingLabelInput
-              style={styles.text}
-              label={"Car Model"}
-              onChangeText={text => {
-                this.setState(prevState => ({
-                  ...prevState,
-                  user: { ...prevState.user, model: text }
-                }));
-              }}
-              value={this.state.user.model}
-            />
-               <>
-              
-              <Text
-                style={{
-                  color: "#FF8080",
-                }}
-              >
-                {this.state.errorMessageModel}
-              </Text>
-            </>
-            <FloatingLabelInput
-              style={styles.text}
-              label={"Year of Production"}
-              onChangeText={text => {
-                this.setState(prevState => ({
-                  ...prevState,
-                  user: { ...prevState.user, year: text }
-                }));
-              }}
-              value={this.state.user.year}
-              keyboardType="numeric"
-            />
-               <>
-              
-              <Text
-                style={{
-                  color: "#FF8080",
-                }}
-              >
-                {this.state.errorMessageYear}
-              </Text>
-            </>
-
-            <Picker
-  selectedValue={this.state.user.transmission}
-  style={{height: 50, width: "100%"}}
-  onValueChange={(itemValue, itemIndex) =>
-    this.setState(prevState => ({
-      ...prevState,
-      user: { ...prevState.user, transmission: itemValue }
-    }))
-  }>
-  <Picker.Item label="Automatic" value="Automatic" />
-  <Picker.Item label="Manual" value="Manual" />
-</Picker>
-
-
-<Picker
-  selectedValue={this.state.user.kilometers}
-  style={{height: 50, width: "100%"}}
-  onValueChange={(itemValue, itemIndex) =>
-    this.setState(prevState => ({
-      ...prevState,
-      user: { ...prevState.user, kilometers: itemValue }
-    }))
-  }>
-  <Picker.Item label="Kilometers" value="" />
-  <Picker.Item label="0 to 50K" value="0-50" />
-  <Picker.Item label="50k to 100K" value="50-100" />
-  <Picker.Item label="100k to 150K" value="100-150" />
-  <Picker.Item label="150k to 200K" value="150-200" />
-  <Picker.Item label="More Than 200K" value="200+" />
-</Picker>
-            <>
-                <Text
-                style={{
-                  color: "#FF8080",
-                }}
-               >
-                {this.state.errorMessageKilo}
-              </Text>
-            </>
-           
-            <FloatingLabelInput
-              style={styles.text}
-              label="Location"
-              onChangeText={text => {
-                this.setState(prevState => ({
-                  ...prevState,
-                  user: { ...prevState.user, location: text }
-                }));
-              }}
-              value={this.state.user.location}
-            />
-   <>
-              
-              <Text
-                style={{
-                  color: "#FF8080",
-                }}
-              >
-                {this.state.errorMessageLocation}
-              </Text>
-            </>
-       
-      
+             
+       <View alignItems="center">          
+              <Button
+                title={this.state.image.length==0?"Add Car Image":"Add Another Car Image"}
+                onPress={this._pickImage}
+                styles={{paddingTop:10}}
+              />
+               {this.state.loadingCar?<ActivityIndicator
+                    animating={true}
+                    size="large"
+                    color={"#000"}
+                    style={{ paddingTop: 7 }}
+                  />:<></>}  
+                 
+       </View>
        <>
               
               <Text
@@ -499,4 +373,4 @@ class AddCarScreen extends React.Component {
   }
 }
 
-export default AddCarScreen;
+export default AddCarScreen3;

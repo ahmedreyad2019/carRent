@@ -18,13 +18,14 @@ import { styles, colors } from "../styles";
 import * as actions from "../actions/index";
 import FloatingLabelInput from "../components/FloatingLabelInput";
 import { ScrollView } from "react-native-gesture-handler";
+
 class RegisterScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       user: {
         firstName: null,
-        LastName: null,
+        lastName: null,
         mobileNumber: null,
         password: "",
         email: null
@@ -32,6 +33,10 @@ class RegisterScreen extends React.Component {
       RepeatPassword: "",
       errorMessage1: null,
       errorMessage2: null,
+      errorMessageFN:null,
+      errorMessageLN:null,
+      errorMessageMail:null,
+      errorMessageMob:null,
       passwordMatch: true
     };
     this.RotateValueHolder = new Animated.Value(0);
@@ -48,18 +53,20 @@ class RegisterScreen extends React.Component {
   }
   handleVerification = async () => {
     Keyboard.dismiss();
-    const { password } = this.state.user;
+    const { password,firstName,lastName,email,mobileNumber } = this.state.user;
     const { RepeatPassword } = this.state;
+    var error=false
     if (password.length < 8) {
       this.setState(prevState => ({
         ...prevState,
         errorMessage1: "*password must be 8 characters or more"
       }));
+      
       this.props.doError(true);
     } else {
       this.setState(prevState => ({
         ...prevState,
-        errorMessage1: ""
+        errorMessage1: null
       }));
     }
     if (password !== RepeatPassword && password.length > 8) {
@@ -67,14 +74,67 @@ class RegisterScreen extends React.Component {
         ...prevState,
         errorMessage2: "*passwords do not match"
       }));
+      error=true
       this.props.doError(true);
     } else {
       this.setState(prevState => ({
         ...prevState,
-        errorMessage2: ""
+        errorMessage2: null
       }));
     }
-    if (password === RepeatPassword && password.length >= 8) {
+    if(!firstName||firstName.length<3){
+      this.setState(prevState => ({
+        ...prevState,
+        errorMessageFN: "*First Name must be more than 2 characters long"
+      }));
+      error=true
+      this.props.doError(true);
+    }else{
+      this.setState(prevState => ({
+        ...prevState,
+        errorMessageFN: null
+      }));
+    }
+    if(!lastName||lastName.length<3){
+      this.setState(prevState => ({
+        ...prevState,
+        errorMessageLN: "*Last Name must be more than 2 characters long"
+      }));
+      error=true
+      this.props.doError(true);
+    }else{
+      this.setState(prevState => ({
+        ...prevState,
+        errorMessageLN: null
+      }));
+    }
+    if(!email||!email.includes("@")){
+      this.setState(prevState => ({
+        ...prevState,
+        errorMessageMail: "*Please enter a valid email"
+      }));
+      error=true
+      this.props.doError(true);
+    }else{
+      this.setState(prevState => ({
+        ...prevState,
+        errorMessageMail: null
+      }));
+    }
+    if(!mobileNumber||mobileNumber.length<11){
+      this.setState(prevState => ({
+        ...prevState,
+        errorMessageMob: "*Please enter a valid Mobile Number"
+      }));
+      error=true
+      this.props.doError(true);
+    }else{
+      this.setState(prevState => ({
+        ...prevState,
+        errorMessageMob: null
+      }));
+    }
+    if (password === RepeatPassword && password.length >= 8&&!error) {
       this.setState(prevState => ({
         ...prevState,
         error: false,
@@ -82,7 +142,8 @@ class RegisterScreen extends React.Component {
         errorMessage2: ""
       }));
       await this.props.doLogin(this.state.user);
-      this.props.navigation.navigate("Login");
+      this.props.navigation.navigate("Home");
+      
     }
   };
 
@@ -161,6 +222,7 @@ class RegisterScreen extends React.Component {
           contentContainerStyle={{
             backgroundColor:colors.backgroundMain,
             padding: 30,
+            paddingTop:50,
             paddingBottom: 300
           }}
         >
@@ -175,17 +237,37 @@ class RegisterScreen extends React.Component {
             }}
             value={this.state.user.firstName}
           />
+            <>
+              
+              <Text
+                style={{
+                  color: "#FF8080",
+                }}
+              >
+                {this.state.errorMessageFN}
+              </Text>
+            </>
           <FloatingLabelInput
             style={styles.text}
             label={"Last Name"}
             onChangeText={text => {
               this.setState(prevState => ({
                 ...prevState,
-                user: { ...prevState.user, LastName: text }
+                user: { ...prevState.user, lastName: text }
               }));
             }}
-            value={this.state.user.LastName}
+            value={this.state.user.lastName}
           />
+            <>
+              
+              <Text
+                style={{
+                  color: "#FF8080",
+                }}
+              >
+                {this.state.errorMessageLN}
+              </Text>
+            </>
           <FloatingLabelInput
             style={styles.text}
             label={"Email"}
@@ -198,6 +280,16 @@ class RegisterScreen extends React.Component {
             value={this.state.user.email}
             keyboardType="email-address"
           />
+            <>
+              
+              <Text
+                style={{
+                  color: "#FF8080",
+                }}
+              >
+                {this.state.errorMessageMail}
+              </Text>
+            </>
           <FloatingLabelInput
             style={styles.text}
             label="Mobile Number"
@@ -211,24 +303,19 @@ class RegisterScreen extends React.Component {
             keyboardType="phone-pad"
             value={this.state.user.mobileNumber}
           />
-
-          <>
             <>
-              <Text
-                style={{ color: "#FF8080", position: "absolute", bottom: 0 }}
-              >
-                {this.state.errorMessage1}
-              </Text>
+              
               <Text
                 style={{
                   color: "#FF8080",
-                  position: "absolute",
-                  bottom: 0
                 }}
               >
-                {this.state.errorMessage2}
+                {this.state.errorMessageMob}
               </Text>
             </>
+
+          <>
+           
             <FloatingLabelInput
               style={styles.text}
               label={"Password"}
@@ -242,6 +329,13 @@ class RegisterScreen extends React.Component {
               value={this.state.user.password}
             />
           </>
+          <>
+          <Text
+                style={{ color: "#FF8080"}}
+              >
+                {this.state.errorMessage1}
+              </Text>
+          </>
           <FloatingLabelInput
             style={styles.text}
             label={"Repeat password"}
@@ -254,6 +348,16 @@ class RegisterScreen extends React.Component {
             textContentType="password"
             value={this.state.RepeatPassword}
           />
+           <>
+              
+              <Text
+                style={{
+                  color: "#FF8080",
+                }}
+              >
+                {this.state.errorMessage2}
+              </Text>
+            </>
           <View
             style={{
               padding: 30,

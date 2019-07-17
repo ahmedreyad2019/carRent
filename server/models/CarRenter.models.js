@@ -45,6 +45,7 @@ const CarRenterSchema = new Schema({
   carsOwned: { type: Array, default: [] },
   dateAdded: { type: Date },
   rating: { type: Number, required: true, default: 5.0 },
+  activated:{type:Boolean,required:true,default:false}
 
 });
 

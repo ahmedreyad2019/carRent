@@ -45,11 +45,19 @@ class AddCarScreen extends React.Component {
         location: null,
         photosLink: []
       },
-      errorMessage1: null,
+      errorMessageMake: null,
+      errorMessageModel:null,
+      errorMessageYear:null,
+      errorMessageLink:null,
+      errorMessagePlate:null,
+      errorMessageExpiry:null,
+      errorMessageLocation:null,
+      errorMessagePhotos:null,
       image: [],
       licenseImage:null,
       loadingCar:false,
-      loadingLicense:false
+      loadingLicense:false,
+      
     };
     this.RotateValueHolder = new Animated.Value(0);
   }
@@ -159,7 +167,7 @@ class AddCarScreen extends React.Component {
   //         ...prevState,
   //         errorMessage1: "*password must be 8 characters or more"
   //       }));
-  //       this.props.doError(true);
+  //       
   //     } else {
   //       this.setState(prevState => ({
   //         ...prevState,
@@ -171,7 +179,7 @@ class AddCarScreen extends React.Component {
   //         ...prevState,
   //         errorMessage2: "*passwords do not match"
   //       }));
-  //       this.props.doError(true);
+  //       
   //     } else {
   //       this.setState(prevState => ({
   //         ...prevState,
@@ -195,12 +203,126 @@ class AddCarScreen extends React.Component {
     if (this.props.error) {
       Vibration.vibrate([100]);
       this.StartImageRotateFunction();
-      this.props.doError(false);
     }
   };
 
   AddCar = async () => {
-    console.log(this.state.user)
+
+    Keyboard.dismiss()
+        const { make,model,year,licenseLink,licenseExpiryDate,plateNumber,location,photosLink } = this.state.user;
+        const { RepeatPassword } = this.state;
+        var error=false
+        if (!make) {
+          this.setState(prevState => ({
+            ...prevState,
+            errorMessageMake: "*Please Specify a Make"
+          }));
+          error=true;
+        } else {
+          this.setState(prevState => ({
+            ...prevState,
+            errorMessageMake: null
+          }));
+        }
+        if (!model) {
+          this.setState(prevState => ({
+            ...prevState,
+            errorMessageModel: "*Please specify a Model"
+          }));
+          error=true;
+          
+        } else {
+          this.setState(prevState => ({
+            ...prevState,
+            errorMessageModel: null
+          }));
+        }
+        if (!year) {
+          this.setState(prevState => ({
+            ...prevState,
+            errorMessageYear: "*Please Specify a Year"
+          }));
+          error=true;
+        } else {
+          this.setState(prevState => ({
+            ...prevState,
+            errorMessageYear: null
+          }));
+        }
+        if (!licenseLink) {
+          this.setState(prevState => ({
+            ...prevState,
+            errorMessageLink: "*Please specify License"
+          }));
+          error=true;
+          
+        } else {
+          this.setState(prevState => ({
+            ...prevState,
+            errorMessageLink: null
+          }));
+        }
+
+        if (!licenseExpiryDate) {
+          this.setState(prevState => ({
+            ...prevState,
+            errorMessageExpiry: "*Please Specify License expiry date"
+          }));
+          error=true;
+        } else {
+          this.setState(prevState => ({
+            ...prevState,
+            errorMessageExpiry: null
+          }));
+        }
+        if (!plateNumber) {
+          this.setState(prevState => ({
+            ...prevState,
+            errorMessagePlate: "*Please specify Plate Number"
+          }));
+          error=true;
+          
+        } else {
+          this.setState(prevState => ({
+            ...prevState,
+            errorMessagePlate: null
+          }));
+        }
+
+        if (!location) {
+          this.setState(prevState => ({
+            ...prevState,
+            errorMessageLocation: "*Please Specify pick up location"
+          }));
+          error=true;
+        } else {
+          this.setState(prevState => ({
+            ...prevState,
+            errorMessageLocation: null
+          }));
+        }
+        console.log(photosLink)
+        if (photosLink.length==0) {
+          console.log("kkk")
+          this.setState(prevState => ({
+            ...prevState,
+            errorMessagePhotos: "*Please Add car images"
+          }));
+          error=true;
+          
+        } else {
+          this.setState(prevState => ({
+            ...prevState,
+            errorMessagePhotos: null
+          }));
+        }
+
+        if (!error) {
+          this.setState(prevState => ({
+            ...prevState,
+            error: false
+          }));
+
     try{
     AsyncStorage.getItem("jwt").then(token =>
       fetch(
@@ -237,7 +359,7 @@ class AddCarScreen extends React.Component {
   }catch(error){
     console.log(error)
   }
-  };
+  };}
   handleLoading = () => {
     const RotateData = this.RotateValueHolder.interpolate({
       inputRange: [0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2],
@@ -313,7 +435,7 @@ class AddCarScreen extends React.Component {
               onPress={() => this.props.navigation.navigate("Main")}
             >
               <Ionicons
-                name={Platform.OS + "-arrow-back"}
+                name={"ios-arrow-back"}
                 size={30}
                 color={"#74808E"}
               />
@@ -351,6 +473,16 @@ class AddCarScreen extends React.Component {
               }}
               value={this.state.user.make}
             />
+               <>
+              
+              <Text
+                style={{
+                  color: "#FF8080",
+                }}
+              >
+                {this.state.errorMessageMake}
+              </Text>
+            </>
             <FloatingLabelInput
               style={styles.text}
               label={"Car Model"}
@@ -362,6 +494,16 @@ class AddCarScreen extends React.Component {
               }}
               value={this.state.user.model}
             />
+               <>
+              
+              <Text
+                style={{
+                  color: "#FF8080",
+                }}
+              >
+                {this.state.errorMessageModel}
+              </Text>
+            </>
             <FloatingLabelInput
               style={styles.text}
               label={"Year of Production"}
@@ -374,6 +516,16 @@ class AddCarScreen extends React.Component {
               value={this.state.user.year}
               keyboardType="numeric"
             />
+               <>
+              
+              <Text
+                style={{
+                  color: "#FF8080",
+                }}
+              >
+                {this.state.errorMessageYear}
+              </Text>
+            </>
             <FloatingLabelInput
               style={styles.text}
               label="License Plate Number"
@@ -385,6 +537,16 @@ class AddCarScreen extends React.Component {
               }}
               value={this.state.user.plateNumber}
             />
+               <>
+              
+              <Text
+                style={{
+                  color: "#FF8080",
+                }}
+              >
+                {this.state.errorMessagePlate}
+              </Text>
+            </>
             <FloatingLabelInput
               style={styles.text}
               label="Location"
@@ -396,7 +558,16 @@ class AddCarScreen extends React.Component {
               }}
               value={this.state.user.location}
             />
-
+   <>
+              
+              <Text
+                style={{
+                  color: "#FF8080",
+                }}
+              >
+                {this.state.errorMessageLocation}
+              </Text>
+            </>
 
             <DatePicker
               placeholder="License Expiry Date"
@@ -432,7 +603,16 @@ class AddCarScreen extends React.Component {
                   user: { ...prevState.user, licenseExpiryDate: date_in }}));
               }}
             />
-
+   <>
+              
+              <Text
+                style={{
+                  color: "#FF8080",
+                }}
+              >
+                {this.state.errorMessageExpiry}
+              </Text>
+            </>
             <View alignItems="center">
             {this.state.loadingLicense?<ActivityIndicator
                     animating={true}
@@ -452,7 +632,16 @@ class AddCarScreen extends React.Component {
                 styles={{paddingTop:10}}
               />
        </View>
-       
+       <>
+              
+              <Text
+                style={{
+                  color: "#FF8080",
+                }}
+              >
+                {this.state.errorMessageLink}
+              </Text>
+            </>
        <View alignItems="center">
               {this.state.loadingCar?<ActivityIndicator
                     animating={true}
@@ -471,8 +660,18 @@ class AddCarScreen extends React.Component {
                 onPress={this._pickImage}
                 styles={{paddingTop:10}}
               />
+                 
        </View>
-
+       <>
+              
+              <Text
+                style={{
+                  color: "#FF8080",
+                }}
+              >
+                {this.state.errorMessagePhotos}
+              </Text>
+            </>
           <StatusBar barStyle={"light-content"} />
 
           <View

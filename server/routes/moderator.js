@@ -388,7 +388,7 @@ router.put("/view/carLicenseRequests/:id/respond", async (req, res) => {
     var thisCar=await Car.findById(req.param.id)
     console.log(thisCar)
     var cars = await Car.findByIdAndUpdate(req.params.id,
-      { status: req.body.response }
+      { status: req.body.response ,comment:req.body.comment}
     );
 
     if (!cars) return res.status(401).send({ msg: "request not available" });

@@ -25,6 +25,7 @@ const CarSchema = new Schema({
   color: { type: String },
   seatingCapacity: { type: Number },
   photosLink: [{ type: String,required:true }],
-  banned: { required: true, default: false, type: Boolean }
+  banned: { required: true, default: false, type: Boolean },
+  comment:{type:String}
 });
 module.exports = mongoose.model("Car", CarSchema);

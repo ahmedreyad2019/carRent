@@ -77,7 +77,6 @@ class MyCarDetailsScreen extends React.Component {
               console.log(this.state.car._id)
             console.log(response)
             this.setState({transactions:response.data})
-            console.log(this.state.transactions[0].transaction)
           })
           .catch(error => {
             console.log(error);
@@ -87,6 +86,7 @@ class MyCarDetailsScreen extends React.Component {
     };
   
   render() {
+  
     // const { selectedCar } = this.props;
     // const transaction = selectedCar;
     // const car = selectedCar.cars[0];
@@ -114,7 +114,7 @@ class MyCarDetailsScreen extends React.Component {
           }
           leftComponent={
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate("Cars")}
+              onPress={() => this.props.navigation.navigate("Main")}
             >
               <Ionicons name={"ios-arrow-back"} size={25} color={"#74808E"} />
             </TouchableOpacity>
@@ -125,8 +125,8 @@ class MyCarDetailsScreen extends React.Component {
 
           <View style={{ marginHorizontal: 10 }}>
            
-            <Detail data={this.state.car.rating + "/5"} field={"Rating"} />
-            <Text
+           { this.state.transactions&&<Detail data={this.state.car.rating + "/5"} field={"Rating"} />}
+            {this.state.transactions&&<Text
               style={{
                 color: colors.primary,
                 fontSize: 28,
@@ -134,8 +134,16 @@ class MyCarDetailsScreen extends React.Component {
               }}
             >
               Transactions
-            </Text>
-
+            </Text>}
+           {this.state.car.status=="Rejected"&& <Text
+              style={{
+                color: colors.primary,
+                fontSize: 20,
+                fontFamily: Platform.OS === "ios" ? "AvenirNext-Bold" : "Roboto"
+              }}
+            >
+              {"Reason of Rejection: "+this.state.car.comment}
+            </Text>}
             {/* <Detail
               data={this.getdateString(transaction.rentingDateStart, true)}
               field={"Renting start date"}
@@ -294,7 +302,8 @@ class MyCarDetailsScreen extends React.Component {
             backgroundColor: "white",
             padding: 20
           }}
-        >
+        > 
+      
           <TouchableOpacity
             onPress={() => {
                 if(this.state.car.status!="PendingApproval"&&this.state.car.status!="Rejected"){
@@ -319,7 +328,7 @@ class MyCarDetailsScreen extends React.Component {
                 color: "white"
               }}
             >
-              {this.state.car.status=="PendingApproval"?"This Car is still waiting for approval":this.state.car.status=="Rejected"?"This Car is Rejected":"Offer for Rent"}
+              {this.state.car.status=="PendingApproval"?"This Car is still waiting for approval":this.state.car.status=="Rejected"?"This Car is Rejected ":"Offer for Rent"}
             </Text>
             {this.props.loading ? (
               <ActivityIndicator animating={true} />

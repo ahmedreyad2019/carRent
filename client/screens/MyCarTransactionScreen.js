@@ -145,7 +145,7 @@ class MyCarTransactionScreen extends React.Component {
             alignItems: "center"
           }}
         >
-          <View
+          {this.state.transaction.transaction.status!="UpForRent"&&<View
             style={{
               flexDirection: "column",
               alignItems: "baseline",
@@ -223,7 +223,7 @@ class MyCarTransactionScreen extends React.Component {
                 size={12}
               />
             </TouchableOpacity>
-          </View>
+          </View>}
           <View
             style={{
               flexDirection: "row",

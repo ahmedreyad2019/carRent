@@ -3,12 +3,24 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const CarRenter = require("../models/CarRenter.models");
 const Car = require("../models/Car.models");
-const CarOwner = require("../models/CarOwner.models");
 const Transaction = require("../models/Transaction.models");
 const Complaint = require("../models/Complaint.models");
 var config = require("../config/jwt");
 var jwt = require("jsonwebtoken");
-var Db = require("mongodb").Db;
+const nodemailer = require("nodemailer");
+
+let transporter = nodemailer.createTransport({
+  service: "gmail",
+  port: 25,
+  secure: false, // true for 465, false for other ports
+  auth: {
+    user: "kraribaz@gmail.com", // generated ethereal user
+    pass: "Khaled+Reyad" // generated ethereal password
+  },
+  tls: {
+    rejectUnauthorized: false
+  }
+});
 //create
 router.post("/", async (req, res) => {
   try {
@@ -25,13 +37,33 @@ router.post("/", async (req, res) => {
     const salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(req.body.password, salt);
     req.body.password = hashedPassword;
+    req.body.activated=false
     const newCarRenter = await CarRenter.create(req.body);
+    var link="http://carrentalserver.herokuapp.com/carRenter/activate/"+newCarRenter._id
+    htmlData="<b>Dear "+req.body.firstName+",</b><br/> <b>Thank You for using carRental, Please Access this link to verify your email address</b> <br/><a href="+link+">Activate</a> "
+    let info = {
+      from: '"CarRental Activation Email"', // sender address
+      to: req.body.email, // list of receivers
+      subject: "carRental Activation", // Subject line
+      html: htmlData // html body
+    };
+    transporter.sendMail(info, (error, info) => {
+      if (error) {
+        console.log(error);
+      }
+      console.log(info);
+    });
     res.json({ msg: "Renter was added successfully", data: newCarRenter });
   } catch (error) {
     res.status(400).send({ msg: error });
     console.log(error);
   }
 });
+
+router.get("/activate/:id", async (req,res)=>{
+  await CarRenter.findByIdAndUpdate(req.params.id,{activated:true})
+  res.status(200).send({ msg: "Activated Succefully" });
+})
 
 router.post("/login", function(req, res) {
   CarRenter.findOne({ mobileNumber: req.body.mobileNumber }, function(
@@ -46,6 +78,11 @@ router.post("/login", function(req, res) {
       return res
         .status(401)
         .send({ auth: false, message: "Please enter password." });
+    }
+    if(!user.activated){
+      return res
+      .status(401)
+      .send({ auth: false, message: "Please activate account." });
     }
     const userPassword = user.password;
     const match = bcrypt.compareSync(loginPassword, userPassword);

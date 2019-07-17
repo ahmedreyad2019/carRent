@@ -48,9 +48,13 @@ class CarLicenseCard extends React.Component {
   }
 
   rejectHandler(){
+    if(!this.state.comment||this.state.comment.length<3){
+      alert("Please write the reason of rejection")
+    }
+    else
     fetch('https://carrentalserver.herokuapp.com/moderator/view/carLicenseRequests/'+this.props.id+'/respond', {
         method: 'PUT',
-        body: JSON.stringify({"response":"Rejected"}),
+        body: JSON.stringify({"response":"Rejected","comment":this.state.comment}),
         headers: {
           'Content-Type': 'application/json',
           'x-access-token':sessionStorage.getItem('jwtToken')
@@ -93,6 +97,7 @@ class CarLicenseCard extends React.Component {
     console.log("Proooops: "+this.props.licensePic)
     return (
         <div justify="center">
+          <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"></link>
       <Card className={classes.card}>
        <CardActionArea>
 
@@ -144,6 +149,13 @@ class CarLicenseCard extends React.Component {
           </Typography>
         </CardContent>
       </CardActionArea>
+      <textarea name="body"
+      class="form-control"
+          onChange={(text)=>{this.setState({comment:text.target.value})}}
+          value={this.state.comment}
+          placeholder="Please enter comment if car is rejected"
+          width="50%"
+          />
       <CardActionArea>
         <Button name="a" id="a" size="small" color="primary" onClick={()=>{this.acceptHandler()}}>
           Accept

@@ -29,6 +29,7 @@ import MyCarTransactionScreen from "../screens/MyCarTransactionScreen";
 import AddCarScreen2 from "../screens/AddCarScreen2";
 import AddCarScreen3 from "../screens/AddCarScreen3";
 import ChooseLocMap from "../screens/ChooseLocMap";
+import CarsOnMaps from "../screens/CarsOnMaps";
 
 const getTabBarIcon = (navigation, focused, tintColor) => {
   const { routeName } = navigation.state;
@@ -108,7 +109,8 @@ const RentScreen = createAppContainer(
       Main: { screen: MainScreen },
       Cars: { screen: CarsScreen },
       Rent: { screen: RentModal },
-      AddDrivingLicense:{screen:AddDrivingLicenseScreen}
+      AddDrivingLicense:{screen:AddDrivingLicenseScreen},
+      MapCars:{screen:CarsOnMaps}
     },
     {
       headerMode: "none"

@@ -485,7 +485,7 @@ class MainScreen extends React.Component {
               <TouchableOpacity
                 activeOpacity={1}
                 onPress={() => (
-                  this.props.navigation.navigate("Cars"),
+                  this.props.navigation.navigate("MapCars"),
                   this.props.doFetchCars(this.props.search)
                 )}
               >

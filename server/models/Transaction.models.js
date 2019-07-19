@@ -18,7 +18,8 @@ const TransactionSchema = new Schema({
   renterRating: { type: Number },
   ownerRating: { type: Number },
   price: { type: Number, required: true },
-  minimumPeriod:{ type: Number, required: true },
   location:{type:String,required:true},
+  flexible:{type:Boolean,required:true},
+  coordinate:{type:JSON,required:true}
 });
 module.exports = mongoose.model("transaction", TransactionSchema);

@@ -103,71 +103,11 @@ class OfferCar extends React.Component {
   }
     console.log(this.state.user)
 if(!error){
-    await Alert.alert(
-      'Is this Offering Flexible?',
-      'Pressing No means that this car can be rented only as a bulk from the dates you entered and cannot be partioned.',
-      [
-        {
-          text: 'Cancel',
-          style:"cancel"
-        },
-        {
-          text: 'No',
-          onPress: () => {  this.setState(prevState => ({
-            ...prevState,
-            user: { ...prevState.user, flexible: false }
-          })); this.sendRequest()},
-        },
-        {text: 'Yes', onPress: () => {  this.setState(prevState => ({
-          ...prevState,
-          user: { ...prevState.user, flexible: true }
-        }));this.sendRequest()}},
-      ],
-    );
-  }
+  this.props.navigation.navigate("Map",{transaction:this.state.user,car:this.state.car})
+   
   };
-
-  sendRequest= ()=>{
-    try{
-      AsyncStorage.getItem("jwt").then(token =>
-        fetch(
-          `https://carrentalserver.herokuapp.com/carOwner/RentMyCar/`+this.state.car._id,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "x-access-token": token
-            },
-            body: JSON.stringify(this.state.user)
-  
-          }
-        )
-          .then(res => res.json())
-          .then(res => {
-            console.log(res)
-            if(res.data){
-                console.log(res)
-              Alert.alert(
-                'Success',
-                'Your Car is Now Up for Rent',
-                [
-                  {text: 'OK', onPress: () => this.props.navigation.navigate("ViewCar",{car:this.state.car})},
-                ],
-                {cancelable: false},
-                
-              );
-            }else{
-              alert(res.message)
-            }
-          })
-          .catch(error => {
-            console.log(error);
-          })
-        );
-    }catch(error){
-      console.log(error)
-    }
   }
+ 
   handleLoading = () => {
     const RotateData = this.RotateValueHolder.interpolate({
       inputRange: [0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2],
@@ -182,7 +122,7 @@ if(!error){
         <Animated.View style={labelStyle}>
           <TouchableOpacity
             onPress={() => {
-              this.RentCar();
+              this.RentCar()
             }}
           >
             <View
@@ -200,7 +140,7 @@ if(!error){
                 {!this.props.loading ? (
                   <>
                     <Text  style={{ color: "#FFF" }}>
-                      Offer For Rent
+                      Next
                     </Text>
                   </>
                 ) : (

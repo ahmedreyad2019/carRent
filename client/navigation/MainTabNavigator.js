@@ -28,6 +28,7 @@ import OfferCar from "../screens/OfferCar";
 import MyCarTransactionScreen from "../screens/MyCarTransactionScreen";
 import AddCarScreen2 from "../screens/AddCarScreen2";
 import AddCarScreen3 from "../screens/AddCarScreen3";
+import ChooseLocMap from "../screens/ChooseLocMap";
 
 const getTabBarIcon = (navigation, focused, tintColor) => {
   const { routeName } = navigation.state;
@@ -124,7 +125,8 @@ const CarOwnerScreen = createAppContainer(
       RentCar:{screen:OfferCar},
       Transaction:{screen:MyCarTransactionScreen},
       AddCar2:{screen:AddCarScreen2},
-      AddCar3:{screen:AddCarScreen3}
+      AddCar3:{screen:AddCarScreen3},
+      Map:{screen:ChooseLocMap}
     },
     {
       headerMode: "none"

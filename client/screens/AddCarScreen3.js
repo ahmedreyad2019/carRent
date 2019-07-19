@@ -350,6 +350,7 @@ class AddCarScreen3 extends React.Component {
               <Text
                 style={{
                   color: "#FF8080",
+                  fontSize:12
                 }}
               >
                 {this.state.errorMessagePhotos}

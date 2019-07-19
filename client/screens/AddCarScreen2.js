@@ -339,6 +339,7 @@ class AddCarScreen2 extends React.Component {
               <Text
                 style={{
                   color: "#FF8080",
+                  fontSize:12
                 }}
               >
                 {this.state.errorMessagePlate}
@@ -384,6 +385,7 @@ class AddCarScreen2 extends React.Component {
               <Text
                 style={{
                   color: "#FF8080",
+                  fontSize:12
                 }}
               >
                 {this.state.errorMessageExpiry}
@@ -413,6 +415,7 @@ class AddCarScreen2 extends React.Component {
               <Text
                 style={{
                   color: "#FF8080",
+                  fontSize:12
                 }}
               >
                 {this.state.errorMessageLink}

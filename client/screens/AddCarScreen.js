@@ -42,7 +42,7 @@ class AddCarScreen extends React.Component {
         year: null,
         location: null,
         transmission:"Automatic",
-        kilometers:""
+        kilometers:"",
       },
       errorMessageMake: null,
       errorMessageModel:null,
@@ -359,6 +359,7 @@ class AddCarScreen extends React.Component {
               <Text
                 style={{
                   color: "#FF8080",
+                  fontSize:12
                 }}
               >
                 {this.state.errorMessageMake}
@@ -380,6 +381,7 @@ class AddCarScreen extends React.Component {
               <Text
                 style={{
                   color: "#FF8080",
+                  fontSize:12
                 }}
               >
                 {this.state.errorMessageModel}
@@ -402,6 +404,7 @@ class AddCarScreen extends React.Component {
               <Text
                 style={{
                   color: "#FF8080",
+                  fontSize:12
                 }}
               >
                 {this.state.errorMessageYear}
@@ -442,6 +445,7 @@ class AddCarScreen extends React.Component {
                 <Text
                 style={{
                   color: "#FF8080",
+                  fontSize:12
                 }}
                >
                 {this.state.errorMessageKilo}
@@ -464,6 +468,7 @@ class AddCarScreen extends React.Component {
               <Text
                 style={{
                   color: "#FF8080",
+                  fontSize:12
                 }}
               >
                 {this.state.errorMessageLocation}
@@ -476,6 +481,7 @@ class AddCarScreen extends React.Component {
               <Text
                 style={{
                   color: "#FF8080",
+                  fontSize:12
                 }}
               >
                 {this.state.errorMessagePhotos}

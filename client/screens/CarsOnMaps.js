@@ -147,6 +147,7 @@ try{
       coordinate={marker.coordinate}
       title={marker.cars.make}
       description={marker.cars.model}
+      
     >
        <Image   source={{ uri: "https://downloadpng.com/wp-content/uploads/thenext-thumb-cache//car-png-icon-c6b4f4d3eb48cc3e1431e0e1fbebeb6d-900x0.png" }} style={{height: 55, width:55 }}></Image>
      </Marker>

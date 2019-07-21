@@ -13,27 +13,14 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import * as actions from "../actions/index";
 import { styles, colors } from "../styles";
 import { connect } from "react-redux";
-
+import Locations from "./Locations.json";
 class PickerLocation extends Component {
   constructor(props) {
     super(props);
     this.state = {
       listOpen: false,
       selected: "Nasr City",
-      listItems: [
-        "Nasr City",
-        "5th Settlement",
-        "3rd Settlement",
-        "1st Settlement",
-        "6th October",
-        "Maadi",
-        "Ramsis",
-        "Sheikh Zayed",
-        "Zamalek",
-        "Mohandeseen",
-        "Helioplis",
-        "Dokki"
-      ]
+      listItems: Locations.map(a => a.location)
     };
   }
   componentWillMount = () => {
@@ -79,7 +66,8 @@ class PickerLocation extends Component {
           zIndex: 1223423423424242424
         }}
       >
-        <TouchableOpacity activeOpacity={1}
+        <TouchableOpacity
+          activeOpacity={1}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           onPress={() => {
             this.setState(prevState => ({

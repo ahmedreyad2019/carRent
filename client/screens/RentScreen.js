@@ -6,6 +6,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Text,
+  Switch,
   Platform
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -55,13 +56,13 @@ class RentModal extends React.Component {
 
   render() {
     const { selectedCar } = this.props;
-   transaction = selectedCar;
+    transaction = selectedCar;
     car = selectedCar.cars;
     date1 = new Date(transaction.rentingDateStart);
     date2 = new Date(transaction.rentingDateEnd);
     const diffTime = Math.abs(date2.getTime() - date1.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-   
+
     return (
       <View
         style={{ flexDirection: "column", justifyContent: "center", flex: 1 }}
@@ -77,14 +78,18 @@ class RentModal extends React.Component {
           }
           leftComponent={
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate("Cars")}
+              onPress={() =>
+                this.props.navigation.navigate(
+                  this.props.navigation.getParam("prev")
+                )
+              }
             >
               <Ionicons name={"ios-arrow-back"} size={25} color={"#74808E"} />
             </TouchableOpacity>
           }
         />
         <ScrollView>
-          <ImageCarousel images={car.photosLink} full={400} />
+          <ImageCarousel images={car.photosLink} full />
 
           <View style={{ marginHorizontal: 10 }}>
             <Text
@@ -102,6 +107,10 @@ class RentModal extends React.Component {
             <Detail data={car.year} field={"Year"} />
             <Detail data={car.location} field={"Location"} />
             <Detail data={car.rating + "/5"} field={"Rating"} />
+            <Detail data={car.transmission} field={"Transmission"} />
+            <Detail data={car.color} field={"Color"} />
+            <Detail data={car.seatingCapacity} field={"Seating Capacity"} />
+
             <Detail
               data={this.getdateString(transaction.rentingDateStart, true)}
               field={"Renting start date"}
@@ -120,9 +129,50 @@ class RentModal extends React.Component {
             justifyContent: "center",
             alignItems: "center",
             backgroundColor: "white",
-            padding: 20
+            paddingHorizontal: 20,
+            paddingVertical: 7
           }}
         >
+          <View
+            style={{
+              width: "100%",
+              backgroundColor: "white",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              paddingHorizontal: 20,
+              paddingVertical: 5,
+              borderTopWidth: 0.5,
+              borderTopColor: "#dedede",
+              borderBottomWidth: 0.5,
+              borderBottomColor: "#dedede",
+              marginVertical: 10
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-around",
+                alignItems: "center"
+              }}
+            >
+              <Ionicons
+                name={"ios" + "-calendar"}
+                size={30}
+                style={{ marginRight: 15 }}
+              />
+
+              <AppText text={"Flexible"} size={15} />
+            </View>
+            <Switch
+              value={this.state.flexible}
+              onValueChange={() => {
+                this.setState(prevState => ({
+                  flexible: !prevState.flexible
+                }));
+              }}
+            />
+          </View>
           <AppText
             text={
               "Total Price: " +
@@ -134,10 +184,12 @@ class RentModal extends React.Component {
           />
           <TouchableOpacity
             disabled={transaction.status === "Booked"}
-            onPress={() => (this.props.user.drivingLicenseRequest?
-              (this.props.doRent(car._id),
-              this.props.doFetchCars(this.props.search)):this.props.navigation.navigate("AddDrivingLicense")
-            )}
+            onPress={() =>
+              this.props.user.drivingLicenseRequest
+                ? (this.props.doRent(car._id),
+                  this.props.doFetchCars(this.props.search))
+                : this.props.navigation.navigate("AddDrivingLicense")
+            }
             style={{
               backgroundColor:
                 transaction.status !== "Booked" ? colors.primary : "green",
@@ -145,13 +197,16 @@ class RentModal extends React.Component {
               justifyContent: "center",
               height: 50,
               width: "100%",
+              marginVertical: 10,
+
               alignItems: "center"
             }}
           >
             <Text
               style={{
                 fontSize: 20,
-                fontFamily:   Platform.OS === "ios" ? "AvenirNext-DemiBold":"Roboto",
+                fontFamily:
+                  Platform.OS === "ios" ? "AvenirNext-DemiBold" : "Roboto",
                 color: "white"
               }}
             >
@@ -177,7 +232,7 @@ const mapStateToProps = state => {
     selectedCar: state.carReducer.selectedCar,
     order: state.carReducer.order,
     search: state.carReducer.search,
-    user:state.loginReducer.user
+    user: state.loginReducer.user
   };
 };
 

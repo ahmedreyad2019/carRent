@@ -108,9 +108,9 @@ const RentScreen = createAppContainer(
     {
       Main: { screen: MainScreen },
       Cars: { screen: CarsScreen },
+      MapCars:{screen:CarsOnMaps},
       Rent: { screen: RentModal },
       AddDrivingLicense:{screen:AddDrivingLicenseScreen},
-      MapCars:{screen:CarsOnMaps}
     },
     {
       headerMode: "none"

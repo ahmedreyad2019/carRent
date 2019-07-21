@@ -91,13 +91,11 @@ class DatePicker extends Component {
           </View>
 
           <DatePickerIOS
-            mode={diffDays >= 2 ? "date" : "datetime"}
+            mode={"date"}
             date={new Date(this.props.date)}
             style={{ color: "white" }}
             onDateChange={this.props.onDateChange}
           />
-
-          
 
           <Ionicons
             name={"ios-close"}

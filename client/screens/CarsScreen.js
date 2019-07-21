@@ -39,17 +39,7 @@ class CarsScreen extends React.Component {
   _onRefresh = () => {
     this.props.doFetchCars(this.props.search);
   };
-  getTimeString = date => {
-    var today = new Date(date);
-    var hours = today.getHours();
-    var minutes = today.getMinutes();
-    var ampm = hours >= 12 ? "pm" : "am";
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? "0" + minutes : minutes;
-    var strTime = hours + ":" + minutes + " " + ampm;
-    return strTime;
-  };
+
   getdateString = (date, hi) => {
     var today = new Date(date);
     var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -71,19 +61,15 @@ class CarsScreen extends React.Component {
       "Nov",
       "Dec"
     ];
-    if (hi) {
-      return (
-        month[today.getMonth()] +
-        " " +
-        today.getDate() +
-        ", " +
-        year +
-        " " +
-        this.getTimeString(date)
-      );
-    }
-
-    return today.getDate() + "/" + (today.getMonth() + 1);
+    return (
+      days[today.getDay()] +
+      ", " +
+      month[today.getMonth()] +
+      " " +
+      today.getDate() +
+      "," +
+      year
+    );
   };
   render() {
     return (
@@ -91,8 +77,10 @@ class CarsScreen extends React.Component {
         <Header
           backgroundColor={colors.primary}
           rightComponent={
-            <TouchableOpacity onPress={() => this.props.doOpenFilterModal()}>
-              <Ionicons name={"ios-funnel"} size={20} color={"#74808E"} />
+            <TouchableOpacity
+              onPress={() => this.props.navigation.navigate("MapCars")}
+            >
+              <Ionicons name={"ios-pin"} size={20} color={"#74808E"} />
             </TouchableOpacity>
           }
           centerComponent={
@@ -211,11 +199,13 @@ class CarsScreen extends React.Component {
                   data={this.props.cars}
                   renderItem={({ item }) => (
                     <TouchableOpacity
-                    onPress={() => {
-                      this.props.doSetCar(item),
-                        this.props.navigation.navigate("Rent");
-                    }}
-                    activeOpacity={1}
+                      onPress={() => {
+                        this.props.doSetCar(item),
+                          this.props.navigation.navigate("Rent", {
+                            prev: "Cars"
+                          });
+                      }}
+                      activeOpacity={1}
                       colors={["transparent", "rgba(0,0,0,0.2)"]}
                       style={{
                         ...styles.carCard
@@ -236,7 +226,6 @@ class CarsScreen extends React.Component {
                           justifyContent: "center",
                           alignItems: "center"
                         }}
-                      
                       >
                         <AppText
                           fontStyle={"bold"}

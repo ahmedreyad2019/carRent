@@ -310,7 +310,6 @@ class MainScreen extends React.Component {
                       Platform.OS === "ios" ? "AvenirNext-DemiBold" : "Roboto"
                   }}
                 >
-                  {this.getTimeString(this.props.search.rentingDateStart)}
                 </Text>
               </TouchableOpacity>
               <View
@@ -374,7 +373,6 @@ class MainScreen extends React.Component {
                       Platform.OS === "ios" ? "AvenirNext-DemiBold" : "Roboto"
                   }}
                 >
-                  {this.getTimeString(this.props.search.rentingDateEnd)}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -485,7 +483,7 @@ class MainScreen extends React.Component {
               <TouchableOpacity
                 activeOpacity={1}
                 onPress={() => (
-                  this.props.navigation.navigate("MapCars"),
+                  this.props.navigation.navigate("Cars"),
                   this.props.doFetchCars(this.props.search)
                 )}
               >

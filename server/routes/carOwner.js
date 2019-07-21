@@ -355,10 +355,21 @@ router.post("/RentMyCar/:id", async (req, res) => {
       .status(401)
       .send({ auth: false, message: "Not your Car" });
     }
-    if(car.status!="Idle"){
+    if(car.status=="PendingApproval"||car.status=="Rejected"){
       return res
       .status(401)
       .send({ message: "This Car Cannot be up for Rent" });
+    }
+
+    var allTransaction=await Transaction.find({carID:req.params.id})
+    console.log(allTransaction)
+    for(var i=0;i<allTransaction.length;i++){
+      if((allTransaction[i].rentingDateStart<new Date(req.body.rentingDateStart)&&allTransaction[i].rentingDateEnd>new Date(req.body.rentingDateStart))
+      ||(allTransaction[i].rentingDateStart<new Date(req.body.rentingDateEnd)&&allTransaction[i].rentingDateEnd>new Date(req.body.rentingDateEnd))
+      ||(allTransaction[i].rentingDateStart>new Date(req.body.rentingDateStart)&&allTransaction[i].rentingDateEnd<new Date(req.body.rentingDateEnd)))
+      return res
+      .status(401)
+      .send({ message: "This Car is already up for rent in those dates." });
     }
     req.body.carOwnerID=stat
     req.body.carID=req.params.id

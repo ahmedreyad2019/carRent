@@ -243,14 +243,13 @@ if(!error){
               confirmBtnText="Confirm"
               cancelBtnText="Cancel"
               mode="date"
+              minDate={new Date()}
               style={{
                 width: "45%",
                 
               }}
               date={this.state.user.rentingDateStart}
               mode="datetime"
-            
-              minDate="2019-07-07"
               showIcon={true}
               customStyles={{
                 dateInput: {
@@ -289,9 +288,8 @@ if(!error){
                
               }}
               date={this.state.user.rentingDateEnd}
+              minDate={this.state.user.rentingDateStart||new Date()}
               mode="datetime"
-              
-              minDate="2019-07-07"
               showIcon={true}
               customStyles={{
                 dateInput: {

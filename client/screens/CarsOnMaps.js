@@ -155,6 +155,7 @@ class CarsOnMaps extends React.Component {
   };
   render() {
     return (
+<<<<<<< HEAD
       <View style={{ flex: 1 }}>
         <Header
           backgroundColor={colors.primary}
@@ -305,6 +306,34 @@ class CarsOnMaps extends React.Component {
           </MapView>
         )}
       </View>
+=======
+                <View style={{ flex: 1 }}>
+    {this.state.coordinate&&<MapView
+    style={{ flex: 1 }}
+    initialRegion={{
+      latitude: this.state.coordinate.latitude,
+      longitude: this.state.coordinate.longitude,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    }}
+    onRegionChange={(region) => {this.setState({coordinate:region})}}
+    customMapStyle={Maps}
+ >
+    {this.props.cars&&this.props.cars.map(marker => (
+    marker.coordinate&&<Marker
+      coordinate={marker.coordinate}
+      title={marker.cars.make}
+      description={marker.cars.model}
+      
+    >
+       <Image   source={{ uri: "https://downloadpng.com/wp-content/uploads/thenext-thumb-cache//car-png-icon-c6b4f4d3eb48cc3e1431e0e1fbebeb6d-900x0.png" }} style={{height: 55, width:55 }}></Image>
+     </Marker>
+  ))}
+        
+     </MapView>}
+     </View>
+ 
+>>>>>>> 4b13250c72a2194ec8fcb2184965185b026c7c27
     );
   }
 }
